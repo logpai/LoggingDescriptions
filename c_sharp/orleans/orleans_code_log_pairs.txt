@@ -1,0 +1,1629 @@
+static void main(string[] args) {	appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup() {	appdomaininitializer = initsilo });	dosomeclientwork();	
+orleans silo is running press enter to terminate 
+
+static void dosomeclientwork() {	var config = orleans.runtime.configuration.clientconfiguration.localhostsilo(30000);	grainclient.initialize(config);	var friend = grainclient.grainfactory.getgrain<icollector>(0);	var result = friend.getsum().result;	
+sum of answers is 
+
+========================= orleans sample_769 =========================
+
+private istreamreliabilitytestgrain<int> creategrainonsilo(silohandle silo) #else private istreamreliabilitytestgrain creategrainonsilo(siloaddress silo) #endif {	istreamreliabilitytestgrain newgrain;	long kp = random.next();	while (true) {	newgrain = getgrain(++kp);	siloaddress loc = newgrain.getlocation().result;	if (loc.equals(silo)) break;	}	
+using grain located on silo 
+
+protected async task<bool> checkgraincounts() {	#if use_generics string graintype = typeof(streamreliabilitytestgrain<int>).fullname;	#else string graintype = typeof(streamreliabilitytestgrain).fullname;	#endif imanagementgrain mgmtgrain = this.grainfactory.getgrain<imanagementgrain>(0);	simplegrainstatistic[] grainstats = await mgmtgrain.getsimplegrainstatistics();	
+found grains 
+
+========================= orleans sample_21 =========================
+
+datetime startedat = datetime.utcnow;	try {	list<task<bool>> promises = new list<task<bool>>();	for (int i = 0; i < numofinserts; i++) {	string s = string.format("177bf46e-d06d-44c0-943b-c12f26d{0:d5}", i);	var e = new reminderentry {	grainref = this.fixture.internalgrainfactory.getgrain(grainid.newid()), remindername = "my_reminder_" + i, period = timespan.fromseconds(5), startat = datetime.utcnow };	int capture = i;	task<bool> promise = task.run(async () => {	await remindertable.upsertrow(e);	
+done 
+
+========================= orleans sample_15 =========================
+
+finished = promise.wait(timeout.multiply(3));	assert.true(false, "should have thrown");	}	catch (exception exc) {	stopwatch.stop();	exception baseexc = exc.getbaseexception();	if (!(baseexc is timeoutexception)) {	assert.true(false, "should not have got here " + exc);	}	}	
+waited for 
+
+var target = client.getgrain<ilongrunningtaskgrain<int>>(guid.newguid());	var delay = timespan.fromseconds(5);	var firstcall = target.longrunningtask(1, responsetimeout + delay);	await task.delay(timespan.frommilliseconds(100));	var secondcall = target.longrunningtask(2, timespan.zero);	try {	await assert.throwsasync<timeoutexception>(() => firstcall);	await assert.throwsasync<timeoutexception>(() => secondcall);	}	catch {	
+firstcall faulted firstcall firstcall result 
+
+var target = client.getgrain<ilongrunningtaskgrain<int>>(guid.newguid());	var delay = timespan.fromseconds(5);	var firstcall = target.longrunningtask(1, responsetimeout + delay);	await task.delay(timespan.frommilliseconds(100));	var secondcall = target.longrunningtask(2, timespan.zero);	try {	await assert.throwsasync<timeoutexception>(() => firstcall);	await assert.throwsasync<timeoutexception>(() => secondcall);	}	catch {	
+secondcall faulted secondcall secondcall result 
+
+========================= orleans sample_44 =========================
+
+private simplegrainstatistic[] getsimplegrainstatisticsrunner(string when) {	simplegrainstatistic[] stats = mgmtgrain.getsimplegrainstatistics(null).result;	stringbuilder sb = new stringbuilder();	foreach (var s in stats) sb.appendline().append(s);	sb.appendline();	
+grain statistics returned by orleans management grain 
+
+========================= orleans sample_382 =========================
+
+assert.notnull(results[0]);	assert.true((bool)results[0].baseobject);	assert.notnull(results[1]);	assert.true((bool)results[1].baseobject);	assert.notnull(results[2]);	assert.true(results[2].baseobject is imanagementgrain);	var statuses = results[3].baseobject as dictionary<siloaddress, silostatus>;	assert.notnull(statuses);	assert.true(statuses.count > 0);	foreach (var pair in statuses) {	
+silo status 
+
+getgraincommand.parameters.add("graintype", typeof(imanagementgrain));	getgraincommand.parameters.add("longkey", (long)0);	getgraincommand.parameters.add("client", client);	_ps.commands.addcommand(getgraincommand);	var results = _ps.invoke<imanagementgrain>();	assert.single(results);	_ps.commands.clear();	var mgmtgrain = results[0];	dictionary<siloaddress, silostatus> statuses = mgmtgrain.gethosts(onlyactive: true).result;	foreach (var pair in statuses) {	
+silo status 
+
+========================= orleans sample_167 =========================
+
+int success = 0;	int failed = 0;	sw = stopwatch.startnew();	hashset<long> transactionsinflight = new hashset<long>();	int generatedtransactions = 0;	while (generatedtransactions < transactionsperrun) {	int generatecount = math.min(transactionsperrun - generatedtransactions, concurrenttransactionstransactions - transactionsinflight.count);	starttransactionsresponse startresponse = await tms.starttransactions(this.transactionbatchtimeouts.take(generatecount).tolist());	list<transactioninfo> newtransactions = startresponse.transactionid .select(this.maketransactioninfo) .tolist();	generatedtransactions += newtransactions.count;	
+generated newtransactions count transactions 
+
+list<transactioninfo> newtransactions = startresponse.transactionid .select(this.maketransactioninfo) .tolist();	generatedtransactions += newtransactions.count;	transactionsinflight.unionwith(newtransactions.select(ti => ti.transactionid));	do {	tuple<int, int> results = await commitandcount(tms, newtransactions, transactionsinflight);	success += results.item1;	failed += results.item2;	}	while (transactionsinflight.count == concurrenttransactionstransactions);	}	
+generation complete 
+
+}	while (transactionsinflight.count == concurrenttransactionstransactions);	}	list<transactioninfo> empty = new list<transactioninfo>();	while (transactionsinflight.count != 0) {	tuple<int, int> results = await commitandcount(tms, empty, transactionsinflight);	success += results.item1;	failed += results.item2;	}	sw.stop();	
+generatedtransactions transactions performed in sw elapsedmilliseconds ms succeeded success failed failed 
+
+}	while (transactionsinflight.count == concurrenttransactionstransactions);	}	list<transactioninfo> empty = new list<transactioninfo>();	while (transactionsinflight.count != 0) {	tuple<int, int> results = await commitandcount(tms, empty, transactionsinflight);	success += results.item1;	failed += results.item2;	}	sw.stop();	
+success sw elapsedmilliseconds transactions sec 
+
+private async task<tuple<int,int>> commitandcount(itransactionmanagerservice tms, list<transactioninfo> newtransactions, hashset<long> transactionsinflight) {	int success = 0;	int failed = 0;	committransactionsresponse commitresponse = await tms.committransactions(newtransactions, transactionsinflight);	if (commitresponse.commitresult.count != 0) {	
+commited commitresponse commitresult count transactions 
+
+private async task<tuple<int,int>> commitandcount(itransactionmanagerservice tms, list<transactioninfo> newtransactions, hashset<long> transactionsinflight) {	int success = 0;	int failed = 0;	committransactionsresponse commitresponse = await tms.committransactions(newtransactions, transactionsinflight);	if (commitresponse.commitresult.count != 0) {	}	else await task.delay(10);	foreach (keyvaluepair<long, commitresult> kvp in commitresponse.commitresult) {	bool removed = transactionsinflight.remove(kvp.key);	if (!removed) {	
+unrequested result kvp key 
+
+========================= orleans sample_314 =========================
+
+public persistencegraintests_awsdynamodbstore(itestoutputhelper output, fixture fixture) : base(output, fixture) {	if (!awstestconstants.isdynamodbavailable) {	
+unable to connect to aws dynamodb simulator 
+
+========================= orleans sample_177 =========================
+
+public void async_asyncexecutorwithretriestest_1() {	int counter = 0;	func<int, task<int>> myfunc = ((int funccounter) => {	assert.equal(counter, funccounter);	
+running for time 
+
+assert.equal(counter, funccounter);	counter++;	if (counter == 5) return task.fromresult(28);	else throw new argumentexception("wrong arg!");	});	func<exception, int, bool> errorfilter = ((exception exc, int i) => {	return true;	});	task<int> promise = asyncexecutorwithretries.executewithretries(myfunc, 10, 10, null, errorfilter);	int value = promise.result;	
+value is 
+
+});	func<exception, int, bool> errorfilter = ((exception exc, int i) => {	return true;	});	task<int> promise = asyncexecutorwithretries.executewithretries(myfunc, 10, 10, null, errorfilter);	int value = promise.result;	counter = 0;	try {	promise = asyncexecutorwithretries.executewithretries(myfunc, 3, 3, null, errorfilter);	value = promise.result;	
+value is 
+
+public void async_asyncexecutorwithretriestest_2() {	int counter = 0;	const int countlimit = 5;	func<int, task<int>> myfunc = ((int funccounter) => {	assert.equal(counter, funccounter);	
+running for time 
+
+public void async_asyncexecutorwithretriestest_4() {	int counter = 0;	int lastiteration = 0;	func<int, task<int>> myfunc = ((int funccounter) => {	lastiteration = funccounter;	assert.equal(counter, funccounter);	
+running for time 
+
+public void async_asyncexecutorwithretriestest_5() {	int counter = 0;	int lastiteration = 0;	func<int, task<int>> myfunc = ((int funccounter) => {	lastiteration = funccounter;	assert.equal(counter, funccounter);	
+running func for time 
+
+public void async_asyncexecutorwithretriestest_5() {	int counter = 0;	int lastiteration = 0;	func<int, task<int>> myfunc = ((int funccounter) => {	lastiteration = funccounter;	assert.equal(counter, funccounter);	++counter;	throw new argumentexception(counter.tostring(cultureinfo.invariantculture));	});	func<exception, int, bool> errorfilter = ((exception exc, int i) => {	
+running error filter for time 
+
+========================= orleans sample_221 =========================
+
+private static async task startsilo() {	await silo.startasync();	
+silo started 
+
+private static async task stopsilo() {	await silo.stopasync();	
+silo stopped 
+
+========================= orleans sample_728 =========================
+
+while (receivedbatches < numbatches) {	var messages = receiver.getqueuemessagesasync(cloudqueuemessage.maxnumberofmessagestopeek).result.toarray();	if (!messages.any()) {	continue;	}	foreach (ibatchcontainer message in messages) {	streamsperqueue.addorupdate(queueid, id => new hashset<istreamidentity> { new streamidentity(message.streamguid, message.streamguid.tostring()) }, (id, set) => {	set.add(new streamidentity(message.streamguid, message.streamguid.tostring()));	return set;	});	
+queue received message on stream 
+
+var qcache = caches[kvp.key];	foreach (istreamidentity streamguid in kvp.value) {	iqueuecachecursor cursor = qcache.getcachecursor(streamguid, firstincache);	int messagecount = 0;	streamsequencetoken tenthincache = null;	streamsequencetoken lasttoken = firstincache;	while (cursor.movenext()) {	exception ex;	messagecount++;	ibatchcontainer batch = cursor.getcurrent(out ex);	
+token 
+
+while (cursor.movenext()) {	exception ex;	messagecount++;	ibatchcontainer batch = cursor.getcurrent(out ex);	assert.true(batch.sequencetoken.compareto(lasttoken) >= 0, $"order check for event {messagecount}");	lasttoken = batch.sequencetoken;	if (messagecount == 10) {	tenthincache = batch.sequencetoken;	}	}	
+on queue we received a total of message on stream 
+
+tenthincache = batch.sequencetoken;	}	}	assert.equal(numbatches / 2, messagecount);	assert.notnull(tenthincache);	cursor = qcache.getcachecursor(streamguid, tenthincache);	messagecount = 0;	while (cursor.movenext()) {	messagecount++;	}	
+on queue we received a total of message on stream 
+
+========================= orleans sample_25 =========================
+
+static void main(string[] args) {	if (args.length > 0 && args[0].equals("all", stringcomparison.invariantcultureignorecase)) {	
+running full benchmarks suite 
+
+static void main(string[] args) {	if (args.length > 0 && args[0].equals("all", stringcomparison.invariantcultureignorecase)) {	_benchmarks.select(pair => pair.value).tolist().foreach(action => action());	return;	}	if (args.length == 0 || !_benchmarks.containskey(args[0])) {	
+please select benchmark list of available 
+
+static void main(string[] args) {	if (args.length > 0 && args[0].equals("all", stringcomparison.invariantcultureignorecase)) {	_benchmarks.select(pair => pair.value).tolist().foreach(action => action());	return;	}	if (args.length == 0 || !_benchmarks.containskey(args[0])) {	_benchmarks .select(pair => pair.key) .tolist() .foreach(console.writeline);	
+all 
+
+private static void runbenchmark<t>(string name, func<t> init, action<t> benchmarkaction, action<t> teardown) {	console.writeline(name);	var bench = init();	var stopwatch = stopwatch.startnew();	benchmarkaction(bench);	
+elapsed milliseconds stopwatch elapsedmilliseconds 
+
+private static void runbenchmark<t>(string name, func<t> init, action<t> benchmarkaction, action<t> teardown) {	console.writeline(name);	var bench = init();	var stopwatch = stopwatch.startnew();	benchmarkaction(bench);	teardown(bench);	
+press any key to continue 
+
+========================= orleans sample_310 =========================
+
+public async task asyncserialexecutortests_serialsubmit() {	asyncserialexecutor executor = new asyncserialexecutor();	random = new saferandom();	list<task> tasks = new list<task>();	for (int i = 0; i < 10; i++) {	int capture = i;	
+submitting task 
+
+public async task asyncserialexecutortests_parallelsubmit() {	asyncserialexecutor executor = new asyncserialexecutor();	random = new saferandom();	concurrentstack<task> tasks = new concurrentstack<task>();	list<task> enqueuetasks = new list<task>();	for (int i = 0; i < 10; i++) {	int capture = i;	enqueuetasks.add( task.run(() => {	
+submitting task 
+
+private async task operation(int opnumber) {	if (operationsinprogress > 0) assert.true(false, $"1: operation {opnumber} found {operationsinprogress} operationsinprogress.");	operationsinprogress++;	var delay = random.nexttimespan(timespan.fromseconds(2));	
+task staring 
+
+private async task operation(int opnumber) {	if (operationsinprogress > 0) assert.true(false, $"1: operation {opnumber} found {operationsinprogress} operationsinprogress.");	operationsinprogress++;	var delay = random.nexttimespan(timespan.fromseconds(2));	await task.delay(delay);	if (operationsinprogress != 1) assert.true(false, $"2: operation {opnumber} found {operationsinprogress} operationsinprogress.");	
+task after first delay 
+
+private async task operation(int opnumber) {	if (operationsinprogress > 0) assert.true(false, $"1: operation {opnumber} found {operationsinprogress} operationsinprogress.");	operationsinprogress++;	var delay = random.nexttimespan(timespan.fromseconds(2));	await task.delay(delay);	if (operationsinprogress != 1) assert.true(false, $"2: operation {opnumber} found {operationsinprogress} operationsinprogress.");	await task.delay(delay);	if (operationsinprogress != 1) assert.true(false, $"3: operation {opnumber} found {operationsinprogress} operationsinprogress.");	operationsinprogress--;	
+task done 
+
+========================= orleans sample_225 =========================
+
+static void main(string[] args) {	var client = new clientbuilder() .uselocalhostclustering() .configure<clusteroptions>(options => {	options.clusterid = "dev";	options.serviceid = "adventureapp";	}) .configureapplicationparts(parts => parts.addapplicationpart(typeof(iroomgrain).assembly).withreferences()) .build();	client.connect().wait();	
+v 
+
+static void main(string[] args) {	var client = new clientbuilder() .uselocalhostclustering() .configure<clusteroptions>(options => {	options.clusterid = "dev";	options.serviceid = "adventureapp";	}) .configureapplicationparts(parts => parts.addapplicationpart(typeof(iroomgrain).assembly).withreferences()) .build();	client.connect().wait();	console.writeline();	
+what s you name 
+
+options.clusterid = "dev";	options.serviceid = "adventureapp";	}) .configureapplicationparts(parts => parts.addapplicationpart(typeof(iroomgrain).assembly).withreferences()) .build();	client.connect().wait();	console.writeline();	string name = console.readline();	var player = client.getgrain<iplayergrain>(guid.newguid());	player.setname(name).wait();	var room1 = client.getgrain<iroomgrain>(0);	player.setroomgrain(room1).wait();	
+look 
+
+string result = "start";	try {	while (result != "") {	string command = console.readline();	result = player.play(command).result;	console.writeline(result);	}	}	finally {	player.die().wait();	
+game over 
+
+========================= orleans sample_718 =========================
+
+static void main(string[] args) {	
+invoked orleansmanager exe with arguments 
+
+var command = args.length > 0 ? args[0].tolowerinvariant() : "";	if (string.isnullorempty(command) || command.equals("/?") || command.equals("-?")) {	printusage();	environment.exit(-1);	}	try {	runcommand(command, args);	environment.exit(0);	}	catch (exception exc) {	
+terminating due to exception 
+
+private static void printusage() {	
+usage orleansmanager grainstats 
+
+private static void printsimplegrainstatistics(ienumerable<string> args) {	var silos = args.select(parsesilo).toarray();	var stats = systemmanagement.getsimplegrainstatistics(silos).result;	
+silo activations type 
+
+private static void printgrainstatistics(ienumerable<string> args) {	var silos = args.select(parsesilo).toarray();	var stats = systemmanagement.getsimplegrainstatistics(silos).result;	
+act type 
+
+writestatus(string.format("**lookupgrain finished ok. lookup result is:"));	var list = lookupresult.addresses;	if (list == null) {	writestatus(string.format("**the returned activation list is null."));	return;	}	if (list.count == 0) {	writestatus(string.format("**the returned activation list is empty."));	return;	}	
+there activations registered in the directory for this grain the activations are are is 
+
+private static bool getstrategyargs<t>(string[] args, func<string, t> strategyparser, out t strategy, out int? interfaceid) {	if (args.length < 1 || args.length > 2) {	printusage();	strategy = default(t);	interfaceid = null;	return true;	}	strategy = strategyparser(args[0]);	if (strategy == null) {	
+strategy args not found 
+
+========================= orleans sample_2127 =========================
+
+public async task runasync() {	
+cold run 
+
+public async task runasync() {	await fullrunasync();	
+warm run 
+
+private async task fullrunasync() {	report[] reports = await task.whenall(enumerable.range(0, 200).select(i => runasync(i, 100, timespan.fromseconds(30))));	report finalreport = new report();	foreach (report report in reports) {	finalreport.succeeded += report.succeeded;	finalreport.failed += report.failed;	finalreport.elapsed = timespan.frommilliseconds(math.max(finalreport.elapsed.totalmilliseconds, report.elapsed.totalmilliseconds));	}	
+finalreport succeeded calls in finalreport elapsed totalmilliseconds ms 
+
+private async task fullrunasync() {	report[] reports = await task.whenall(enumerable.range(0, 200).select(i => runasync(i, 100, timespan.fromseconds(30))));	report finalreport = new report();	foreach (report report in reports) {	finalreport.succeeded += report.succeeded;	finalreport.failed += report.failed;	finalreport.elapsed = timespan.frommilliseconds(math.max(finalreport.elapsed.totalmilliseconds, report.elapsed.totalmilliseconds));	}	
+finalreport succeeded finalreport elapsed totalmilliseconds calls per second 
+
+private async task fullrunasync() {	report[] reports = await task.whenall(enumerable.range(0, 200).select(i => runasync(i, 100, timespan.fromseconds(30))));	report finalreport = new report();	foreach (report report in reports) {	finalreport.succeeded += report.succeeded;	finalreport.failed += report.failed;	finalreport.elapsed = timespan.frommilliseconds(math.max(finalreport.elapsed.totalmilliseconds, report.elapsed.totalmilliseconds));	}	
+finalreport failed calls failed 
+
+========================= orleans sample_311 =========================
+
+public void sched_simplefifotest() {	activationtaskscheduler activationscheduler = this.scheduler.getworkitemgroup(this.rootcontext).taskrunner;	int n = 0;	iworkitem item1 = new closureworkitem(() => { n = n + 5; });	iworkitem item2 = new closureworkitem(() => { n = n * 3; });	this.scheduler.queueworkitem(item1, this.rootcontext);	this.scheduler.queueworkitem(item2, this.rootcontext);	thread.sleep(1000);	assert.true(n != 0, "work items did not get executed");	assert.equal(15, n);	
+test executed ok 
+
+task[] tasks = new task[numtasks];	for (int i = 0; i < numtasks; i++) {	int tasknum = i;	tasks[i] = new task(() => { this.output.writeline("inside task-" + tasknum); flags[tasknum].waitone(); });	this.output.writeline("created task-" + tasknum + " id=" + tasks[tasknum].id);	}	task[] wrappers = new task[numtasks];	for (int i = 0; i < numtasks; i++) {	int tasknum = i;	wrappers[i] = new task(() => {	
+inside wrapper 
+
+}	task[] tasks = new task[numtasks];	for (int i = 0; i < numtasks; i++) {	int tasknum = i;	tasks[i] = new task(() => { this.output.writeline("inside task-" + tasknum); flags[tasknum].waitone(); });	}	closureworkitem[] workitems = new closureworkitem[numtasks];	for (int i = 0; i < numtasks; i++) {	int tasknum = i;	workitems[i] = new closureworkitem(() => {	
+inside closureworkitem 
+
+logcontext("main-task " + task.currentid);	int n = 0;	action closure = () => {	logcontext("closureworkitem-task " + task.currentid);	for (int i = 0; i < 10; i++) {	int id = -1;	action action = () => {	id = task.currentid.hasvalue ? (int)task.currentid : -1;	logcontext("sub-task " + id + " n=" + n);	int k = n;	
+sub task sleeping 
+
+int n = 0;	action closure = () => {	logcontext("closureworkitem-task " + task.currentid);	for (int i = 0; i < 10; i++) {	int id = -1;	action action = () => {	id = task.currentid.hasvalue ? (int)task.currentid : -1;	logcontext("sub-task " + id + " n=" + n);	int k = n;	thread.sleep(100);	
+sub task awake 
+
+int id = -1;	action action = () => {	id = task.currentid.hasvalue ? (int)task.currentid : -1;	logcontext("sub-task " + id + " n=" + n);	int k = n;	thread.sleep(100);	n = k + 1;	};	task.factory.startnew(action).continuewith(tsk => {	logcontext("sub-task " + id + "-continuewith");	
+sub task done 
+
+thread.sleep(100);	n = k + 1;	};	task.factory.startnew(action).continuewith(tsk => {	logcontext("sub-task " + id + "-continuewith");	});	}	};	iworkitem workitem = new closureworkitem(closure);	this.scheduler.queueworkitem(workitem, context);	
+main task sleeping 
+
+n = k + 1;	};	task.factory.startnew(action).continuewith(tsk => {	logcontext("sub-task " + id + "-continuewith");	});	}	};	iworkitem workitem = new closureworkitem(closure);	this.scheduler.queueworkitem(workitem, context);	thread.sleep(timespan.fromseconds(2));	
+main task awake 
+
+========================= orleans sample_224 =========================
+
+protected async task grain_awsstore_silorestart() {	var initialserviceid = this.hostedcluster.options.serviceid;	var initialdeploymentid = this.hostedcluster.options.clusterid;	var serviceid = await this.hostedcluster.client.getgrain<iserviceidgrain>(guid.empty).getserviceid();	output.writeline("clusterid={0} serviceid={1}", this.hostedcluster.options.clusterid, serviceid);	guid id = guid.newguid();	iawsstoragetestgrain grain = this.fixture.grainfactory.getgrain<iawsstoragetestgrain>(id);	int val = await grain.getvalue();	assert.equal(0, val);	await grain.dowrite(1);	
+about to reset silos 
+
+output.writeline("clusterid={0} serviceid={1}", this.hostedcluster.options.clusterid, serviceid);	guid id = guid.newguid();	iawsstoragetestgrain grain = this.fixture.grainfactory.getgrain<iawsstoragetestgrain>(id);	int val = await grain.getvalue();	assert.equal(0, val);	await grain.dowrite(1);	foreach (var silo in this.hostedcluster.getactivesilos().tolist()) {	this.hostedcluster.restartsilo(silo);	}	this.hostedcluster.initializeclient();	
+silos restarted 
+
+for (int i = 0; i < n; i++) {	var promise = action(i);	promises.add(promise);	if ((i % batchsize) == 0 && i > 0) {	task.waitall(promises.toarray());	promises.clear();	}	}	task.waitall(promises.toarray());	sw.stop();	
+completed did iterations in at rps 
+
+========================= orleans sample_181 =========================
+
+public void formattedtypenamesarerecoverable() {	var types = new[]	{	typeof(namevaluecollection), typeof(int), typeof(int[]), typeof(int*[]), typeof(list<>), typeof(list<int>), typeof(list<int*[]>), typeof(inner<int[,,]>.innerinner<string, list<int>>.bottom[,]), typeof(inner<>.innerinner<,>.bottom), typeof(runtimetypenameformattertests), typeof(testgraininterfaces.circularstateteststate), typeof(int).makebyreftype(), typeof(inner<int[]>.innerinner<string, list<int>>.bottom[,]) .makepointertype() .makepointertype() .makearraytype(10) .makebyreftype(), typeof(namevaluecollection) };	foreach (var type in types) {	var formatted = runtimetypenameformatter.format(type);	
+full name type fullname 
+
+public void formattedtypenamesarerecoverable() {	var types = new[]	{	typeof(namevaluecollection), typeof(int), typeof(int[]), typeof(int*[]), typeof(list<>), typeof(list<int>), typeof(list<int*[]>), typeof(inner<int[,,]>.innerinner<string, list<int>>.bottom[,]), typeof(inner<>.innerinner<,>.bottom), typeof(runtimetypenameformattertests), typeof(testgraininterfaces.circularstateteststate), typeof(int).makebyreftype(), typeof(inner<int[]>.innerinner<string, list<int>>.bottom[,]) .makepointertype() .makepointertype() .makearraytype(10) .makebyreftype(), typeof(namevaluecollection) };	foreach (var type in types) {	var formatted = runtimetypenameformatter.format(type);	
+formatted formatted 
+
+========================= orleans sample_210 =========================
+
+public fixture() {	try {	sqlserverstorage = relationalstoragefortesting.setupinstance(adonetinvariants.invariantnamesqlserver, testdatabasename).getawaiter().getresult();	}	catch (exception ex) {	
+failed to initialize sql server for relationalgeneraltests 
+
+public fixture() {	try {	sqlserverstorage = relationalstoragefortesting.setupinstance(adonetinvariants.invariantnamesqlserver, testdatabasename).getawaiter().getresult();	}	catch (exception ex) {	}	try {	mysqlstorage = relationalstoragefortesting.setupinstance(adonetinvariants.invariantnamemysql, testdatabasename).getawaiter().getresult();	}	catch (exception ex) {	
+failed to initialize mysql for relationalgeneraltests 
+
+========================= orleans sample_123 =========================
+
+jsondata = dotnetjsonserializer.serialize(datavalues);	});	idx[0] = 0;	timespan elapsed = testutils.timerun(numiterations, baseline, "newtonsoft json javascriptserializer", () => {	datavalues.clear();	datavalues.add("a", idx[0]++);	datavalues.add("b", idx[0]++);	datavalues.add("c", idx[0]++);	jsondata = newtonsoft.json.jsonconvert.serializeobject(datavalues);	});	
+elapsed date 
+
+========================= orleans sample_34 =========================
+
+assert.null(err);	}	catch (exception exc) {	output.writeline(exc);	error = exc;	}	try {	if (grain != null) await grain.stoptimer(testname);	}	catch (exception exc) {	
+ignoring exception from stoptimer 
+
+========================= orleans sample_344 =========================
+
+public async task runasync() {	
+cold run 
+
+public async task runasync() {	await fullrunasync();	
+warm run 
+
+private async task fullrunasync() {	report[] reports = await task.whenall(enumerable.range(0, 20).select(i => runasync(i, 5000, 300)));	report finalreport = new report();	foreach (report report in reports) {	finalreport.succeeded += report.succeeded;	finalreport.failed += report.failed;	finalreport.elapsed = timespan.frommilliseconds(math.max(finalreport.elapsed.totalmilliseconds, report.elapsed.totalmilliseconds));	}	
+finalreport succeeded transactions in finalreport elapsed totalmilliseconds ms 
+
+private async task fullrunasync() {	report[] reports = await task.whenall(enumerable.range(0, 20).select(i => runasync(i, 5000, 300)));	report finalreport = new report();	foreach (report report in reports) {	finalreport.succeeded += report.succeeded;	finalreport.failed += report.failed;	finalreport.elapsed = timespan.frommilliseconds(math.max(finalreport.elapsed.totalmilliseconds, report.elapsed.totalmilliseconds));	}	
+finalreport succeeded finalreport elapsed totalmilliseconds transactions per second 
+
+private async task fullrunasync() {	report[] reports = await task.whenall(enumerable.range(0, 20).select(i => runasync(i, 5000, 300)));	report finalreport = new report();	foreach (report report in reports) {	finalreport.succeeded += report.succeeded;	finalreport.failed += report.failed;	finalreport.elapsed = timespan.frommilliseconds(math.max(finalreport.elapsed.totalmilliseconds, report.elapsed.totalmilliseconds));	}	
+finalreport failed transactions failed 
+
+========================= orleans sample_315 =========================
+
+public async task bootstrapprovider_controllable() {	string controllername = controllablebootstrapprovidername;	string controllertype = typeof(controllablebootstrapprovider).fullname;	silohandle[] silos = hostedcluster.getactivesilos().toarray();	int numsilos = silos.length;	string args = "onesetofargs";	imanagementgrain mgmtgrain = grainfactory.getgrain<imanagementgrain>(0);	object[] replies = await mgmtgrain.sendcontrolcommandtoprovider(controllertype, controllername, (int) controllablebootstrapprovider.commands.echoarg, args);	
+got replies 
+
+string controllertype = typeof(controllablebootstrapprovider).fullname;	silohandle[] silos = hostedcluster.getactivesilos().toarray();	int numsilos = silos.length;	string args = "onesetofargs";	imanagementgrain mgmtgrain = grainfactory.getgrain<imanagementgrain>(0);	object[] replies = await mgmtgrain.sendcontrolcommandtoprovider(controllertype, controllername, (int) controllablebootstrapprovider.commands.echoarg, args);	assert.equal(numsilos, replies.length);	assert.true(replies.all(reply => reply.tostring().equals(args)), $"got args {args}");	args = "differentsetofargs";	replies = await mgmtgrain.sendcontrolcommandtoprovider(controllertype, controllername, (int) controllablebootstrapprovider.commands.echoarg, args);	
+got replies 
+
+========================= orleans sample_282 =========================
+
+static void main(string[] args) {	appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	
+orleans silo is running press enter to terminate 
+
+static void initsilo(string[] args) {	hostwrapper = new orleanshostwrapper(args);	if (!hostwrapper.run()) {	
+failed to initialize orleans silo 
+
+========================= orleans sample_888 =========================
+
+public async task dependenttransaction() {	long id1 = this.transactionmanager.starttransaction(timespan.fromticks(this.storagedelay.ticks * 2));	long id2 = this.transactionmanager.starttransaction(timespan.fromticks(this.storagedelay.ticks * 4));	var info = new transactioninfo(id1);	stopwatch sw = stopwatch.startnew();	this.transactionmanager.committransaction(info);	sw.stop();	
+transaction info took sw elapsedmilliseconds ms to commit 
+
+public async task dependenttransaction() {	long id1 = this.transactionmanager.starttransaction(timespan.fromticks(this.storagedelay.ticks * 2));	long id2 = this.transactionmanager.starttransaction(timespan.fromticks(this.storagedelay.ticks * 4));	var info = new transactioninfo(id1);	stopwatch sw = stopwatch.startnew();	this.transactionmanager.committransaction(info);	sw.stop();	sw = stopwatch.startnew();	await waitfortransactioncommit(id1, this.logmaintenanceinterval + this.storagedelay);	sw.stop();	
+transaction took sw elapsedmilliseconds ms to resolve 
+
+this.transactionmanager.committransaction(info);	sw.stop();	sw = stopwatch.startnew();	await waitfortransactioncommit(id1, this.logmaintenanceinterval + this.storagedelay);	sw.stop();	var info2 = new transactioninfo(id2);	info2.dependenttransactions.add(id1);	sw = stopwatch.startnew();	this.transactionmanager.committransaction(info2);	sw.stop();	
+transaction took sw elapsedmilliseconds ms to commit 
+
+await waitfortransactioncommit(id1, this.logmaintenanceinterval + this.storagedelay);	sw.stop();	var info2 = new transactioninfo(id2);	info2.dependenttransactions.add(id1);	sw = stopwatch.startnew();	this.transactionmanager.committransaction(info2);	sw.stop();	sw = stopwatch.startnew();	await waitfortransactioncommit(id2, this.logmaintenanceinterval + this.storagedelay);	sw.stop();	
+transaction took sw elapsedmilliseconds ms to resolve 
+
+========================= orleans sample_299 =========================
+
+private static async task startsilo() {	await silo.startasync();	
+silo started 
+
+private static async task stopsilo() {	await silo.stopasync();	
+silo stopped 
+
+========================= orleans sample_790 =========================
+
+static async task initializeorleans() {	var config = new clientconfiguration();	config.deploymentid = "orleans-docker";	config.propagateactivityid = true;	var hostentry = await dns.gethostentryasync("orleans-silo");	var ip = hostentry.addresslist[0];	config.gateways.add(new ipendpoint(ip, 10400));	
+initializing 
+
+static async task initializeorleans() {	var config = new clientconfiguration();	config.deploymentid = "orleans-docker";	config.propagateactivityid = true;	var hostentry = await dns.gethostentryasync("orleans-silo");	var ip = hostentry.addresslist[0];	config.gateways.add(new ipendpoint(ip, 10400));	client = new clientbuilder().useconfiguration(config).build();	await client.connect();	running = true;	
+initialized 
+
+config.propagateactivityid = true;	var hostentry = await dns.gethostentryasync("orleans-silo");	var ip = hostentry.addresslist[0];	config.gateways.add(new ipendpoint(ip, 10400));	client = new clientbuilder().useconfiguration(config).build();	await client.connect();	running = true;	var grain = client.getgrain<igreetinggrain>(guid.newguid());	while(running) {	var response = await grain.sayhello("gutemberg");	
+datetime utcnow response 
+
+========================= orleans sample_780 =========================
+
+static int main(string[] args) {	var config = clientconfiguration.localhostsilo();	try {	initializewithretries(config, initializeattemptsbeforefailing: 5);	}	catch (exception ex) {	
+orleans client initialization failed failed due to ex 
+
+static int main(string[] args) {	var config = clientconfiguration.localhostsilo();	try {	initializewithretries(config, initializeattemptsbeforefailing: 5);	}	catch (exception ex) {	console.readline();	return 1;	}	doclientwork().wait();	
+press enter to terminate 
+
+private static void initializewithretries(clientconfiguration config, int initializeattemptsbeforefailing) {	int attempt = 0;	while (true) {	try {	grainclient.initialize(config);	
+client successfully connect to silo host 
+
+private static void initializewithretries(clientconfiguration config, int initializeattemptsbeforefailing) {	int attempt = 0;	while (true) {	try {	grainclient.initialize(config);	break;	}	catch (silounavailableexception) {	attempt++;	
+attempt attempt of initializeattemptsbeforefailing failed to initialize the orleans client 
+
+========================= orleans sample_753 =========================
+
+static async task<iclusterclient> runwatcher() {	try {	var config = clientconfiguration.localhostsilo();	var client = new clientbuilder().useconfiguration(config).build();	await client.connect();	guid playerid = new guid("{2349992c-860a-4eda-9590-000000000006}");	iplayergrain player = client.getgrain<iplayergrain>(playerid);	igamegrain game = null;	while (game == null) {	
+getting current game for player 
+
+iplayergrain player = client.getgrain<iplayergrain>(playerid);	igamegrain game = null;	while (game == null) {	try {	game = await player.getcurrentgame();	if (game == null) {	await task.delay(5000);	}	}	catch (exception exc) {	
+exception 
+
+while (game == null) {	try {	game = await player.getcurrentgame();	if (game == null) {	await task.delay(5000);	}	}	catch (exception exc) {	}	}	
+subscribing to updates for game 
+
+game = await player.getcurrentgame();	if (game == null) {	await task.delay(5000);	}	}	catch (exception exc) {	}	}	var watcher = new gameobserver();	await game.subscribeforgameupdates( await client.createobjectreference<igameobserver>(watcher));	
+subscribed successfully press enter to stop 
+
+}	}	catch (exception exc) {	}	}	var watcher = new gameobserver();	await game.subscribeforgameupdates( await client.createobjectreference<igameobserver>(watcher));	return client;	}	catch (exception exc) {	
+unexpected error 
+
+public void updategamescore(string score) {	
+new game score 
+
+========================= orleans sample_941 =========================
+
+static void main(string[] args) {	appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	
+orleans silo is running press enter to terminate 
+
+static void initsilo(string[] args) {	hostwrapper = new orleanshostwrapper(args);	if (!hostwrapper.run()) {	
+failed to initialize orleans silo 
+
+========================= orleans sample_897 =========================
+
+public bool run() {	bool ok = false;	try {	silohost.initializeorleanssilo();	ok = silohost.startorleanssilo();	if (ok) {	
+successfully started orleans silo as a node 
+
+public bool stop() {	bool ok = false;	try {	silohost.stoporleanssilo();	
+orleans silo shutdown 
+
+private bool parsearguments(string[] args) {	string deploymentid = null;	string configfilename = null;	string siloname = dns.gethostname();	int argpos = 1;	for (int i = 0; i < args.length; i++) {	string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	
+bad command line arguments supplied 
+
+string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	return false;	}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	
+bad command line arguments supplied 
+
+}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	
+deploymentgroup ignoring deprecated command line argument 
+
+}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	break;	
+bad command line arguments supplied 
+
+}	else if (argpos == 1) {	siloname = a;	argpos++;	}	else if (argpos == 2) {	configfilename = a;	argpos++;	}	else {	
+too many command line arguments supplied 
+
+========================= orleans sample_887 =========================
+
+public void azuretabledatamanagerstresstests_readall_singlepartition() {	const string testname = "azuretabledatamanagerstresstests_readall";	const int iterations = 1000;	writealot_async(testname, 1, iterations, iterations);	stopwatch sw = stopwatch.startnew();	var data = manager.readalltableentriesforpartitionasync(partitionkey) .waitforresultwiththrow(azuretabledefaultpolicies.tablecreationtimeout).select(tuple => tuple.item1);	sw.stop();	int count = data.count();	
+azuretable readall completed readall entries in at rps 
+
+public void azuretabledatamanagerstresstests_readalltableentities() {	const string testname = "azuretabledatamanagerstresstests_readalltableentities";	const int iterations = 2000;	writealot_async(testname, 3, iterations, iterations);	stopwatch sw = stopwatch.startnew();	var data = manager.readalltableentriesasync() .waitforresultwiththrow(azuretabledefaultpolicies.tablecreationtimeout).select(tuple => tuple.item1);	sw.stop();	int count = data.count();	
+azuretable readalltableentities completed readall entries in at rps 
+
+const int iterations = 2000;	writealot_async(testname, 3, iterations, iterations);	stopwatch sw = stopwatch.startnew();	var data = manager.readalltableentriesasync() .waitforresultwiththrow(azuretabledefaultpolicies.tablecreationtimeout).select(tuple => tuple.item1);	sw.stop();	int count = data.count();	assert.true(count >= iterations, $"readallshould return some data: found={count}");	sw = stopwatch.startnew();	manager.cleartableasync().waitwiththrow(azuretabledefaultpolicies.tablecreationtimeout);	sw.stop();	
+azuretable readalltableentities clear cleared table of entries in at rps 
+
+string rowkey = i.tostring(cultureinfo.invariantculture);	unittestazuretabledata dataobject = new unittestazuretabledata();	dataobject.partitionkey = partitionkey;	dataobject.rowkey = rowkey;	dataobject.stringdata = rowkey;	var promise = manager.upserttableentryasync(dataobject);	promises.add(promise);	if ((i % batchsize) == 0 && i > 0) {	task.whenall(promises).waitwiththrow(azuretabledefaultpolicies.tablecreationtimeout);	promises.clear();	
+has written rows in at rps 
+
+dataobject.stringdata = rowkey;	var promise = manager.upserttableentryasync(dataobject);	promises.add(promise);	if ((i % batchsize) == 0 && i > 0) {	task.whenall(promises).waitwiththrow(azuretabledefaultpolicies.tablecreationtimeout);	promises.clear();	}	}	task.whenall(promises).waitwiththrow(azuretabledefaultpolicies.tablecreationtimeout);	sw.stop();	
+completed wrote entries to partition s in at rps 
+
+========================= orleans sample_2 =========================
+
+public override bool onstart() {	
+orleansazuresilos onstart called information 
+
+public override bool onstart() {	
+orleansazuresilos onstart initializing config information 
+
+public override void run() {	
+orleansazuresilos run entry point called information 
+
+public override void run() {	
+orleansazuresilos run starting orleans silo information 
+
+public override void onstop() {	
+orleansazuresilos onstop called information 
+
+public override void onstop() {	if (orleansazuresilo != null) {	orleansazuresilo.stop();	}	roleenvironment.changing -= roleenvironmentchanging;	base.onstop();	
+orleansazuresilos onstop finished information 
+
+========================= orleans sample_951 =========================
+
+static void main(string[] args) {	appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	
+orleans silo is running press enter to terminate 
+
+static void initsilo(string[] args) {	hostwrapper = new orleanshostwrapper(args);	if (!hostwrapper.run()) {	
+failed to initialize orleans silo 
+
+========================= orleans sample_834 =========================
+
+public workerrole() {	
+orleansazuresilos constructor called 
+
+public override bool onstart() {	
+orleansazuresilos onstart called information 
+
+public override bool onstart() {	
+orleansazuresilos onstart initializing config information 
+
+public override void run() {	
+orleansazuresilos run entry point called information 
+
+public override void run() {	
+orleansazuresilos onstart starting orleans silo information 
+
+public override void onstop() {	
+orleansazuresilos onstop called information 
+
+public override void onstop() {	if (this.orleansazuresilo != null) {	this.orleansazuresilo.stop();	}	roleenvironment.changing -= roleenvironmentchanging;	base.onstop();	
+orleansazuresilos onstop finished information 
+
+========================= orleans sample_865 =========================
+
+public bool run() {	bool ok = false;	try {	silohost.initializeorleanssilo();	ok = silohost.startorleanssilo();	if (ok) {	
+successfully started orleans silo as a node 
+
+public bool stop() {	bool ok = false;	try {	silohost.stoporleanssilo();	
+orleans silo shutdown 
+
+private bool parsearguments(string[] args) {	string deploymentid = null;	string siloname = dns.gethostname();	int argpos = 1;	for (int i = 0; i < args.length; i++) {	string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	
+bad command line arguments supplied 
+
+string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	return false;	}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	
+bad command line arguments supplied 
+
+}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	
+bad command line arguments supplied 
+
+case "deploymentid": deploymentid = split[1];	break;	return false;	}	}	else if (argpos == 1) {	siloname = a;	argpos++;	}	else {	
+too many command line arguments supplied 
+
+========================= orleans sample_896 =========================
+
+public bool run() {	bool ok = false;	try {	silohost.initializeorleanssilo();	ok = silohost.startorleanssilo();	if (ok) {	
+successfully started orleans silo as a node 
+
+public bool stop() {	bool ok = false;	try {	silohost.stoporleanssilo();	
+orleans silo shutdown 
+
+private bool parsearguments(string[] args) {	string deploymentid = null;	string siloname = dns.gethostname();	int argpos = 1;	for (int i = 0; i < args.length; i++) {	string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	
+bad command line arguments supplied 
+
+string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	return false;	}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	
+bad command line arguments supplied 
+
+}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	
+bad command line arguments supplied 
+
+case "deploymentid": deploymentid = split[1];	break;	return false;	}	}	else if (argpos == 1) {	siloname = a;	argpos++;	}	else {	
+too many command line arguments supplied 
+
+========================= orleans sample_785 =========================
+
+public int run() {	this.perfcounters = new chirperperformancecounters(this.graphdatafile.fullname);	perfcounters.chirpspersecond.rawvalue = 0;	pipeline = new asyncpipeline(pipelinelength);	loader = new chirpernetworkloader(pipeline);	
+loading chirper network data file 
+
+simulateduser u = new simulateduser(user);	u.shouldrechirprate = this.shouldrechirprate;	u.chirppublishtimebase = this.chirppublishtimebase;	u.chirppublishtimerandom = this.chirppublishtimerandom;	u.verbose = this.verbose;	lock (activeusers) {	activeusers.add(u);	}	u.start();	});	
+starting sending chirps 
+
+}	u.start();	});	random rand = new random();	int count = 0;	stopwatch stopwatch = stopwatch.startnew();	do {	int i = rand.next(activeusers.count);	simulateduser u = activeusers[i];	if (u == null) {	
+user not found 
+
+do {	int i = rand.next(activeusers.count);	simulateduser u = activeusers[i];	if (u == null) {	return -1;	}	string msg = fortune.getfortune();	pipeline.add(u.publishmessage(msg));	count++;	if (count % 10000 == 0) {	
+sec in ms pipeline contains items 
+
+case "pipeline": this.pipelinelength = int32.parse(args[++i]);	break;	case "?": case "help": default: ok = false;	break;	}	}	else if (argpos == 1) {	this.graphdatafile = new fileinfo(a);	argpos++;	if (!graphdatafile.exists) {	
+cannot find data file 
+
+}	}	else if (argpos == 1) {	this.graphdatafile = new fileinfo(a);	argpos++;	if (!graphdatafile.exists) {	ok = false;	}	}	else {	
+too many command line arguments supplied 
+
+argpos++;	if (!graphdatafile.exists) {	ok = false;	}	}	else {	return false;	}	}	if (graphdatafile == null) {	
+no graph data file supplied driver cannot run 
+
+public void printusage() {	using (stringwriter usagestr = new stringwriter()) {	
+exe options file 
+
+public void printusage() {	using (stringwriter usagestr = new stringwriter()) {	
+where 
+
+========================= orleans sample_901 =========================
+
+public void dynamodbdatamanagerstresstests_readall_singlepartition() {	const string testname = "dynamodbdatamanagerstresstests_readall";	const int iterations = 1000;	writealot_async(testname, 1, iterations, iterations);	stopwatch sw = stopwatch.startnew();	var keys = new dictionary<string, attributevalue> { { ":pk", new attributevalue(partitionkey) } };	var data = manager.queryasync(unittestdynamodbstorage.instance_table_name, keys, $"partitionkey = :pk", item => new unittestdynamodbtabledata(item)).result;	sw.stop();	int count = data.results.count();	
+dynamodbdatamanagerstresstests readall completed readall entries in at rps 
+
+string rowkey = i.tostring(cultureinfo.invariantculture);	unittestdynamodbtabledata dataobject = new unittestdynamodbtabledata();	dataobject.partitionkey = partitionkey;	dataobject.rowkey = rowkey;	dataobject.stringdata = rowkey;	var promise = manager.upsertentryasync(unittestdynamodbstorage.instance_table_name, dynamodbstoragetests.getkeys(dataobject), dynamodbstoragetests.getvalues(dataobject));	promises.add(promise);	if ((i % batchsize) == 0 && i > 0) {	task.whenall(promises);	promises.clear();	
+has written rows in at rps 
+
+dataobject.stringdata = rowkey;	var promise = manager.upsertentryasync(unittestdynamodbstorage.instance_table_name, dynamodbstoragetests.getkeys(dataobject), dynamodbstoragetests.getvalues(dataobject));	promises.add(promise);	if ((i % batchsize) == 0 && i > 0) {	task.whenall(promises);	promises.clear();	}	}	task.whenall(promises);	sw.stop();	
+completed wrote entries to partition s in at rps 
+
+========================= orleans sample_178 =========================
+
+}	else if (arg.startswith("/out:")) {	var outfile = arg.substring(arg.indexof(':') + 1);	assertwellformed(outfile);	options.outputfilename = outfile;	}	else if (arg.startswith("/loglevel:")) {	var levelstring = arg.substring(arg.indexof(':') + 1);	if (!enum.tryparse(ignorecase: true, value: levelstring, result: out loglevel level)) {	var validvalues = string.join(", ", enum.getnames(typeof(loglevel)).select(v => v.tostring()));	
+error is not a valid log level valid values are validvalues 
+
+else if (arg.startswith("/loglevel:")) {	var levelstring = arg.substring(arg.indexof(':') + 1);	if (!enum.tryparse(ignorecase: true, value: levelstring, result: out loglevel level)) {	var validvalues = string.join(", ", enum.getnames(typeof(loglevel)).select(v => v.tostring()));	return 1;	}	options.loglevel = level;	}	}	else {	
+invalid argument arg 
+
+}	options.loglevel = level;	}	}	else {	printusage();	return 1;	}	}	if (options.inputassembly == null) {	
+error orleans codegen no input file specified 
+
+}	else {	printusage();	return 1;	}	}	if (options.inputassembly == null) {	return 2;	}	if (string.isnullorempty(options.outputfilename)) {	
+error orleans codegen no output filename specified 
+
+console.writeline($"orleans-codegen - options {environment.newline}\tinputlib={options.inputassembly.fullname}{environment.newline}\toutputfilename={options.outputfilename}");	bool referencesorleans = options.inputassembly.name.equals(codegenerator.orleansassemblyfilename);	foreach (string assembly in options.referencedassemblies) {	var filename = path.getfilename(assembly);	console.writeline("\t{0} => {1}", filename, assembly);	if (filename != null && filename.equals(codegenerator.orleansassemblyfilename)) referencesorleans = true;	}	var stopwatch = stopwatch.startnew();	if (referencesorleans) {	if (!codegenerator.generatecode(options)) {	
+warning orleans codegen the input assembly contained no types which required code generation 
+
+var filename = path.getfilename(assembly);	console.writeline("\t{0} => {1}", filename, assembly);	if (filename != null && filename.equals(codegenerator.orleansassemblyfilename)) referencesorleans = true;	}	var stopwatch = stopwatch.startnew();	if (referencesorleans) {	if (!codegenerator.generatecode(options)) {	}	}	else {	
+error orleans codegen the input assembly does not reference orleans and therefore code can not be generated 
+
+}	var stopwatch = stopwatch.startnew();	if (referencesorleans) {	if (!codegenerator.generatecode(options)) {	}	}	else {	return -2;	}	stopwatch.stop();	
+build time code generation for assembly options inputassembly took stopwatch elapsedmilliseconds milliseconds 
+
+if (!codegenerator.generatecode(options)) {	}	}	else {	return -2;	}	stopwatch.stop();	return 0;	}	catch (exception ex) {	
+code generation failed 
+
+private static void printusage() {	
+usage in grain assembly filename out filename for output file r reference assemblies 
+
+private static void printusage() {	
+arguments filename arguments will be read and processed from this file 
+
+private static void printusage() {	console.writeline();	
+example in mygrain dll out c orleanssample mygrain obj debug mygrain orleans g cs r orleans dll myinterfaces bin debug myinterfaces dll 
+
+private static void checkpath(string path, func<string, bool> condition, string what) {	if (condition(path)) return;	var errmsg = string.format("bad path {0} reason = {1}", path, what);	
+codegen error 
+
+========================= orleans sample_2038 =========================
+
+try {	var config = clientconfiguration.localhostsilo();	grainclient.initialize(config);	ichirperaccount account = grainclient.grainfactory.getgrain<ichirperaccount>(userid);	publisher = account;	list<chirpermessage> chirps = await account.getreceivedmessages(10);	foreach (chirpermessage c in chirps) {	this.newchirparrived(c);	}	if (snapshot) {	
+press any key to exit 
+
+publisher = account;	list<chirpermessage> chirps = await account.getreceivedmessages(10);	foreach (chirpermessage c in chirps) {	this.newchirparrived(c);	}	if (snapshot) {	console.readkey();	}	else {	viewer = await grainclient.grainfactory.createobjectreference<ichirperviewer>(this);	
+listening for new chirps 
+
+break;	}	}	else if (argpos == 0) {	long id = 0;	ok = !string.isnullorwhitespace(a) && long.tryparse(a, out id);	this.userid = id;	argpos++;	}	else {	
+error unknown command line argument 
+
+public void printusage() {	
+exe snapshot user id 
+
+========================= orleans sample_921 =========================
+
+public bool run() {	bool ok = false;	try {	silohost.initializeorleanssilo();	ok = silohost.startorleanssilo();	if (ok) {	
+successfully started orleans silo as a node 
+
+public bool stop() {	bool ok = false;	try {	silohost.stoporleanssilo();	
+orleans silo shutdown 
+
+private bool parsearguments(string[] args) {	string deploymentid = null;	string siloname = dns.gethostname();	int argpos = 1;	for (int i = 0; i < args.length; i++) {	string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	
+bad command line arguments supplied 
+
+string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	return false;	}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	
+bad command line arguments supplied 
+
+}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	
+bad command line arguments supplied 
+
+case "deploymentid": deploymentid = split[1];	break;	return false;	}	}	else if (argpos == 1) {	siloname = a;	argpos++;	}	else {	
+too many command line arguments supplied 
+
+========================= orleans sample_855 =========================
+
+static int main(string[] args) {	int exitcode = startsilo(args);	
+press enter to terminate 
+
+========================= orleans sample_756 =========================
+
+public siloinstancetablemanagertests(itestoutputhelper output, fixture fixture) {	testutils.checkforazurestorage();	this.output = output;	this.clusterid = "test-" + guid.newguid();	generation = siloaddress.allocatenewgeneration();	siloaddress = siloaddressutils.newlocalsiloaddress(generation);	output.writeline("clusterid={0} generation={1}", this.clusterid, generation);	
+initializing siloinstancemanager 
+
+public void dispose() {	if(manager != null && siloinstancetabletestconstants.deleteentriesaftertest) {	timespan timeout = siloinstancetabletestconstants.timeout;	output.writeline("testcleanup timeout={0}", timeout);	manager.deletetableentries(this.clusterid).waitwiththrow(timeout);	
+testcleanup finished 
+
+public async task siloinstancetable_register_checkdata() {	const string testname = "siloinstancetable_register_checkdata";	
+start 
+
+public async task siloinstancetable_register_checkdata() {	const string testname = "siloinstancetable_register_checkdata";	registersiloinstance();	var data = await findsiloentry(siloaddress);	siloinstancetableentry siloentry = data.item1;	string etag = data.item2;	assert.notnull(etag);	assert.notnull(siloentry);	assert.equal(siloinstancetabletestconstants.instance_status_created, siloentry.status);	checksiloinstancetableentry(myentry, siloentry);	
+end 
+
+========================= orleans sample_7 =========================
+
+static int main(string [] args) {	var path = path.getdirectoryname(assembly.getexecutingassembly().location);	string mapfilename = path.combine (path, "adventuremap.json");	switch (args.length) {	
+invalid command line arguments 
+
+static int main(string [] args) {	var path = path.getdirectoryname(assembly.getexecutingassembly().location);	string mapfilename = path.combine (path, "adventuremap.json");	switch (args.length) {	return -1;	case 0: break;	case 1: mapfilename = args[0];	break;	}	if (!file.exists(mapfilename)) {	
+file not found 
+
+static async task runasync(isilohost silo, iclusterclient client, string mapfilename) {	await silo.startasync();	await client.connect();	
+map file name is 
+
+static async task runasync(isilohost silo, iclusterclient client, string mapfilename) {	await silo.startasync();	await client.connect();	
+setting up adventure please wait 
+
+static async task runasync(isilohost silo, iclusterclient client, string mapfilename) {	await silo.startasync();	await client.connect();	adventure adventure = new adventure(client);	adventure.configure(mapfilename).wait();	
+adventure setup completed 
+
+========================= orleans sample_717 =========================
+
+public int run() {	if (silohost == null) {	return 1;	}	try {	silohost.initializeorleanssilo();	if (silohost.startorleanssilo()) {	
+successfully started orleans silo silohost name as a silohost type node 
+
+public int stop() {	if (silohost != null) {	try {	silohost.stoporleanssilo();	silohost.dispose();	
+orleans silo silohost name shutdown 
+
+========================= orleans sample_781 =========================
+
+const int initializeattemptsbeforefailing = 5;	int attempt = 0;	while (true) {	try {	if (roleenvironment.isavailable) {	azureclient.initialize(azureclient.defaultconfiguration());	}	else {	grainclient.initialize(clientconfiguration.localhostsilo());	}	
+client successfully connect to silo host 
+
+========================= orleans sample_882 =========================
+
+public override bool onstart() {	
+orleansazureweb onstart 
+
+public override void onstop() {	
+orleansazureweb onstop 
+
+public override void run() {	
+orleansazureweb run 
+
+public override void run() {	try {	base.run();	}	catch (exception exc) {	
+run failed with 
+
+========================= orleans sample_871 =========================
+
+for (var i = 0; i < workercount; ++i) workers[i] = task.run(workerfunc);	task.run(monitorfunc).ignore();	await task.whenall(workers);	pipeline.wait();	stopwatch.stop();	assert.equal(expectedtaskscompleted, taskscompleted);	var targettimesec = expectedtaskscompleted * delaylength.totalseconds / pipelinecapacity;	var mintimesec = (1.0 - variance) * targettimesec;	var maxtimesec = (1.0 + variance) * targettimesec;	var actualsec = stopwatch.elapsed.totalseconds;	
+test finished in sec of target time sec permitted variance is 
+
+========================= orleans sample_209 =========================
+
+static void main(string[] args) {	appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup() {	appdomaininitializer = initsilo });	dosomeclientwork();	
+orleans silo is running press enter to terminate 
+
+========================= orleans sample_943 =========================
+
+static void main(string[] args) {	#if use_inproc_silo appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	#endif var config = clientconfiguration.localhostsilo();	grainclient.initialize(config);	var friend = grainclient.grainfactory.getgrain<ihello>(0);	
+good morning my friend 
+
+static void main(string[] args) {	#if use_inproc_silo appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	#endif var config = clientconfiguration.localhostsilo();	grainclient.initialize(config);	var friend = grainclient.grainfactory.getgrain<ihello>(0);	
+orleans silo is running press enter to terminate 
+
+static void initsilo(string[] args) {	hostwrapper = new orleanshostwrapper(args);	if (!hostwrapper.run()) {	
+failed to initialize orleans silo 
+
+========================= orleans sample_751 =========================
+
+public workerrole() {	
+orleansazuresilos constructor called 
+
+public override bool onstart() {	
+orleansazuresilos onstart called information 
+
+public override bool onstart() {	
+orleansazuresilos onstart initializing config information 
+
+public override void run() {	
+orleansazuresilos run entry point called information 
+
+public override void run() {	
+orleansazuresilos onstart starting orleans silo information 
+
+public override void onstop() {	
+orleansazuresilos onstop called information 
+
+public override void onstop() {	if (orleansazuresilo != null) {	orleansazuresilo.stop();	}	roleenvironment.changing -= roleenvironmentchanging;	base.onstop();	
+orleansazuresilos onstop finished information 
+
+========================= orleans sample_984 =========================
+
+public bool run() {	bool ok = false;	try {	silohost.initializeorleanssilo();	ok = silohost.startorleanssilo();	if (ok) {	
+successfully started orleans silo as a node 
+
+public bool stop() {	bool ok = false;	try {	silohost.stoporleanssilo();	
+orleans silo shutdown 
+
+private bool parsearguments(string[] args) {	string deploymentid = null;	string siloname = dns.gethostname();	int argpos = 1;	for (int i = 0; i < args.length; i++) {	string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	
+bad command line arguments supplied 
+
+string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	return false;	}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	
+bad command line arguments supplied 
+
+}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	
+bad command line arguments supplied 
+
+case "deploymentid": deploymentid = split[1];	break;	return false;	}	}	else if (argpos == 1) {	siloname = a;	argpos++;	}	else {	
+too many command line arguments supplied 
+
+========================= orleans sample_926 =========================
+
+static void main(string[] args) {	#if use_inproc_silo appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	#endif var config = clientconfiguration.localhostsilo();	grainclient.initialize(config);	var friend = grainclient.grainfactory.getgrain<ihello>(0);	
+good morning 
+
+static void main(string[] args) {	#if use_inproc_silo appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	#endif var config = clientconfiguration.localhostsilo();	grainclient.initialize(config);	var friend = grainclient.grainfactory.getgrain<ihello>(0);	
+orleans silo is running press enter to terminate 
+
+static void initsilo(string[] args) {	hostwrapper = new orleanshostwrapper(args);	if (!hostwrapper.run()) {	
+failed to initialize orleans silo 
+
+========================= orleans sample_786 =========================
+
+public chirperperformancecounters(string instancename) {	chirpspersecond = new chirperperformancecounterlong(null);	if (performancecountercategory.exists(categoryname)) {	try {	chirpspersecond = new chirperperformancecounterlong(new performancecounter(categoryname, chirpspersecondname, instancename, false));	}	catch {	
+failed to initialize performance counters 
+
+public chirperperformancecounters(string instancename) {	chirpspersecond = new chirperperformancecounterlong(null);	if (performancecountercategory.exists(categoryname)) {	try {	chirpspersecond = new chirperperformancecounterlong(new performancecounter(categoryname, chirpspersecondname, instancename, false));	}	catch {	}	}	else {	
+performance counter category not found make sure the category and the counters are registered properly 
+
+========================= orleans sample_902 =========================
+
+private static async task doclientwork(iclusterclient client) {	iatmgrain atm = client.getgrain<iatmgrain>(0);	guid from = guid.newguid();	guid to = guid.newguid();	await atm.transfer(from, to, 100);	uint frombalance = await client.getgrain<iaccountgrain>(from).getbalance();	uint tobalance = await client.getgrain<iaccountgrain>(to).getbalance();	
+we transfered credits from from to to from balance frombalance to balance tobalance 
+
+========================= orleans sample_710 =========================
+
+protected override void run() {	
+agent running in thread 
+
+protected override void run() {	cts.token.waithandle.waitone();	
+agent stopping in thread 
+
+========================= orleans sample_219 =========================
+
+private void trace(string format, params object[] args) {	if (trace == null) {	var path = string.format("d:\\trace-{0}.{1}.{2}.txt", datetime.utcnow.hour, datetime.utcnow.minute, datetime.utcnow.ticks);	
+opening trace file at 
+
+private void trace(string format, params object[] args) {	if (trace == null) {	var path = string.format("d:\\trace-{0}.{1}.{2}.txt", datetime.utcnow.hour, datetime.utcnow.minute, datetime.utcnow.ticks);	trace = file.createtext(path);	}	trace.write(format, args);	
+at offset 
+
+========================= orleans sample_1699 =========================
+
+private void writelogmessagetologconsumers(int errorcode, severity sev, string message, exception exception) {	foreach (ilogconsumer consumer in this.logconsumers) {	try {	consumer.log(sev, this.loggertype, this.name, message, this.ipendpoint, exception, errorcode);	}	catch (exception exc) {	
+exception while passing a log message to log consumer logconsumer type logger name severity message error code message exception log consumer exception 
+
+========================= orleans sample_1508 =========================
+
+public void printusage() {	using (var usagestr = new stringwriter()) {	
+exe command 
+
+public void printusage() {	using (var usagestr = new stringwriter()) {	
+where commands are 
+
+========================= orleans sample_1468 =========================
+
+public bool run() {	bool ok = false;	try {	silohost.initializeorleanssilo();	ok = silohost.startorleanssilo();	if (ok) {	
+successfully started orleans silo as a node 
+
+public bool stop() {	bool ok = false;	try {	silohost.stoporleanssilo();	
+orleans silo shutdown 
+
+private bool parsearguments(string[] args) {	string deploymentid = null;	string siloname = dns.gethostname();	int argpos = 1;	for (int i = 0; i < args.length; i++) {	string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	
+bad command line arguments supplied 
+
+string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	return false;	}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	
+bad command line arguments supplied 
+
+}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	
+bad command line arguments supplied 
+
+case "deploymentid": deploymentid = split[1];	break;	return false;	}	}	else if (argpos == 1) {	siloname = a;	argpos++;	}	else {	
+too many command line arguments supplied 
+
+========================= orleans sample_833 =========================
+
+string line = console.readline();	while ( line != null && line.tolower().trim() != "quit") {	client.publishmessage(line).wait();	console.write("enter a comment: ");	line = console.readline();	}	environment.exit(0);	}	run.wait();	if (run.isfaulted) {	
+error running client program 
+
+environment.exit(0);	}	run.wait();	if (run.isfaulted) {	}	else {	ok = run.result;	}	}	catch (exception exc) {	
+error running client program 
+
+========================= orleans sample_922 =========================
+
+public async task grain_grainstorage_silorestart() {	var initialserviceid = fixture.getclientserviceid();	output.writeline("clusterid={0} serviceid={1}", this.hostedcluster.options.clusterid, initialserviceid);	guid id = guid.newguid();	igrainstoragetestgrain grain = this.grainfactory.getgrain<igrainstoragetestgrain>(id);	int val = await grain.getvalue();	assert.equal(0, val);	await grain.dowrite(1);	var serviceid = await this.grainfactory.getgrain<iserviceidgrain>(guid.empty).getserviceid();	assert.equal(initialserviceid, serviceid);	
+about to reset silos 
+
+igrainstoragetestgrain grain = this.grainfactory.getgrain<igrainstoragetestgrain>(id);	int val = await grain.getvalue();	assert.equal(0, val);	await grain.dowrite(1);	var serviceid = await this.grainfactory.getgrain<iserviceidgrain>(guid.empty).getserviceid();	assert.equal(initialserviceid, serviceid);	foreach (var silo in this.hostedcluster.getactivesilos().tolist()) {	this.hostedcluster.restartsilo(silo);	}	this.hostedcluster.initializeclient();	
+silos restarted 
+
+========================= orleans sample_78 =========================
+
+static void main(string[] args) {	appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	var config = clientconfiguration.localhostsilo();	grainclient.initialize(config);	var grain = grainclient.grainfactory.getgrain<iperson>(0);	var name = grain.getfirstname().result;	if ( name != null) {	
+this was found in the persistent store 
+
+appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	var config = clientconfiguration.localhostsilo();	grainclient.initialize(config);	var grain = grainclient.grainfactory.getgrain<iperson>(0);	var name = grain.getfirstname().result;	if ( name != null) {	}	else {	grain.setpersonalattributes(new personalattributes { firstname = "john", lastname = "doe", gender = gendertype.male }).wait();	
+we just wrote something to the persistent store please verify 
+
+appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	var config = clientconfiguration.localhostsilo();	grainclient.initialize(config);	var grain = grainclient.grainfactory.getgrain<iperson>(0);	var name = grain.getfirstname().result;	if ( name != null) {	}	else {	grain.setpersonalattributes(new personalattributes { firstname = "john", lastname = "doe", gender = gendertype.male }).wait();	}	
+orleans silo is running press enter to terminate 
+
+static void initsilo(string[] args) {	hostwrapper = new orleanshostwrapper(args);	if (!hostwrapper.run()) {	
+failed to initialize orleans silo 
+
+========================= orleans sample_856 =========================
+
+public int run() {	if (silohost == null) {	siloargs.printusage();	return 1;	}	try {	silohost.initializeorleanssilo();	if (silohost.startorleanssilo()) {	
+successfully started orleans silo silohost name as a silohost type node 
+
+public int stop() {	if (silohost != null) {	try {	silohost.stoporleanssilo();	silohost.dispose();	
+orleans silo silohost name shutdown 
+
+public static siloargs parsearguments(string[] args) {	string deploymentid = null;	string siloname = null;	for (int i = 0; i < args.length; i++) {	string arg = args[i];	if (arg.startswith("-") || arg.startswith("/")) {	switch (arg.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return null;	
+bad command line arguments supplied arg 
+
+string arg = args[i];	if (arg.startswith("-") || arg.startswith("/")) {	switch (arg.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return null;	return null;	}	}	else if (arg.contains("=")) {	string[] parameters = arg.split('=');	if (string.isnullorempty(parameters[1])) {	
+bad command line arguments supplied arg 
+
+else if (arg.contains("=")) {	string[] parameters = arg.split('=');	if (string.isnullorempty(parameters[1])) {	return null;	}	switch (parameters[0].tolowerinvariant()) {	case "deploymentid": deploymentid = parameters[1];	break;	case "name": siloname = parameters[1];	break;	
+bad command line arguments supplied arg 
+
+}	switch (parameters[0].tolowerinvariant()) {	case "deploymentid": deploymentid = parameters[1];	break;	case "name": siloname = parameters[1];	break;	return null;	}	}	else {	
+bad command line arguments supplied arg 
+
+========================= orleans sample_755 =========================
+
+options.serviceid = servicename.tostring();	options.clusterid = "development";	});	builder.useazurestorageclustering(options => options.connectionstring = "usedevelopmentstorage=true");	builder.configureapplicationparts(parts => parts.addapplicationpart(typeof(icalculatorgrain).assembly));	builder.configurelogging(logging => logging.adddebug());	var client = builder.build();	await client.connect();	double result;	if (args.length < 1) {	
+usage assembly getexecutingassembly operation operand operations get set add subtract multiple divide 
+
+case "multiply": case "*": result = await calculator.multiply(value);	break;	case "divide": case "/": result = await calculator.divide(value);	break;	case "set": result = await calculator.set(value);	break;	case "get": default: result = await calculator.get();	break;	}	console.writeline(result);	
+listening for updates to calculations press any key to exit 
+
+private static async task staysubscribed(icalculatorgrain grain, icalculatorobserver observer, cancellationtoken token) {	while (!token.iscancellationrequested) {	try {	await task.delay(timespan.fromseconds(5), token);	await grain.subscribe(observer);	}	catch (exception exception) {	
+exception while trying to subscribe for updates exception 
+
+public void calculationupdated(double value) {	
+calculation updated value 
+
+total += await grains[i % grains.count].add(total);	success++;	}	catch {	fail++;	}	if (console.keyavailable) {	var key = console.readkey(true);	if (key.key == consolekey.enter || key.key == consolekey.escape || key.key == consolekey.c && (key.modifiers & consolemodifiers.control) != 0) run = false;	if (key.key == consolekey.b) grains = null;	
+successes success failures fail elapsed stopwatch elapsed 
+
+========================= orleans sample_745 =========================
+
+public task joingame(igamegrain game) {	currentgame = game;	
+player joined game 
+
+public task leavegame(igamegrain game) {	currentgame = null;	
+player left game 
+
+========================= orleans sample_932 =========================
+
+public override bool onstart() {	
+orleansazureweb onstart 
+
+public override void onstop() {	
+orleansazureweb onstop 
+
+public override void run() {	
+orleansazureweb run 
+
+public override void run() {	try {	base.run();	}	catch (exception exc) {	
+run failed with 
+
+========================= orleans sample_990 =========================
+
+static int main(string[] args) {	int exitcode = initializeorleans();	
+press enter to terminate 
+
+========================= orleans sample_782 =========================
+
+await this.transactionagent.value.commit(transactioninfo);	transactioncontext.clear();	}	if (message.direction == message.directions.oneway) return;	safesendresponse(message, resultobject);	}	catch (exception exc2) {	logger.warn(errorcode.runtime_error_100329, "exception during invoke of message: " + message, exc2);	try {	if (exc2 is orleanstransactionindoubtexception) {	
+transaction failed due to in doubt transaction 
+
+========================= orleans sample_1120 =========================
+
+console.title = progtitle;	int result;	if (!prog.parsearguments(args)) {	prog.printusage();	result = -1;	}	else {	result = prog.run();	}	if (prog.pauseatend) {	
+press any key to exit 
+
+========================= orleans sample_1469 =========================
+
+public void id_issystem() {	grainid testgrain = orleans.runtime.constants.directoryserviceid;	
+testing grainid 
+
+public void id_issystem() {	grainid testgrain = orleans.runtime.constants.directoryserviceid;	assert.true(testgrain.issystemtarget);	grainid sgrain = (grainid)this.environment.serializationmanager.deepcopy(testgrain);	
+testing grainid 
+
+public void id_issystem() {	grainid testgrain = orleans.runtime.constants.directoryserviceid;	assert.true(testgrain.issystemtarget);	grainid sgrain = (grainid)this.environment.serializationmanager.deepcopy(testgrain);	assert.true(sgrain.issystemtarget);	assert.equal(testgrain, sgrain);	assert.same(testgrain, sgrain);	activationid testactivation = activationid.getsystemactivation(testgrain, siloaddress.new(new ipendpoint(ipaddress.loopback, 2456), 0));	
+testing activationid 
+
+public void siloaddress_tofrom_parsablestring() {	siloaddress address1 = siloaddressutils.newlocalsiloaddress(12345);	string addressstr1 = address1.toparsablestring();	siloaddress addressobj1 = siloaddress.fromparsablestring(addressstr1);	
+convert from got result string object 
+
+public void siloaddress_tofrom_parsablestring() {	siloaddress address1 = siloaddressutils.newlocalsiloaddress(12345);	string addressstr1 = address1.toparsablestring();	siloaddress addressobj1 = siloaddress.fromparsablestring(addressstr1);	assert.equal(address1, addressobj1);	const string addressstr2 = "127.0.0.1:11111@144611139";	siloaddress addressobj2 = siloaddress.fromparsablestring(addressstr2);	string addressstr2out = addressobj2.toparsablestring();	
+convert from got result string object 
+
+========================= orleans sample_238 =========================
+
+static async task mainasync() {	assemblyloadcontext.default.unloading += context => {	isstopping = true;	clientstopped.waitone();	};	var connectionstring = file.readalltext("connection-string.txt");	var config = new clientconfiguration {	clusterid = "orleans-docker", gatewayprovider = clientconfiguration.gatewayprovidertype.azuretable, dataconnectionstring = connectionstring };	var client = new clientbuilder() .configureapplicationparts(parts => parts.addapplicationpart(typeof(ipinggrain).assembly).withreferences()) .useconfiguration(config) .build();	await client.connect();	
+client is connected 
+
+clientstopped.waitone();	};	var connectionstring = file.readalltext("connection-string.txt");	var config = new clientconfiguration {	clusterid = "orleans-docker", gatewayprovider = clientconfiguration.gatewayprovidertype.azuretable, dataconnectionstring = connectionstring };	var client = new clientbuilder() .configureapplicationparts(parts => parts.addapplicationpart(typeof(ipinggrain).assembly).withreferences()) .useconfiguration(config) .build();	await client.connect();	while (!isstopping) {	var grainid = guid.newguid();	var grain = client.getgrain<ipinggrain>(grainid);	
+pinging grain grainid numberofping times 
+
+clientstopped.waitone();	};	var connectionstring = file.readalltext("connection-string.txt");	var config = new clientconfiguration {	clusterid = "orleans-docker", gatewayprovider = clientconfiguration.gatewayprovidertype.azuretable, dataconnectionstring = connectionstring };	var client = new clientbuilder() .configureapplicationparts(parts => parts.addapplicationpart(typeof(ipinggrain).assembly).withreferences()) .useconfiguration(config) .build();	await client.connect();	while (!isstopping) {	var grainid = guid.newguid();	var grain = client.getgrain<ipinggrain>(grainid);	
+this grain is activated on await grain getruntimeidentity 
+
+var config = new clientconfiguration {	clusterid = "orleans-docker", gatewayprovider = clientconfiguration.gatewayprovidertype.azuretable, dataconnectionstring = connectionstring };	var client = new clientbuilder() .configureapplicationparts(parts => parts.addapplicationpart(typeof(ipinggrain).assembly).withreferences()) .useconfiguration(config) .build();	await client.connect();	while (!isstopping) {	var grainid = guid.newguid();	var grain = client.getgrain<ipinggrain>(grainid);	for (var i = 0; i < numberofping; i++) {	if (isstopping) break;	var value = await grain.ping();	
+ping value 
+
+await client.connect();	while (!isstopping) {	var grainid = guid.newguid();	var grain = client.getgrain<ipinggrain>(grainid);	for (var i = 0; i < numberofping; i++) {	if (isstopping) break;	var value = await grain.ping();	thread.sleep(500);	}	}	
+client is stopping 
+
+========================= orleans sample_793 =========================
+
+public void waitforcompletion() {	
+press any key to exit 
+
+public void printusage() {	using (stringwriter usagestr = new stringwriter()) {	
+exe pipeline n file 
+
+public void printusage() {	using (stringwriter usagestr = new stringwriter()) {	
+where 
+
+========================= orleans sample_917 =========================
+
+private static async task<int> runmainasync() {	try {	var host = await startsilo();	
+press enter to terminate 
+
+========================= orleans sample_715 =========================
+
+public workerrole() {	
+orleansazuresilos constructor called 
+
+public override bool onstart() {	
+orleansazuresilos onstart called information 
+
+public override bool onstart() {	
+orleansazuresilos onstart initializing config information 
+
+public override void run() {	
+orleansazuresilos run entry point called information 
+
+public override void run() {	
+orleansazuresilos onstart starting orleans silo information 
+
+public override void onstop() {	
+orleansazuresilos onstop called information 
+
+public override void onstop() {	if (this.orleansazuresilo != null) {	this.orleansazuresilo.stop();	}	roleenvironment.changing -= roleenvironmentchanging;	base.onstop();	
+orleansazuresilos onstop finished information 
+
+========================= orleans sample_822 =========================
+
+public async task serviceid_silorestart() {	var configserviceid = this.fixture.getclientserviceid();	output.writeline("serviceid={0}", this.fixture.serviceid);	assert.equal(this.fixture.serviceid, configserviceid);	
+about to reset silos 
+
+public async task serviceid_silorestart() {	var configserviceid = this.fixture.getclientserviceid();	output.writeline("serviceid={0}", this.fixture.serviceid);	assert.equal(this.fixture.serviceid, configserviceid);	
+restarting silos 
+
+public async task serviceid_silorestart() {	var configserviceid = this.fixture.getclientserviceid();	output.writeline("serviceid={0}", this.fixture.serviceid);	assert.equal(this.fixture.serviceid, configserviceid);	foreach (var silo in this.hostedcluster.getactivesilos().tolist()) {	this.hostedcluster.restartsilo(silo);	}	
+silos restarted 
+
+========================= orleans sample_38 =========================
+
+var statstasks = new list<task<tuple<guid, string, list<tuple<datetime, datetime>>>>>();	for (int i = 0; i < numberofcalls; i++) statstasks.add(grain.getcallstats());	await task.whenall(promises);	var responsespersilo = statstasks.select(t => t.result).groupby(s => s.item2);	foreach (var silogroup in responsespersilo) {	var silo = silogroup.key;	hashset<guid> activations = new hashset<guid>();	foreach (var response in silogroup) {	if (activations.contains(response.item1)) continue;	activations.add(response.item1);	
+silo silo with activations count activations activation response 
+
+for (int i = 0; i < numberofcalls; i++) statstasks.add(grain.getcallstats());	await task.whenall(promises);	var responsespersilo = statstasks.select(t => t.result).groupby(s => s.item2);	foreach (var silogroup in responsespersilo) {	var silo = silogroup.key;	hashset<guid> activations = new hashset<guid>();	foreach (var response in silogroup) {	if (activations.contains(response.item1)) continue;	activations.add(response.item1);	int count = 1;	
+count logformatter printdate call logformatter printdate call 
+
+========================= orleans sample_339 =========================
+
+public void log<tstate>(loglevel loglevel, eventid eventid, tstate state, exception exception, func<tstate, exception, string> formatter) {	
+loglevel eventid this name formatter state exception 
+
+========================= orleans sample_259 =========================
+
+private static async task<int> runmainasync() {	try {	var host = await startsilo();	
+press enter to terminate 
+
+========================= orleans sample_701 =========================
+
+public task<string> f1method() {	
+calling 
+
+public task<string> f2method() {	
+calling 
+
+public task<string> f3method() {	
+calling 
+
+public task<string> e1method() {	
+calling 
+
+public task<string> e2method() {	
+calling 
+
+public task<string> e3method() {	
+calling 
+
+public task<string> d1method() {	
+calling 
+
+public task<string> d2method() {	
+calling 
+
+public task<string> d3method() {	
+calling 
+
+public task<string> c1method() {	
+calling 
+
+public task<string> c2method() {	
+calling 
+
+public task<string> c3method() {	
+calling 
+
+public task<string> b1method() {	
+calling 
+
+public task<string> b2method() {	
+calling 
+
+public task<string> b3method() {	
+calling 
+
+public task<string> a1method() {	
+calling 
+
+public task<string> a2method() {	
+calling 
+
+public task<string> a3method() {	
+calling 
+
+========================= orleans sample_641 =========================
+
+public bool run() {	bool ok = false;	try {	silohost.initializeorleanssilo();	ok = silohost.startorleanssilo();	if (ok) {	
+successfully started orleans silo as a node 
+
+public bool stop() {	bool ok = false;	try {	silohost.stoporleanssilo();	
+orleans silo shutdown 
+
+private bool parsearguments(string[] args) {	string deploymentid = null;	string siloname = dns.gethostname();	int argpos = 1;	for (int i = 0; i < args.length; i++) {	string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	
+bad command line arguments supplied 
+
+string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	return false;	}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	
+bad command line arguments supplied 
+
+}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	
+bad command line arguments supplied 
+
+case "deploymentid": deploymentid = split[1];	break;	return false;	}	}	else if (argpos == 1) {	siloname = a;	argpos++;	}	else {	
+too many command line arguments supplied 
+
+========================= orleans sample_750 =========================
+
+else {	exitcode = prog.run();	}	}	catch (exception exc) {	prog.logmessage(string.format("{0} halting due to error - {1}", thisprog.name, exc));	prog.flushlog();	exitcode = 1;	}	if (!prog.automated) {	
+press any key to exit 
+
+========================= orleans sample_913 =========================
+
+static void main(string[] args) {	var siloconfig = clusterconfiguration.localhostprimarysilo();	siloconfig.defaults.defaulttracelevel = severity.warning;	var silo = new silohost("test silo", siloconfig);	silo.initializeorleanssilo();	silo.startorleanssilo();	
+orleans silo is running press enter to terminate 
+
+========================= orleans sample_927 =========================
+
+try {	if (!prog.parsearguments(args)) {	prog.printusage();	exitcode = -1;	}	else {	exitcode = prog.run();	}	}	catch (exception exc) {	
+halting due to error exception 
+
+}	catch (exception exc) {	exitcode = 1;	}	console.writeline("==> press any key to exit <==");	console.readkey();	try {	prog.stop();	}	catch (exception exc) {	
+ignoring shutdown error 
+
+========================= orleans sample_903 =========================
+
+static void main(string[] args) {	var builder = new silohostbuilder() .configure<clusteroptions>(options => {	options.clusterid = constants.clusterid;	options.serviceid = constants.serviceid;	}) .uselocalhostclustering() .configure<endpointoptions>(options => options.advertisedipaddress = ipaddress.loopback) .configureapplicationparts(parts => parts.addapplicationpart(typeof(channel).assembly).withreferences()) .configurelogging(logging => logging.addconsole()) .addmemorygrainstorage("pubsubstore") .addsimplemessagestreamprovider(constants.chatroomstreamprovider);	var silo = builder.build();	silo.startasync().wait();	
+press enter to close 
+
+========================= orleans sample_740 =========================
+
+this.jsonsettings = orleansjsonserializer.updateserializersettings(orleansjsonserializer.getdefaultserializersettings(this.typeresolver, this.grainfactory), this.options.usefullassemblynames, this.options.indentjson, this.options.typenamehandling);	var account = cloudstorageaccount.parse(this.options.connectionstring);	var blobclient = account.createcloudblobclient();	container = blobclient.getcontainerreference(this.options.containername);	await container.createifnotexistsasync().configureawait(false);	stopwatch.stop();	this.logger.loginformation((int)azureprovidererrorcode.azureblobprovider_initprovider, $"initializing provider {this.name} of type {this.gettype().name} in stage {this.options.initstage} took {stopwatch.elapsedmilliseconds} milliseconds.");	}	catch (exception ex) {	stopwatch.stop();	
+initialization failed for provider this name of type this gettype name in stage this options initstage in stopwatch elapsedmilliseconds milliseconds 
+
+========================= orleans sample_1379 =========================
+
+grainreference reference = this.fixture.internalgrainfactory.getgrain(grainid.newid());	var data = teststoregrainstate.newrandomstate();	output.writeline("using store = {0}", store.gettype().fullname);	stopwatch sw = new stopwatch();	var keys = getkeys(name, reference);	sw.restart();	string etag = store.writerow(keys, asdictionary(data.state), null);	output.writeline("write returned etag={0} after {1} {2}", etag, sw.elapsed, storageproviderutils.printonewrite(keys, data, etag));	sw.restart();	var storeddata = store.readrow(keys);	
+read returned after 
+
+string etag = store.writerow(keys, asdictionary(data.state), null);	output.writeline("write returned etag={0} after {1} {2}", etag, sw.elapsed, storageproviderutils.printonewrite(keys, data, etag));	sw.restart();	var storeddata = store.readrow(keys);	assert.notnull(data);	sw.restart();	bool ok = store.deleterow(keys, etag);	assert.true(ok, $"row deleted ok after {sw.elapsed}. etag={etag} keys={storageproviderutils.printkeys(keys)}");	sw.restart();	storeddata = store.readrow(keys);	
+re read took and returned 
+
+========================= orleans sample_85 =========================
+
+var logger = serviceprovider.getservice<iloggerfactory>().createlogger(testname);	var stopwatch = new stopwatch();	stopwatch.start();	int tmp = 0;	for (int i = 0; i < n; i++) {	logger.warn(mainlogcode, "msg " + i);	tmp = i;	}	timespan delay = eventbulkingoptions.bulkeventinterval - stopwatch.elapsed;	if (delay > timespan.zero) {	
+sleeping for 
+
+========================= orleans sample_377 =========================
+
+var builder = new testclusterbuilder(2);	builder.configurelegacyconfiguration(legacy => {	legacy.clusterconfiguration.globals.maxforwardcount = forwardcount;	legacy.clientconfiguration.gateways.removeat(1);	if (forwardcount == 0) {	legacy.clusterconfiguration.globals.reminderservicetype = globalconfiguration.reminderserviceprovidertype.disabled;	}	});	initialize(builder);	icollectiontestgrain grain = await pickgraininnonprimary();	
+about to make a getage call 
+
+});	initialize(builder);	icollectiontestgrain grain = await pickgraininnonprimary();	timespan age = await grain.getage();	output.writeline(age.tostring());	await grain.deactivateself();	await task.delay(3000);	var thrownexception = await record.exceptionasync(() => grain.getage());	if (forwardcount != 0) {	assert.null(thrownexception);	
+the call after deactivateself has not thrown any exception as expected since forwardcount is 
+
+await grain.deactivateself();	await task.delay(3000);	var thrownexception = await record.exceptionasync(() => grain.getage());	if (forwardcount != 0) {	assert.null(thrownexception);	}	else {	assert.notnull(thrownexception);	assert.istype<orleansmessagerejectionexception>(thrownexception);	assert.contains("non-existent activation", thrownexception.message);	
+the call after deactivateself has thrown non existent activation exception as expected since forwardcount is 
+
+icollectiontestgrain grain = this.testcluster.grainfactory.getgrain<icollectiontestgrain>(i);	grainid grainid = ((grainreference)await grain.getgrainreference()).grainid;	siloaddress primaryforgrain = (await testutils.getdetailedgrainreport(this.testcluster.internalgrainfactory, grainid, this.testcluster.primary)).primaryforgrain;	if (primaryforgrain.equals(this.testcluster.primary.siloaddress)) {	continue;	}	string silohostingactivation = await grain.getruntimeinstanceid();	if (this.testcluster.primary.siloaddress.tolongstring().equals(silohostingactivation)) {	continue;	}	
+created grain with key whose primary directory owner is silo and which was activated on silo 
+
+private async task missingactivation_runner( int grainid, timespan lazyderegistrationdelay, bool forcecreationinsecondary = false) {	
+smissingactivation runner 
+
+itestgrain grain;	var ismultiplesilospresent = testcluster.secondarysilos != null && testcluster.secondarysilos.count > 0;	if (!ismultiplesilospresent && forcecreationinsecondary) {	throw new invalidoperationexception( "if 'forcecreationinsecondary' is true multiple silos must be present, check the test!");	}	var grainsiloaddress = string.empty;	var primarysiloaddress = testcluster.primary.siloaddress.tostring();	var secondarysiloaddress = ismultiplesilospresent ? testcluster.secondarysilos[0].siloaddress.tostring() : string.empty;	if (ismultiplesilospresent && forcecreationinsecondary) {	while (true) {	
+getgrain realgrainid 
+
+throw new invalidoperationexception( "if 'forcecreationinsecondary' is true multiple silos must be present, check the test!");	}	var grainsiloaddress = string.empty;	var primarysiloaddress = testcluster.primary.siloaddress.tostring();	var secondarysiloaddress = ismultiplesilospresent ? testcluster.secondarysilos[0].siloaddress.tostring() : string.empty;	if (ismultiplesilospresent && forcecreationinsecondary) {	while (true) {	grain = this.testcluster.grainfactory.getgrain<itestgrain>(realgrainid);	grainsiloaddress = await grain.getruntimeinstanceid();	if (grainsiloaddress != secondarysiloaddress) {	
+getgrain realgrainid primary skipping 
+
+var primarysiloaddress = testcluster.primary.siloaddress.tostring();	var secondarysiloaddress = ismultiplesilospresent ? testcluster.secondarysilos[0].siloaddress.tostring() : string.empty;	if (ismultiplesilospresent && forcecreationinsecondary) {	while (true) {	grain = this.testcluster.grainfactory.getgrain<itestgrain>(realgrainid);	grainsiloaddress = await grain.getruntimeinstanceid();	if (grainsiloaddress != secondarysiloaddress) {	realgrainid++;	}	else {	
+getgrain realgrainid secondary proceeding 
+
+}	assert.equal(1, primaryactivation + secondaryactivation);	primaryactivation = await this.testcluster.client.gettesthooks(testcluster.primary) .unregistergrainfortesting(grainreference);	secondaryactivation = 0;	if (ismultiplesilospresent) {	secondaryactivation = await this.testcluster.client.gettesthooks(testcluster.secondarysilos[0]) .unregistergrainfortesting(grainreference);	}	assert.equal(0, primaryactivation + secondaryactivation);	if (lazyderegistrationdelay > timespan.zero) {	timespan pause = lazyderegistrationdelay.multiply(2);	
+pausing for because we are using lazy deregistration 
+
+if (ismultiplesilospresent) {	secondaryactivation = await this.testcluster.client.gettesthooks(testcluster.secondarysilos[0]) .unregistergrainfortesting(grainreference);	}	assert.equal(0, primaryactivation + secondaryactivation);	if (lazyderegistrationdelay > timespan.zero) {	timespan pause = lazyderegistrationdelay.multiply(2);	await task.delay(pause);	}	var firstex = await assert.throwsasync<orleansmessagerejectionexception>(() => grain.getlabel());	assert.contains("non-existent activation", firstex.message);	
+got non existent activation exception as expected 
+
+assert.equal(grainid.tostring(), newlabel);	output.writeline($"after 2nd call. newlabel = '{newlabel}'");	if (forcecreationinsecondary) {	grainsiloaddress = await grain.getruntimeinstanceid();	output.writeline( grainsiloaddress == primarysiloaddress ? "recreated in primary" : "recreated in secondary");	output.writeline( grainsiloaddress == primarysiloaddress ? "recreated in primary" : "recreated in secondary");	}	}	else {	var secondex = await assert.throwsasync<orleansmessagerejectionexception>(() => grain.getlabel());	
+got exception 
+
+output.writeline($"after 2nd call. newlabel = '{newlabel}'");	if (forcecreationinsecondary) {	grainsiloaddress = await grain.getruntimeinstanceid();	output.writeline( grainsiloaddress == primarysiloaddress ? "recreated in primary" : "recreated in secondary");	output.writeline( grainsiloaddress == primarysiloaddress ? "recreated in primary" : "recreated in secondary");	}	}	else {	var secondex = await assert.throwsasync<orleansmessagerejectionexception>(() => grain.getlabel());	assert.true( secondex.message.contains("duplicate activation") || secondex.message.contains("non-existent activation") || secondex.message.contains("forwarding failed"), "2nd exception message: " + secondex);	
+got exception as expected 
+
+========================= orleans sample_104 =========================
+
+protected abstract ienumerable<string> converttoexecutablebatches(string setupscript, string databasename);	public static async task<relationalstoragefortesting> setupinstance(string invariantname, string testdatabasename, string connectionstring = null) {	if (string.isnullorwhitespace(invariantname)) {	throw new argumentexception("the name of invariant must contain characters", "invariantname");	}	if (string.isnullorwhitespace(testdatabasename)) {	throw new argumentexception("database string must contain characters", "testdatabasename");	}	
+initializing relational databases 
+
+if (string.isnullorwhitespace(testdatabasename)) {	throw new argumentexception("database string must contain characters", "testdatabasename");	}	relationalstoragefortesting teststorage;	if(connectionstring == null) {	teststorage = createtestinstance(invariantname);	}	else {	teststorage = createtestinstance(invariantname, connectionstring);	}	
+dropping and recreating database with connectionstring 
+
+teststorage = createtestinstance(invariantname);	}	else {	teststorage = createtestinstance(invariantname, connectionstring);	}	if (await teststorage.existsdatabaseasync(testdatabasename)) {	await teststorage.dropdatabaseasync(testdatabasename);	}	await teststorage.createdatabaseasync(testdatabasename);	teststorage = teststorage.copyinstance(testdatabasename);	
+creating database tables 
+
+await teststorage.dropdatabaseasync(testdatabasename);	}	await teststorage.createdatabaseasync(testdatabasename);	teststorage = teststorage.copyinstance(testdatabasename);	var setupscript = string.empty;	foreach (var filename in teststorage.setupsqlscriptfilenames) {	setupscript += file.readalltext(filename);	setupscript += "\r\n";	}	await teststorage.executesetupscript(setupscript, testdatabasename);	
+initializing relational databases done 
+
+========================= orleans sample_120 =========================
+
+public grainplacementtests(itestoutputhelper output) {	this.output = output;	
+grainplacementtests constructor 
+
+public async task preferlocalplacementgrain_shouldmigratewhenhostsilokilled(string value) {	await hostedcluster.waitforlivenesstostabilizeasync();	
+starting test 
+
+targetsilo = hostedcluster.secondarysilos.first().siloaddress.endpoint;	}	guid proxykey;	irandomplacementtestgrain proxy;	ipendpoint expected;	do {	proxykey = guid.newguid();	proxy = grainfactory.getgrain<irandomplacementtestgrain>(proxykey);	expected = await proxy.getendpoint();	} while (!targetsilo.equals(expected));	
+proxy grain was originally located on silo 
+
+ipendpoint expected;	do {	proxykey = guid.newguid();	proxy = grainfactory.getgrain<irandomplacementtestgrain>(proxykey);	expected = await proxy.getendpoint();	} while (!targetsilo.equals(expected));	guid grainkey = proxykey;	await proxy.startpreferlocalgrain(grainkey);	ipreferlocalplacementtestgrain grain = grainfactory.getgrain<ipreferlocalplacementtestgrain>(grainkey);	ipendpoint actual = await grain.getendpoint();	
+preferlocalplacement grain was originally located on silo 
+
+proxykey = guid.newguid();	proxy = grainfactory.getgrain<irandomplacementtestgrain>(proxykey);	expected = await proxy.getendpoint();	} while (!targetsilo.equals(expected));	guid grainkey = proxykey;	await proxy.startpreferlocalgrain(grainkey);	ipreferlocalplacementtestgrain grain = grainfactory.getgrain<ipreferlocalplacementtestgrain>(grainkey);	ipendpoint actual = await grain.getendpoint();	assert.equal(expected, actual);	silohandle silotokill = hostedcluster.getactivesilos().first(s => s.siloaddress.endpoint.equals(expected));	
+killing silo hosting locally placed grain 
+
+expected = await proxy.getendpoint();	} while (!targetsilo.equals(expected));	guid grainkey = proxykey;	await proxy.startpreferlocalgrain(grainkey);	ipreferlocalplacementtestgrain grain = grainfactory.getgrain<ipreferlocalplacementtestgrain>(grainkey);	ipendpoint actual = await grain.getendpoint();	assert.equal(expected, actual);	silohandle silotokill = hostedcluster.getactivesilos().first(s => s.siloaddress.endpoint.equals(expected));	hostedcluster.stopsilo(silotokill);	ipendpoint newactual = await grain.getendpoint();	
+preferlocalplacement grain was recreated on silo 
+
+public async task preferlocalplacementgrain_shouldnotmigratewhenothersilokilled(string value) {	await hostedcluster.waitforlivenesstostabilizeasync();	
+starting test 
+
+targetsilo = hostedcluster.secondarysilos.first().siloaddress.endpoint;	}	guid proxykey;	irandomplacementtestgrain proxy;	ipendpoint expected;	do {	proxykey = guid.newguid();	proxy = grainfactory.getgrain<irandomplacementtestgrain>(proxykey);	expected = await proxy.getendpoint();	} while (!targetsilo.equals(expected));	
+proxy grain was originally located on silo 
+
+ipendpoint expected;	do {	proxykey = guid.newguid();	proxy = grainfactory.getgrain<irandomplacementtestgrain>(proxykey);	expected = await proxy.getendpoint();	} while (!targetsilo.equals(expected));	guid grainkey = proxykey;	await proxy.startpreferlocalgrain(grainkey);	ipreferlocalplacementtestgrain grain = grainfactory.getgrain<ipreferlocalplacementtestgrain>(grainkey);	ipendpoint actual = await grain.getendpoint();	
+preferlocalplacement grain was originally located on silo 
+
+proxykey = guid.newguid();	proxy = grainfactory.getgrain<irandomplacementtestgrain>(proxykey);	expected = await proxy.getendpoint();	} while (!targetsilo.equals(expected));	guid grainkey = proxykey;	await proxy.startpreferlocalgrain(grainkey);	ipreferlocalplacementtestgrain grain = grainfactory.getgrain<ipreferlocalplacementtestgrain>(grainkey);	ipendpoint actual = await grain.getendpoint();	assert.equal(expected, actual);	silohandle silotokill = hostedcluster.getactivesilos().first(s => !s.siloaddress.endpoint.equals(expected));	
+killing other silo not hosting locally placed grain 
+
+expected = await proxy.getendpoint();	} while (!targetsilo.equals(expected));	guid grainkey = proxykey;	await proxy.startpreferlocalgrain(grainkey);	ipreferlocalplacementtestgrain grain = grainfactory.getgrain<ipreferlocalplacementtestgrain>(grainkey);	ipendpoint actual = await grain.getendpoint();	assert.equal(expected, actual);	silohandle silotokill = hostedcluster.getactivesilos().first(s => !s.siloaddress.endpoint.equals(expected));	hostedcluster.stopsilo(silotokill);	ipendpoint newactual = await grain.getendpoint();	
+preferlocalplacement grain is now located on silo 
+
+========================= orleans sample_66 =========================
+
+public override bool onstart() {	
+orleansazureweb onstart 
+
+public override void onstop() {	
+orleansazureweb onstop 
+
+public override void run() {	
+orleansazureweb run 
+
+public override void run() {	try {	base.run();	}	catch (exception exc) {	
+run failed with 
+
+========================= orleans sample_959 =========================
+
+public override bool onstart() {	
+orleansazureweb onstart 
+
+public override void onstop() {	
+orleansazureweb onstop 
+
+public override void run() {	
+orleansazureweb run 
+
+public override void run() {	try {	base.run();	}	catch (exception exc) {	
+run failed with 
+
+========================= orleans sample_979 =========================
+
+await storage.initializetable(this.options.tablename, new list<keyschemaelement> {	new keyschemaelement { attributename = grain_reference_property_name, keytype = keytype.hash }, new keyschemaelement { attributename = grain_type_property_name, keytype = keytype.range }	}, new list<attributedefinition> {	new attributedefinition { attributename = grain_reference_property_name, attributetype = scalarattributetype.s }, new attributedefinition { attributename = grain_type_property_name, attributetype = scalarattributetype.s }	});	stopwatch.stop();	this.logger.loginformation((int)errorcode.storageproviderbase, $"initializing provider {this.name} of type {this.gettype().name} in stage {this.options.initstage} took {stopwatch.elapsedmilliseconds} milliseconds.");	}	catch (exception exc) {	stopwatch.stop();	
+initialization failed for provider this name of type this gettype name in stage this options initstage in stopwatch elapsedmilliseconds milliseconds 
+
+========================= orleans sample_2120 =========================
+
+public bool run() {	bool ok = false;	try {	silohost.initializeorleanssilo();	ok = silohost.startorleanssilo();	if (ok) {	
+successfully started orleans silo as a node 
+
+public bool stop() {	bool ok = false;	try {	silohost.stoporleanssilo();	
+orleans silo shutdown 
+
+private bool parsearguments(string[] args) {	string deploymentid = null;	string siloname = dns.gethostname();	int argpos = 1;	for (int i = 0; i < args.length; i++) {	string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	
+bad command line arguments supplied 
+
+string a = args[i];	if (a.startswith("-") || a.startswith("/")) {	switch (a.tolowerinvariant()) {	case "/?": case "/help": case "-?": case "-help": return false;	return false;	}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	
+bad command line arguments supplied 
+
+}	}	else if (a.contains("=")) {	string[] split = a.split('=');	if (string.isnullorempty(split[1])) {	return false;	}	switch (split[0].tolowerinvariant()) {	case "deploymentid": deploymentid = split[1];	break;	
+bad command line arguments supplied 
+
+case "deploymentid": deploymentid = split[1];	break;	return false;	}	}	else if (argpos == 1) {	siloname = a;	argpos++;	}	else {	
+too many command line arguments supplied 
+
+========================= orleans sample_798 =========================
+
+private void do_fanout_stress(int numloops, int blocksize, timespan timeout, bool dononreentrant, bool doac) {	stopwatch totaltime = stopwatch.startnew();	list<task> promises = new list<task>();	for (int i = 0; i < numloops; i++) {	
+start loop 
+
+private void do_fanout_stress(int numloops, int blocksize, timespan timeout, bool dononreentrant, bool doac) {	stopwatch totaltime = stopwatch.startnew();	list<task> promises = new list<task>();	for (int i = 0; i < numloops; i++) {	stopwatch loopclock = stopwatch.startnew();	for (int j = 0; j < blocksize; j++) {	int offset = j;	
+start inner loop 
+
+========================= orleans sample_46 =========================
+
+public void consistentringprovider_test1() {	siloaddress silo1 = siloaddressutils.newlocalsiloaddress(0);	consistentringprovider ring = new consistentringprovider(silo1, nullloggerfactory.instance);	
+range the whole ring is 
+
+public void consistentringprovider_test1() {	siloaddress silo1 = siloaddressutils.newlocalsiloaddress(0);	consistentringprovider ring = new consistentringprovider(silo1, nullloggerfactory.instance);	ring.addserver(siloaddressutils.newlocalsiloaddress(1));	
+range the whole ring is 
+
+public void consistentringprovider_test1() {	siloaddress silo1 = siloaddressutils.newlocalsiloaddress(0);	consistentringprovider ring = new consistentringprovider(silo1, nullloggerfactory.instance);	ring.addserver(siloaddressutils.newlocalsiloaddress(1));	ring.addserver(siloaddressutils.newlocalsiloaddress(2));	
+range the whole ring is 
+
+public void consistentringprovider_test2() {	siloaddress silo1 = siloaddressutils.newlocalsiloaddress(0);	virtualbucketsringprovider ring = new virtualbucketsringprovider(silo1, nullloggerfactory.instance, 30);	
+range the whole ring with silo is 
+
+public void consistentringprovider_test2() {	siloaddress silo1 = siloaddressutils.newlocalsiloaddress(0);	virtualbucketsringprovider ring = new virtualbucketsringprovider(silo1, nullloggerfactory.instance, 30);	for (int i = 1; i <= 10; i++) {	ring.silostatuschangenotification(siloaddressutils.newlocalsiloaddress(i), silostatus.active);	var range = rangefactory.createequallydividedmultirange(ring.getmyrange(), 5);	
+range the whole ring with silos is 
+
+var multirange = rangefactory.createequallydividedmultirange(silorange.value, num_agents);	list<iringrangeinternal> agentranges = new list<iringrangeinternal>();	for(int i=0; i < num_agents; i++) {	iringrangeinternal agentrange = (iringrangeinternal)multirange.getsubrange(i);	agentranges.add(agentrange);	}	allagentranges.add(silorange.key, agentranges);	}	dictionary<siloaddress, list<int>> queuehistogram = getqueuehistogram(allagentranges, (int)num_queues);	string str = utils.enumerabletostring(sortedsiloranges, tuple => string.format("silo {0} -> range {1:0.000}%, {2} queues: {3}", tuple.item1, tuple.item2.rangepercentage(), queuehistogram[tuple.item1].sum(), utils.enumerabletostring(queuehistogram[tuple.item1])), "\n");	
+the whole ring with silos is 
+
+list<iringrangeinternal> agentranges = new list<iringrangeinternal>();	for(int i=0; i < num_agents; i++) {	iringrangeinternal agentrange = (iringrangeinternal)multirange.getsubrange(i);	agentranges.add(agentrange);	}	allagentranges.add(silorange.key, agentranges);	}	dictionary<siloaddress, list<int>> queuehistogram = getqueuehistogram(allagentranges, (int)num_queues);	string str = utils.enumerabletostring(sortedsiloranges, tuple => string.format("silo {0} -> range {1:0.000}%, {2} queues: {3}", tuple.item1, tuple.item2.rangepercentage(), queuehistogram[tuple.item1].sum(), utils.enumerabletostring(queuehistogram[tuple.item1])), "\n");	output.writeline("total number of queues is: {0}", queuehistogram.values.select(list => list.sum()).sum());	
+expected average range per silo is expected queues per silo is expected queues per agent is 
+
+========================= orleans sample_100 =========================
+
+while (receivedbatches < numbatches) {	var messages = receiver.getqueuemessagesasync(sqsstorage.max_number_of_message_to_peak).result.toarray();	if (!messages.any()) {	continue;	}	foreach (var message in messages.cast<sqsbatchcontainer>()) {	streamsperqueue.addorupdate(queueid, id => new hashset<istreamidentity> { new streamidentity(message.streamguid, message.streamguid.tostring()) }, (id, set) => {	set.add(new streamidentity(message.streamguid, message.streamguid.tostring()));	return set;	});	
+queue received message on stream 
+
+var qcache = caches[kvp.key];	foreach (istreamidentity streamguid in kvp.value) {	iqueuecachecursor cursor = qcache.getcachecursor(streamguid, firstincache);	int messagecount = 0;	streamsequencetoken tenthincache = null;	streamsequencetoken lasttoken = firstincache;	while (cursor.movenext()) {	exception ex;	messagecount++;	ibatchcontainer batch = cursor.getcurrent(out ex);	
+token 
+
+while (cursor.movenext()) {	exception ex;	messagecount++;	ibatchcontainer batch = cursor.getcurrent(out ex);	assert.true(batch.sequencetoken.compareto(lasttoken) >= 0, $"order check for event {messagecount}");	lasttoken = batch.sequencetoken;	if (messagecount == 10) {	tenthincache = batch.sequencetoken;	}	}	
+on queue we received a total of message on stream 
+
+tenthincache = batch.sequencetoken;	}	}	assert.equal(numbatches / 2, messagecount);	assert.notnull(tenthincache);	cursor = qcache.getcachecursor(streamguid, tenthincache);	messagecount = 0;	while (cursor.movenext()) {	messagecount++;	}	
+on queue we received a total of message on stream 
+
+========================= orleans sample_186 =========================
+
+public mockbootstrapprovider() {	
+constructor mockbootstrapprovider 
+
+public graincallbootstrapper() {	
+constructor 
+
+public localgraininitbootstrapper() {	
+constructor 
+
+public controllablebootstrapprovider() {	myid = interlocked.increment(ref idcounter);	
+constructor instance id 
+
+========================= orleans sample_281 =========================
+
+logcontext("main-task " + task.currentid);	int n = 0;	action action = () => {	logcontext("workitem-task " + task.currentid);	for (int i = 0; i < 10; i++) {	int id = -1;	task.factory.startnew(() => {	id = task.currentid.hasvalue ? (int)task.currentid : -1;	logcontext("sub-task " + id + " n=" + n);	int k = n;	
+sub task sleeping 
+
+int n = 0;	action action = () => {	logcontext("workitem-task " + task.currentid);	for (int i = 0; i < 10; i++) {	int id = -1;	task.factory.startnew(() => {	id = task.currentid.hasvalue ? (int)task.currentid : -1;	logcontext("sub-task " + id + " n=" + n);	int k = n;	thread.sleep(100);	
+sub task awake 
+
+for (int i = 0; i < 10; i++) {	int id = -1;	task.factory.startnew(() => {	id = task.currentid.hasvalue ? (int)task.currentid : -1;	logcontext("sub-task " + id + " n=" + n);	int k = n;	thread.sleep(100);	n = k + 1;	}) .continuewith(tsk => {	logcontext("sub-task " + id + "-continuewith");	
+sub task done 
+
+int k = n;	thread.sleep(100);	n = k + 1;	}) .continuewith(tsk => {	logcontext("sub-task " + id + "-continuewith");	});	}	};	task t = new task(action);	t.start(scheduler);	
+main task sleeping 
+
+thread.sleep(100);	n = k + 1;	}) .continuewith(tsk => {	logcontext("sub-task " + id + "-continuewith");	});	}	};	task t = new task(action);	t.start(scheduler);	thread.sleep(timespan.fromseconds(2));	
+main task awake 
+
+public async task activationsched_whenany() {	taskscheduler scheduler = this.masterscheduler.getworkitemgroup(this.context).taskrunner;	manualresetevent pause1 = new manualresetevent(false);	manualresetevent pause2 = new manualresetevent(false);	var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	
+task started 
+
+manualresetevent pause1 = new manualresetevent(false);	manualresetevent pause2 = new manualresetevent(false);	var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	pause1.waitone();	
+task done 
+
+task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task<int>.factory.startnew(() => {	
+task started 
+
+task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	pause2.waitone();	
+task done 
+
+public async task activationsched_whenany_timeout() {	taskscheduler scheduler = this.masterscheduler.getworkitemgroup(this.context).taskrunner;	manualresetevent pause1 = new manualresetevent(false);	manualresetevent pause2 = new manualresetevent(false);	var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	
+task started 
+
+manualresetevent pause1 = new manualresetevent(false);	manualresetevent pause2 = new manualresetevent(false);	var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	pause1.waitone();	
+task done 
+
+task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task<int>.factory.startnew(() => {	
+task started 
+
+task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	pause2.waitone();	
+task done 
+
+public async task activationsched_whenany_busy_timeout() {	taskscheduler scheduler = this.masterscheduler.getworkitemgroup(this.context).taskrunner;	var pause1 = new taskcompletionsource<bool>();	var pause2 = new taskcompletionsource<bool>();	var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	
+task started 
+
+task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	int num1 = 1;	while (!pause1.task.result) {	num1 = random.next();	}	
+task done 
+
+task wrapper = new task(() => {	task1 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	int num1 = 1;	while (!pause1.task.result) {	num1 = random.next();	}	return num1;	});	task2 = task<int>.factory.startnew(() => {	
+task started 
+
+num1 = random.next();	}	return num1;	});	task2 = task<int>.factory.startnew(() => {	assert.equal(scheduler, taskscheduler.current);	int num2 = 2;	while (!pause2.task.result) {	num2 = random.next();	}	
+task done 
+
+public async task activationsched_task_run() {	taskscheduler scheduler = this.masterscheduler.getworkitemgroup(this.context).taskrunner;	manualresetevent pause1 = new manualresetevent(false);	manualresetevent pause2 = new manualresetevent(false);	var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task.run(() => {	
+task started 
+
+manualresetevent pause1 = new manualresetevent(false);	manualresetevent pause2 = new manualresetevent(false);	var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	pause1.waitone();	
+task done 
+
+task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task.run(() => {	
+task started 
+
+task join = null;	task wrapper = new task(() => {	task1 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	pause2.waitone();	
+task done 
+
+assert.notequal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	pause2.waitone();	return 2;	});	join = task.whenall(task1, task2).continuewith(t => {	
+join started 
+
+return 1;	});	task2 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	pause2.waitone();	return 2;	});	join = task.whenall(task1, task2).continuewith(t => {	if (t.isfaulted) throw t.exception;	assert.equal(scheduler, taskscheduler.current);	
+join done 
+
+public async task activationsched_task_run_delay() {	taskscheduler scheduler = this.masterscheduler.getworkitemgroup(this.context).taskrunner;	manualresetevent pause1 = new manualresetevent(false);	manualresetevent pause2 = new manualresetevent(false);	var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task.run(() => {	
+task started 
+
+var finish = new taskcompletionsource<bool>();	task<int> task1 = null;	task<int> task2 = null;	task join = null;	task wrapper = new task(() => {	task1 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	task.delay(1);	assert.notequal(scheduler, taskscheduler.current);	pause1.waitone();	
+task done 
+
+task join = null;	task wrapper = new task(() => {	task1 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	task.delay(1);	assert.notequal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task.run(() => {	
+task started 
+
+task.delay(1);	assert.notequal(scheduler, taskscheduler.current);	pause1.waitone();	return 1;	});	task2 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	task.delay(1);	assert.notequal(scheduler, taskscheduler.current);	pause2.waitone();	
+task done 
+
+return 1;	});	task2 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	task.delay(1);	assert.notequal(scheduler, taskscheduler.current);	pause2.waitone();	return 2;	});	join = task.whenall(task1, task2).continuewith(t => {	
+join started 
+
+task2 = task.run(() => {	assert.notequal(scheduler, taskscheduler.current);	task.delay(1);	assert.notequal(scheduler, taskscheduler.current);	pause2.waitone();	return 2;	});	join = task.whenall(task1, task2).continuewith(t => {	if (t.isfaulted) throw t.exception;	assert.equal(scheduler, taskscheduler.current);	
+join done 
+
+stagecomplete[chainnum] = tasknum;	executingchain[chainnum] = false;	executingglobal = -1;	}	});	task task = taskchains[i];	for (int j = 1; j < chainlength; j++) {	int tasknum = j;	task = task.continuewith(t => {	if (t.isfaulted) throw t.exception;	
+inside chain task 
+
+}	finally {	stagecomplete[chainnum] = tasknum;	executingchain[chainnum] = false;	executingglobal = -1;	}	}, scheduler);	}	taskchainends[chainnum] = task.continuewith(t => {	if (t.isfaulted) throw t.exception;	
+inside chain final task 
+
+========================= orleans sample_223 =========================
+
+public void startclustersifneeded(int numclusters, itestoutputhelper output) {	this.output = output;	if (multicluster.clusters.count != numclusters) {	if (multicluster.clusters.count > 0) multicluster.stopallclientsandclusters();	
+creating clusters and clients 
+
+client[i] = this.multicluster.newclient(clustername, 0, clientwrapper.factory);	}	output.writeline("clusters and clients are ready (elapsed = {0})", stopwatch.elapsed);	multicluster.waitforlivenesstostabilizeasync().waitwiththrow(timespan.fromminutes(1));	client[0].injectclusterconfiguration(cluster);	multicluster.waitformulticlustergossiptostabilizeasync(false).waitwiththrow(timespan.fromminutes(system.diagnostics.debugger.isattached ? 60 : 1));	stopwatch.stop();	output.writeline("multicluster is ready (elapsed = {0}).", stopwatch.elapsed);	}	else {	
+reusing existing clusters and clients 
+
+private void assertequal<t>(t expected, t actual, string grainidentity) {	if (! expected.equals(actual)) {	
+identity of offending grain grainidentity 
+
+else {	assertequal(true, result.item2, grainidentity);	assertequal(1, result.item1, grainidentity);	assertequal(2, client[1].getconfirmedversion(grainclass, x), grainidentity);	assertequal(444, client[1].getalocal(grainclass, x), grainidentity);	assertequal(444, client[0].getaglobal(grainclass, x), grainidentity);	assertequal(444, client[1].getaglobal(grainclass, x), grainidentity);	}	}	});	
+running individual short tests 
+
+await checker7(0);	await checker7(4);	await checker7(7);	multicluster.setprotocolmessagefilterfortesting(cluster[0], msg => ! (msg is inotificationmessage));	await checker7(0);	await checker7(1);	await checker7(2);	await checker7(3);	multicluster.setprotocolmessagefilterfortesting(cluster[0], _ => true);	}	
+running individual longer tests 
+
+await checker7(0);	await checker7(1);	await checker7(2);	await checker7(3);	multicluster.setprotocolmessagefilterfortesting(cluster[0], _ => true);	}	if (phases != 0) {	await checker3(20);	await checker3(phases);	}	
+running many concurrent test instances 
+
+========================= orleans sample_62 =========================
+
+for (int i = 0; i < n; i++) {	var promise = action(i);	promises.add(promise);	if ((i % batchsize) == 0 && i > 0) {	task.waitall(promises.toarray(), azuretabledefaultpolicies.tablecreationtimeout);	promises.clear();	}	}	task.waitall(promises.toarray(), azuretabledefaultpolicies.tablecreationtimeout);	sw.stop();	
+completed did iterations in at rps 
+
+========================= orleans sample_33 =========================
+
+public async task sms_limits_findmax_consumers() {	guid streamid = guid.newguid();	string streamprovidername = smsstreamprovidername;	
+starting search for maxconsumersperstream value using stream 
+
+try {	for (loopcount = 1; loopcount <= maxexpectedperstream; loopcount++) {	istreamlifecycleconsumergrain consumer = this.grainfactory.getgrain<istreamlifecycleconsumergrain>(guid.newguid());	await consumer.becomeconsumer(streamid, this.streamnamespace, streamprovidername);	}	}	catch (exception exc) {	this.output.writeline("stopping loop at loopcount={0} due to exception {1}", loopcount, exc);	}	maxconsumersperstream = loopcount - 1;	
+finished search for maxconsumersperstream with value 
+
+public async task sms_limits_findmax_producers() {	guid streamid = guid.newguid();	string streamprovidername = smsstreamprovidername;	
+starting search for maxproducersperstream value using stream 
+
+try {	for (loopcount = 1; loopcount <= maxexpectedperstream; loopcount++) {	istreamlifecycleproducergrain producer = this.grainfactory.getgrain<istreamlifecycleproducergrain>(guid.newguid());	await producer.becomeproducer(streamid, this.streamnamespace, streamprovidername);	}	}	catch (exception exc) {	this.output.writeline("stopping loop at loopcount={0} due to exception {1}", loopcount, exc);	}	maxproducersperstream = loopcount - 1;	
+finished search for maxproducersperstream with value 
+
+private task test_stream_churn_numstreams_fewpublishers( string streamprovidername, int pipelinesize, int numstreams, int numconsumers = 9, int numproducers = 4, bool warmuppubsub = true, bool warmupproducers = false, bool normalsubscribecalls = true) {	
+testing churn with streams on producers with consumers per stream 
+
+var promises = new list<task<double>>();	for (int s = 0; s < numstreams; s++) {	guid streamid = guid.newguid();	task<double> promise = task.run( () => testonestream(streamid, streamprovidername, numproducers, numconsumers, nummessages, usefanout));	promises.add(promise);	if (!usefanout) {	await promise;	}	}	if (usefanout) {	
+test waiting for streams to finish 
+
+task<double> promise = task.run( () => testonestream(streamid, streamprovidername, numproducers, numconsumers, nummessages, usefanout));	promises.add(promise);	if (!usefanout) {	await promise;	}	}	if (usefanout) {	}	double rps = (await task.whenall(promises)).sum();	promises.clear();	
+got total rps on streams or rps per streams 
+
+if (!usefanout) {	await promise;	}	}	if (usefanout) {	}	double rps = (await task.whenall(promises)).sum();	promises.clear();	sw.stop();	int totalmessages = nummessages * numstreams * numproducers;	
+sent messages total on streams from producers to consumers in at rps 
+
+========================= orleans sample_22 =========================
+
+heartbeats[i] = new heartbeatdata();	heartbeats[i].game = guid.newguid();	for (int j = 0; j < nplayerspergame; j++) {	heartbeats[i].status.players.add(getplayerid(i*nplayerspergame + j));	}	}	int iteration = 0;	ipresencegrain presence = client.getgrain<ipresencegrain>(0);	list<task> promises = new list<task>();	while (iteration++ < niterations) {	
+sending heartbeat series 
+
+promises.clear();	try {	for (int i = 0; i < ngames; i++) {	heartbeats[i].status.score = string.format("{0}:{1}", iteration, iteration > 5 ? iteration - 5 : 0);	task t = presence.heartbeat(heartbeatdatadotnetserializer.serialize(heartbeats[i]));	promises.add(t);	}	task.waitall(promises.toarray());	}	catch (exception exc) {	
+exception 
+
+}	task.waitall(promises.toarray());	}	catch (exception exc) {	}	thread.sleep(sendinterval);	}	return client;	}	catch (exception exc) {	
+unexpected error 
+
+========================= orleans sample_929 =========================
+
+static void main(string[] args) {	appdomain hostdomain = appdomain.createdomain("orleanshost", null, new appdomainsetup {	appdomaininitializer = initsilo, appdomaininitializerarguments = args, });	
+orleans silo is running press enter to terminate 
+
+static void initsilo(string[] args) {	hostwrapper = new orleanshostwrapper(args);	if (!hostwrapper.run()) {	
+failed to initialize orleans silo 
+
+========================= orleans sample_799 =========================
+
+private void trace(string format, params object[] args) {	if (trace == null) {	var path = string.format("d:\\trace-{0}.{1}.{2}.txt", datetime.utcnow.hour, datetime.utcnow.minute, datetime.utcnow.ticks);	
+opening trace file at 
+
+private void trace(string format, params object[] args) {	if (trace == null) {	var path = string.format("d:\\trace-{0}.{1}.{2}.txt", datetime.utcnow.hour, datetime.utcnow.minute, datetime.utcnow.ticks);	trace = file.createtext(path);	}	trace.write(format, args);	
+at offset 
+
+========================= orleans sample_1696 =========================
+
+public async task constructor_bad_await() {	try {	int id = random.next();	ibadconstructortestgrain grain = this.grainfactory.getgrain<ibadconstructortestgrain>(id);	await grain.dosomething();	assert.true(false, "expected throwsomething call to fail as unable to activate grain");	}	catch (timeoutexception te) {	
+received timeout 
+
+private static void assertisnotinvalidoperationexception(exception thrownexception, string expectedmessagesubstring) {	
+received exception 
+
+private static void assertisnotinvalidoperationexception(exception thrownexception, string expectedmessagesubstring) {	exception e = thrownexception.getbaseexception();	
+nested exception type 
+
+private static void assertisnotinvalidoperationexception(exception thrownexception, string expectedmessagesubstring) {	exception e = thrownexception.getbaseexception();	
+nested exception message 
+
+========================= orleans sample_333 =========================
+
+public async task sched_ac_waittest() {	int n = 0;	bool insidetask = false;	unittestschedulingcontext context = new unittestschedulingcontext();	this.orleanstaskscheduler = testinternalhelper.initializeschedulerfortesting(context, this.performancemetrics, this.loggerfactory);	var result = new taskcompletionsource<bool>();	this.orleanstaskscheduler.queueworkitem(new closureworkitem(() => {	var task1 = task.factory.startnew(() => {	
+starting 
+
+this.orleanstaskscheduler.queueworkitem(new closureworkitem(() => {	var task1 = task.factory.startnew(() => {	assert.false(insidetask, $"starting new task when i am already inside task of iteration {n}");	insidetask = true;	this.output.writeline("===> 1a");	thread.sleep(1000); n = n + 3;	this.output.writeline("===> 1b");	insidetask = false;	});	var task2 = task.factory.startnew(() => {	
+starting 
+
+========================= orleans sample_222 =========================
+
+public clientwrapperbase(string name, int gatewayport, string clusterid, action<clientconfiguration> configcustomizer, action<iclientbuilder> clientconfigurator) {	this.name = name;	
+initializing client 
+
+========================= orleans sample_63 =========================
+
+public override bool onstart() {	
+orleansazureweb onstart 
+
+public override void onstop() {	
+orleansazureweb onstop 
+
+public override void run() {	
+orleansazureweb run 
+
+public override void run() {	try {	base.run();	}	catch (exception exc) {	
+run failed with 
+
+========================= orleans sample_828 =========================
+
+public override bool onstart() {	
+starting role entry point 
+
+========================= orleans sample_808 =========================
+
+this.logger.loginformation((int)azureprovidererrorcode.azuretableprovider_initprovider, $"azuretablegrainstorage {name} initializing: {this.options.tostring()}");	this.logger.loginformation((int)azureprovidererrorcode.azuretableprovider_paramconnectionstring, $"azuretablegrainstorage {name} is using dataconnectionstring: {configutilities.redactconnectionstringinfo(this.options.connectionstring)}");	this.jsonsettings = orleansjsonserializer.updateserializersettings(orleansjsonserializer.getdefaultserializersettings(this.typeresolver, this.grainfactory), this.options.usefullassemblynames, this.options.indentjson, this.options.typenamehandling);	this.tabledatamanager = new grainstatetabledatamanager(this.options.tablename, this.options.connectionstring, this.loggerfactory);	await this.tabledatamanager.inittableasync();	stopwatch.stop();	this.logger.loginformation((int)azureprovidererrorcode.azuretableprovider_initprovider, $"initializing provider {this.name} of type {this.gettype().name} in stage {this.options.initstage} took {stopwatch.elapsedmilliseconds} milliseconds.");	}	catch (exception ex) {	stopwatch.stop();	
+initialization failed for provider this name of type this gettype name in stage this options initstage in stopwatch elapsedmilliseconds milliseconds 
+
+========================= orleans sample_1378 =========================
+
+console.title = progtitle;	try {	if (!prog.parsearguments(args)) {	prog.printusage();	exitcode = -1;	}	else {	task<int> run = prog.run();	bool ok = run.wait(timeout);	if (run.isfaulted) {	
+error running client program 
+
+exitcode = -1;	}	else {	task<int> run = prog.run();	bool ok = run.wait(timeout);	if (run.isfaulted) {	prog.dumpstatus();	exitcode = 1;	}	else if (!ok) {	
+timeout running client program 
+
+========================= orleans sample_919 =========================
+
+public static bool generatecode(codegenoptions options) {	var outputfilename = options.outputfilename;	var outputfiledirectory = path.getdirectoryname(outputfilename);	if (!string.isnullorempty(outputfiledirectory) && !directory.exists(outputfiledirectory)) {	directory.createdirectory(outputfiledirectory);	}	
+orleans codegen generating file outputfilename 
+
+public static bool generatecode(codegenoptions options) {	var outputfilename = options.outputfilename;	var outputfiledirectory = path.getdirectoryname(outputfilename);	if (!string.isnullorempty(outputfiledirectory) && !directory.exists(outputfiledirectory)) {	directory.createdirectory(outputfiledirectory);	}	#if !netcoreapp2_0 var generatedcode = generatecodeinappdomain(options);	#else var generatedcode = generatecodeinternal(options);	#endif using (var sourcewriter = new streamwriter(outputfilename)) {	
+sourcewriter writeline codegen 
+
+var outputfiledirectory = path.getdirectoryname(outputfilename);	if (!string.isnullorempty(outputfiledirectory) && !directory.exists(outputfiledirectory)) {	directory.createdirectory(outputfiledirectory);	}	#if !netcoreapp2_0 var generatedcode = generatecodeinappdomain(options);	#else var generatedcode = generatecodeinternal(options);	#endif using (var sourcewriter = new streamwriter(outputfilename)) {	disablewarnings(sourcewriter, suppresscompilerwarnings);	sourcewriter.writeline(generatedcode ?? string.empty);	restorewarnings(sourcewriter, suppresscompilerwarnings);	
+endif 
+
+if (!string.isnullorempty(outputfiledirectory) && !directory.exists(outputfiledirectory)) {	directory.createdirectory(outputfiledirectory);	}	#if !netcoreapp2_0 var generatedcode = generatecodeinappdomain(options);	#else var generatedcode = generatecodeinternal(options);	#endif using (var sourcewriter = new streamwriter(outputfilename)) {	disablewarnings(sourcewriter, suppresscompilerwarnings);	sourcewriter.writeline(generatedcode ?? string.empty);	restorewarnings(sourcewriter, suppresscompilerwarnings);	}	
+orleans codegen generated file written outputfilename 
+
+private static void disablewarnings(textwriter sourcewriter, ienumerable<int> warnings) {	
+pragma warning disable 
+
+private static void restorewarnings(textwriter sourcewriter, ienumerable<int> warnings) {	
+pragma warning restore 
+
+========================= orleans sample_2034 =========================
+
+public void logoption(ioptionformatter formatter) {	try {	var stringbuiler = new stringbuilder();	stringbuiler.appendline($"configuration {formatter.name}: ");	foreach (var setting in formatter.format()) {	stringbuiler.appendline($"{setting}");	}	this.logger.loginformation(stringbuiler.tostring());	} catch(exception ex) {	
+an error occured while logging options formatter name 
+
+========================= orleans sample_1595 =========================
+
+public static void initialize() {	clientconfiguration config = clientconfiguration.standardload();	if (config == null) {	
+error loading standard client configuration file 
+
+public static void initialize(fileinfo configfile) {	clientconfiguration config;	try {	config = clientconfiguration.loadfromfile(configfile.fullname);	}	catch (exception ex) {	
+error loading client configuration file 
+
+public static void initialize(fileinfo configfile) {	clientconfiguration config;	try {	config = clientconfiguration.loadfromfile(configfile.fullname);	}	catch (exception ex) {	throw;	}	if (config == null) {	
+error loading client configuration file 
+
+public static void initialize(clientconfiguration config) {	if (config == null) {	
+initialize was called with null clientconfiguration object 
+
+if (isinitialized) return;	lock (initlock) {	if (!isinitialized) {	try {	isfullyinitialized = false;	client = clusterclient;	client.connect().getawaiter().getresult();	isfullyinitialized = true;	}	catch (exception exc) {	
+initialization failed 
+
+========================= orleans sample_1503 =========================
+
+protected async task do_liveness_oracletest_1() {	output.writeline("clusterid= {0}", this.hostedcluster.options.clusterid);	silohandle silo3 = this.hostedcluster.startadditionalsilo();	imanagementgrain mgmtgrain = this.grainfactory.getgrain<imanagementgrain>(0);	dictionary<siloaddress, silostatus> statuses = await mgmtgrain.gethosts(false);	foreach (var pair in statuses) {	
+silo status 
+
+protected async task do_liveness_oracletest_1() {	output.writeline("clusterid= {0}", this.hostedcluster.options.clusterid);	silohandle silo3 = this.hostedcluster.startadditionalsilo();	imanagementgrain mgmtgrain = this.grainfactory.getgrain<imanagementgrain>(0);	dictionary<siloaddress, silostatus> statuses = await mgmtgrain.gethosts(false);	foreach (var pair in statuses) {	assert.equal(silostatus.active, pair.value);	}	assert.equal(3, statuses.count);	ipendpoint address = silo3.siloaddress.endpoint;	
+about to stop 
+
+dictionary<siloaddress, silostatus> statuses = await mgmtgrain.gethosts(false);	foreach (var pair in statuses) {	assert.equal(silostatus.active, pair.value);	}	assert.equal(3, statuses.count);	ipendpoint address = silo3.siloaddress.endpoint;	this.hostedcluster.stopsilo(silo3);	output.writeline("----------------");	statuses = await mgmtgrain.gethosts(false);	foreach (var pair in statuses) {	
+silo status 
+
+========================= orleans sample_428 =========================
+
+private clientconfiguration getoverriddenconfig() {	var config = clientconfiguration.standardload();	if (config == null) {	
+error loading standard client configuration file 
+
+========================= orleans sample_2041 =========================
+

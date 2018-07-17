@@ -1,0 +1,1065 @@
+static void main() {	
+hello world 
+
+========================= corert sample_1685 =========================
+
+private static void main(string[] args) {	if (args.length == 0) {	
+usage hello name 
+
+private static void main(string[] args) {	if (args.length == 0) {	return;	}	
+hello 
+
+========================= corert sample_11 =========================
+
+public static void compilemethod(webassemblycodegencompilation compilation, webassemblymethodcodenode methodcodenodeneedingcode) {	methoddesc method = methodcodenodeneedingcode.method;	if (compilation.logger.isverbose) {	string methodname = method.tostring();	
+compiling 
+
+========================= corert sample_1633 =========================
+
+public static int main() {	if (string.empty.length > 0) {	new bringuptest().tostring();	}	int counter = 0;	try {	try {	throw new exception("my exception");	}	catch (outofmemoryexception) {	
+unexpected exception caught 
+
+int counter = 0;	try {	try {	throw new exception("my exception");	}	catch (outofmemoryexception) {	return fail;	}	}	catch (exception e) {	
+exception caught 
+
+try {	try {	throw new exception("my exception");	}	catch (outofmemoryexception) {	return fail;	}	}	catch (exception e) {	if (e.message != "my exception") {	
+unexpected exception message 
+
+catch (outofmemoryexception) {	return fail;	}	}	catch (exception e) {	if (e.message != "my exception") {	return fail;	}	string stacktrace = e.stacktrace;	if (!stacktrace.contains("bringuptest.main")) {	
+unexpected stack trace 
+
+string stacktrace = e.stacktrace;	if (!stacktrace.contains("bringuptest.main")) {	return fail;	}	counter++;	}	try {	g.myobjectfield = new object();	}	catch (nullreferenceexception) {	
+null reference exception in write barrier caught 
+
+}	try {	try {	g.myfield++;	}	finally {	counter++;	}	}	catch (nullreferenceexception) {	
+null reference exception caught 
+
+counter++;	}	}	catch (nullreferenceexception) {	counter++;	}	try {	throw new exception("testing filter");	}	catch (exception e) when (e.message == "testing filter" && counter++ > 0) {	
+exception caught via filter 
+
+}	}	catch (nullreferenceexception) {	counter++;	}	try {	throw new exception("testing filter");	}	catch (exception e) when (e.message == "testing filter" && counter++ > 0) {	if (e.message != "testing filter") {	
+unexpected exception message 
+
+return fail;	}	counter++;	}	try {	throwexcthroughmethodswithfinalizers1("main");	}	catch (exception e) when (filterwithgc() && counter++ > 0) {	console.writeline(e.message);	if (e.message != "throwexcthroughmethodswithfinalizers2") {	
+unexpected exception message 
+
+}	try {	throwexcthroughmethodswithfinalizers1("main");	}	catch (exception e) when (filterwithgc() && counter++ > 0) {	console.writeline(e.message);	if (e.message != "throwexcthroughmethodswithfinalizers2") {	return fail;	}	if (finallycounter != 2) {	
+finalizers didn t execute 
+
+catch {	counter++;	throw;	}	}	catch (exception ex) {	if (ex.message != "hello") return fail;	counter++;	}	if (counter != 10) {	
+unexpected counter value 
+
+static void throwexcthroughmethodswithfinalizers1(string caller) {	createsomegarbage();	string s = caller + " + throwexcthroughmethodswithfinalizers1";	createsomegarbage();	try {	throwexcthroughmethodswithfinalizers2(s);	}	finally {	
+executing finally in 
+
+static void throwexcthroughmethodswithfinalizers2(string caller) {	createsomegarbage();	string s = caller + " + throwexcthroughmethodswithfinalizers2";	createsomegarbage();	try {	throw new exception("throwexcthroughmethodswithfinalizers2");	}	finally {	
+executing finally in 
+
+========================= corert sample_8 =========================
+
+public static int main() {	int result = pass;	if (!testvaluetypedelegates()) {	
+failed 
+
+public static int main() {	int result = pass;	if (!testvaluetypedelegates()) {	result = fail;	}	if (!testvirtualdelegates()) {	
+failed 
+
+public static int main() {	int result = pass;	if (!testvaluetypedelegates()) {	result = fail;	}	if (!testvirtualdelegates()) {	result = fail;	}	if (!testinterfacedelegates()) {	
+failed 
+
+if (!testvaluetypedelegates()) {	result = fail;	}	if (!testvirtualdelegates()) {	result = fail;	}	if (!testinterfacedelegates()) {	result = fail;	}	if (!teststaticopencloseddelegates()) {	
+failed 
+
+if (!testvirtualdelegates()) {	result = fail;	}	if (!testinterfacedelegates()) {	result = fail;	}	if (!teststaticopencloseddelegates()) {	result = fail;	}	if (!testmulticastdelegates()) {	
+failed 
+
+if (!testinterfacedelegates()) {	result = fail;	}	if (!teststaticopencloseddelegates()) {	result = fail;	}	if (!testmulticastdelegates()) {	result = fail;	}	if (!testdynamicinvoke()) {	
+failed 
+
+object t = new testvaluetype { x = 456 };	func<string> d = t.tostring;	string result = d();	if (result != "456") return false;	}	{	func<int, testvaluetype> d = testvaluetype.makevaluetype;	testvaluetype result = d(789);	if (result.x != 789) return false;	}	
+ok 
+
+{	mid t = new mid();	if (t.getbasedo()() != "base") return false;	if (t.getderiveddo()() != "mid") return false;	}	{	mid t = new derived();	if (t.getbasedo()() != "base") return false;	if (t.getderiveddo()() != "derived") return false;	}	
+ok 
+
+{	ifoo t = new classwithifoo("class");	func<int, string> d = t.dofoo;	if (d(987) != "class987") return false;	}	{	ifoo t = new structwithifoo("struct");	func<int, string> d = t.dofoo;	if (d(654) != "struct654") return false;	}	
+ok 
+
+public static bool teststaticopencloseddelegates() {	console.write("testing static open and closed delegates...");	{	func<string, string, string> d = extensionclass.combine;	if (d("hello", "world") != "helloworld") return false;	}	{	func<string, string> d = "hi".combine;	if (d("there") != "hithere") return false;	}	
+ok 
+
+if (t.state != 1) return false;	t.state = 0;	d += t.addtwo;	d();	if (t.state != 3) return false;	t.state = 0;	d += t.addone;	d();	if (t.state != 4) return false;	}	
+ok 
+
+var args = new object[] { (intptr)8 };	bool caught = false;	try {	d.dynamicinvoke(args);	}	catch (argumentexception) {	caught = true;	}	if (!caught) return false;	}	
+ok 
+
+========================= corert sample_10 =========================
+
+public void emitsource() {	
+pragma warning disable 
+
+public void emitsource() {	
+pragma warning disable 
+
+public void emitsource() {	
+pragma warning disable writeline 
+
+public void emitsource() {	
+using system 
+
+public void emitsource() {	
+using system reflection 
+
+public void emitsource() {	
+using system collections generic 
+
+public void emitsource() {	
+using internal nativeformat 
+
+private void emitrecord(recorddef record) {	openscope($"public partial struct {record.name}");	
+internal metadatareader reader 
+
+private void emitrecord(recorddef record) {	openscope($"public partial struct {record.name}");	
+internal record name handle handle 
+
+private void emitrecord(recorddef record) {	openscope($"public partial struct {record.name}");	openscope($"public {record.name}handle handle");	openscope("get");	
+return handle 
+
+foreach (var member in record.members) {	if ((member.flags & memberdefflags.notpersisted) != 0) continue;	string membertype = member.getmembertype();	string fieldtype = member.getmembertype(membertypekind.readerfield);	string fieldname = member.getmemberfieldname();	string description = member.getmemberdescription();	if (description != null) writedoccomment(description);	openscope($"public {membertype} {member.name}");	openscope("get");	if (fieldtype != membertype) writeline($"return ({membertype}){fieldname};");	
+return fieldname 
+
+string fieldtype = member.getmembertype(membertypekind.readerfield);	string fieldname = member.getmemberfieldname();	string description = member.getmemberdescription();	if (description != null) writedoccomment(description);	openscope($"public {membertype} {member.name}");	openscope("get");	if (fieldtype != membertype) writeline($"return ({membertype}){fieldname};");	closescope();	closescope(member.name);	writelineifneeded();	
+internal fieldtype fieldname 
+
+private void emithandle(recorddef record) {	string handlename = $"{record.name}handle";	openscope($"public partial struct {handlename}");	openscope("public override bool equals(object obj)");	
+if obj is handlename 
+
+private void emithandle(recorddef record) {	string handlename = $"{record.name}handle";	openscope($"public partial struct {handlename}");	openscope("public override bool equals(object obj)");	writeline($"    return _value == (({handlename})obj)._value;");	
+else if obj is handle 
+
+private void emithandle(recorddef record) {	string handlename = $"{record.name}handle";	openscope($"public partial struct {handlename}");	openscope("public override bool equals(object obj)");	writeline($"    return _value == (({handlename})obj)._value;");	writeline("    return _value == ((handle)obj)._value;");	
+else 
+
+private void emithandle(recorddef record) {	string handlename = $"{record.name}handle";	openscope($"public partial struct {handlename}");	openscope("public override bool equals(object obj)");	writeline($"    return _value == (({handlename})obj)._value;");	writeline("    return _value == ((handle)obj)._value;");	
+return false 
+
+writeline($"    return _value == (({handlename})obj)._value;");	writeline("    return _value == ((handle)obj)._value;");	closescope("equals");	openscope($"public bool equals({handlename} handle)");	writeline("return _value == handle._value;");	closescope("equals");	openscope("public bool equals(handle handle)");	writeline("return _value == handle._value;");	closescope("equals");	openscope("public override int gethashcode()");	
+return int value 
+
+closescope("equals");	openscope($"public bool equals({handlename} handle)");	writeline("return _value == handle._value;");	closescope("equals");	openscope("public bool equals(handle handle)");	writeline("return _value == handle._value;");	closescope("equals");	openscope("public override int gethashcode()");	closescope("gethashcode");	writelineifneeded();	
+internal int value 
+
+writeline("return _value == handle._value;");	closescope("equals");	openscope("public override int gethashcode()");	closescope("gethashcode");	writelineifneeded();	openscope($"internal {handlename}(handle handle) : this(handle._value)");	closescope();	openscope($"internal {handlename}(int value)");	writeline("handletype htype = (handletype)(value >> 24);");	writeline($"if (!(htype == 0 || htype == handletype.{record.name} || htype == handletype.null))");	
+throw new argumentexception 
+
+closescope("equals");	openscope("public override int gethashcode()");	closescope("gethashcode");	writelineifneeded();	openscope($"internal {handlename}(handle handle) : this(handle._value)");	closescope();	openscope($"internal {handlename}(int value)");	writeline("handletype htype = (handletype)(value >> 24);");	writeline($"if (!(htype == 0 || htype == handletype.{record.name} || htype == handletype.null))");	writeline($"_value = (value & 0x00ffffff) | (((int)handletype.{record.name}) << 24);");	
+validate 
+
+closescope("gethashcode");	writelineifneeded();	openscope($"internal {handlename}(handle handle) : this(handle._value)");	closescope();	openscope($"internal {handlename}(int value)");	writeline("handletype htype = (handletype)(value >> 24);");	writeline($"if (!(htype == 0 || htype == handletype.{record.name} || htype == handletype.null))");	writeline($"_value = (value & 0x00ffffff) | (((int)handletype.{record.name}) << 24);");	closescope();	openscope($"public static implicit operator  handle({handlename} handle)");	
+return new handle handle value 
+
+closescope();	openscope($"internal {handlename}(int value)");	writeline("handletype htype = (handletype)(value >> 24);");	writeline($"if (!(htype == 0 || htype == handletype.{record.name} || htype == handletype.null))");	writeline($"_value = (value & 0x00ffffff) | (((int)handletype.{record.name}) << 24);");	closescope();	openscope($"public static implicit operator  handle({handlename} handle)");	closescope("handle");	openscope("internal int offset");	openscope("get");	
+return this value 
+
+writeline($"if (!(htype == 0 || htype == handletype.{record.name} || htype == handletype.null))");	writeline($"_value = (value & 0x00ffffff) | (((int)handletype.{record.name}) << 24);");	closescope();	openscope($"public static implicit operator  handle({handlename} handle)");	closescope("handle");	openscope("internal int offset");	openscope("get");	closescope();	closescope("offset");	openscope($"public {record.name} get{record.name}(metadatareader reader)");	
+return reader get record name this 
+
+closescope();	openscope($"public static implicit operator  handle({handlename} handle)");	closescope("handle");	openscope("internal int offset");	openscope("get");	closescope();	closescope("offset");	openscope($"public {record.name} get{record.name}(metadatareader reader)");	closescope($"get{record.name}");	openscope("public bool isnull(metadatareader reader)");	
+return reader isnull this 
+
+closescope("handle");	openscope("internal int offset");	openscope("get");	closescope();	closescope("offset");	openscope($"public {record.name} get{record.name}(metadatareader reader)");	closescope($"get{record.name}");	openscope("public bool isnull(metadatareader reader)");	closescope("isnull");	openscope("public handle tohandle(metadatareader reader)");	
+return reader tohandle this 
+
+closescope("offset");	openscope($"public {record.name} get{record.name}(metadatareader reader)");	closescope($"get{record.name}");	openscope("public bool isnull(metadatareader reader)");	closescope("isnull");	openscope("public handle tohandle(metadatareader reader)");	closescope("tohandle");	writescopeattribute("[system.diagnostics.conditional(\"debug\")]");	openscope("internal void _validate()");	writeline($"if ((handletype)((_value & 0xff000000) >> 24) != handletype.{record.name})");	
+throw new argumentexception 
+
+closescope($"get{record.name}");	openscope("public bool isnull(metadatareader reader)");	closescope("isnull");	openscope("public handle tohandle(metadatareader reader)");	closescope("tohandle");	writescopeattribute("[system.diagnostics.conditional(\"debug\")]");	openscope("internal void _validate()");	writeline($"if ((handletype)((_value & 0xff000000) >> 24) != handletype.{record.name})");	closescope("_validate");	openscope("public override string tostring()");	
+return string format value 
+
+private void emitcollection(string collectiontypename, string elementtypename) {	openscope($"public partial struct {collectiontypename}");	
+private nativereader reader 
+
+private void emitcollection(string collectiontypename, string elementtypename) {	openscope($"public partial struct {collectiontypename}");	
+private uint offset 
+
+private void emitcollection(string collectiontypename, string elementtypename) {	openscope($"public partial struct {collectiontypename}");	openscope($"internal {collectiontypename}(nativereader reader, uint offset)");	writeline("_offset = offset;");	writeline("_reader = reader;");	closescope();	openscope("public int count");	openscope("get");	
+uint count 
+
+private void emitcollection(string collectiontypename, string elementtypename) {	openscope($"public partial struct {collectiontypename}");	openscope($"internal {collectiontypename}(nativereader reader, uint offset)");	writeline("_offset = offset;");	writeline("_reader = reader;");	closescope();	openscope("public int count");	openscope("get");	
+reader decodeunsigned offset out count 
+
+private void emitcollection(string collectiontypename, string elementtypename) {	openscope($"public partial struct {collectiontypename}");	openscope($"internal {collectiontypename}(nativereader reader, uint offset)");	writeline("_offset = offset;");	writeline("_reader = reader;");	closescope();	openscope("public int count");	openscope("get");	
+return int count 
+
+openscope($"public partial struct {collectiontypename}");	openscope($"internal {collectiontypename}(nativereader reader, uint offset)");	writeline("_offset = offset;");	writeline("_reader = reader;");	closescope();	openscope("public int count");	openscope("get");	closescope();	closescope("count");	openscope($"public enumerator getenumerator()");	
+return new enumerator reader offset 
+
+writeline("_offset = offset;");	writeline("_reader = reader;");	closescope();	openscope("public int count");	openscope("get");	closescope();	closescope("count");	openscope($"public enumerator getenumerator()");	closescope("getenumerator");	openscope($"public struct enumerator");	
+private nativereader reader 
+
+writeline("_offset = offset;");	writeline("_reader = reader;");	closescope();	openscope("public int count");	openscope("get");	closescope();	closescope("count");	openscope($"public enumerator getenumerator()");	closescope("getenumerator");	openscope($"public struct enumerator");	
+private uint offset 
+
+writeline("_offset = offset;");	writeline("_reader = reader;");	closescope();	openscope("public int count");	openscope("get");	closescope();	closescope("count");	openscope($"public enumerator getenumerator()");	closescope("getenumerator");	openscope($"public struct enumerator");	
+private uint remaining 
+
+writeline("_offset = offset;");	writeline("_reader = reader;");	closescope();	openscope("public int count");	openscope("get");	closescope();	closescope("count");	openscope($"public enumerator getenumerator()");	closescope("getenumerator");	openscope($"public struct enumerator");	
+private elementtypename current 
+
+openscope($"public enumerator getenumerator()");	closescope("getenumerator");	openscope($"public struct enumerator");	openscope($"internal enumerator(nativereader reader, uint offset)");	writeline("_reader = reader;");	writeline("_offset = reader.decodeunsigned(offset, out _remaining);");	writeline($"_current = default({elementtypename});");	closescope();	openscope($"public {elementtypename} current");	openscope("get");	
+return current 
+
+writeline("_reader = reader;");	writeline("_offset = reader.decodeunsigned(offset, out _remaining);");	writeline($"_current = default({elementtypename});");	closescope();	openscope($"public {elementtypename} current");	openscope("get");	closescope();	closescope("current");	openscope("public bool movenext()");	writeline("if (_remaining == 0)");	
+return false 
+
+writeline("_reader = reader;");	writeline("_offset = reader.decodeunsigned(offset, out _remaining);");	writeline($"_current = default({elementtypename});");	closescope();	openscope($"public {elementtypename} current");	openscope("get");	closescope();	closescope("current");	openscope("public bool movenext()");	writeline("if (_remaining == 0)");	
+remaining 
+
+writeline("_offset = reader.decodeunsigned(offset, out _remaining);");	writeline($"_current = default({elementtypename});");	closescope();	openscope($"public {elementtypename} current");	openscope("get");	closescope();	closescope("current");	openscope("public bool movenext()");	writeline("if (_remaining == 0)");	writeline("_offset = _reader.read(_offset, out _current);");	
+return true 
+
+private void emitopaquehandle() {	openscope("public partial struct handle");	foreach (var record in schemadef.recordschema) {	string handlename = $"{record.name}handle";	openscope($"public {handlename} to{handlename}(metadatareader reader)");	
+return new handlename this 
+
+private void emitmetadatareader() {	openscope("public partial class metadatareader");	foreach (var record in schemadef.recordschema) {	openscope($"public {record.name} get{record.name}({record.name}handle handle)");	if (record.name == "constantstringvalue") {	
+if isnull handle 
+
+private void emitmetadatareader() {	openscope("public partial class metadatareader");	foreach (var record in schemadef.recordschema) {	openscope($"public {record.name} get{record.name}({record.name}handle handle)");	if (record.name == "constantstringvalue") {	
+return new constantstringvalue 
+
+private void emitmetadatareader() {	openscope("public partial class metadatareader");	foreach (var record in schemadef.recordschema) {	openscope($"public {record.name} get{record.name}({record.name}handle handle)");	if (record.name == "constantstringvalue") {	}	
+record name record 
+
+openscope($"public {record.name} get{record.name}({record.name}handle handle)");	if (record.name == "constantstringvalue") {	}	writeline("record._reader = this;");	writeline("record._handle = handle;");	writeline("var offset = (uint)handle.offset;");	foreach (var member in record.members) {	if ((member.flags & memberdefflags.notpersisted) != 0) continue;	writeline($"offset = _streamreader.read(offset, out record.{member.getmemberfieldname()});");	}	
+return record 
+
+writeline("record._handle = handle;");	writeline("var offset = (uint)handle.offset;");	foreach (var member in record.members) {	if ((member.flags & memberdefflags.notpersisted) != 0) continue;	writeline($"offset = _streamreader.read(offset, out record.{member.getmemberfieldname()});");	}	closescope($"get{record.name}");	}	foreach (var record in schemadef.recordschema) {	openscope($"internal handle tohandle({record.name}handle handle)");	
+return new handle handle value 
+
+}	closescope($"get{record.name}");	}	foreach (var record in schemadef.recordschema) {	openscope($"internal handle tohandle({record.name}handle handle)");	closescope("tohandle");	}	foreach (var record in schemadef.recordschema) {	string handlename = $"{record.name}handle";	openscope($"internal {handlename} to{handlename}(handle handle)");	
+return new handlename handle value 
+
+========================= corert sample_1781 =========================
+
+public int emitsymbolreference(isymbolnode target, int delta, reloctype reloctype) {	string realsymbolname = getbasesymbolname(target, _nodefactory.namemangler, true);	if (realsymbolname == null) {	
+unable to generate symbolref to 
+
+========================= corert sample_1636 =========================
+
+public void emitsource() {	
+pragma warning disable 
+
+public void emitsource() {	writeline();	
+using system 
+
+public void emitsource() {	writeline();	
+using system io 
+
+public void emitsource() {	writeline();	
+using system collections generic 
+
+public void emitsource() {	writeline();	
+using system reflection 
+
+public void emitsource() {	writeline();	
+using internal lowlevellinq 
+
+public void emitsource() {	writeline();	
+using internal nativeformat 
+
+private void emitwriteprimitivearray(string typename) {	openscope($"public static void write(this nativewriter writer, {typename}[] values)");	writeline("if (values == null)");	writeline("{");	
+writer writeunsigned 
+
+private void emitwriteprimitivearray(string typename) {	openscope($"public static void write(this nativewriter writer, {typename}[] values)");	writeline("if (values == null)");	writeline("{");	
+return 
+
+private void emitwriteprimitivearray(string typename) {	openscope($"public static void write(this nativewriter writer, {typename}[] values)");	writeline("if (values == null)");	writeline("{");	writeline("}");	
+writer writeunsigned uint values length 
+
+private void emitwriteprimitivearray(string typename) {	openscope($"public static void write(this nativewriter writer, {typename}[] values)");	writeline("if (values == null)");	writeline("{");	writeline("}");	
+foreach typename value in values 
+
+private void emitwriteprimitivearray(string typename) {	openscope($"public static void write(this nativewriter writer, {typename}[] values)");	writeline("if (values == null)");	writeline("{");	writeline("}");	writeline("{");	
+writer write value 
+
+private void emitwriteenum(enumtype enumtype) {	openscope($"public static void write(this nativewriter writer, {enumtype.name} value)");	
+writer writeunsigned uint value 
+
+private void emitwrite(string typename) {	openscope($"public static void write(this nativewriter writer, {typename} record)");	writeline("if (record != null)");	
+writer writeunsigned uint record handle offset 
+
+private void emitwrite(string typename) {	openscope($"public static void write(this nativewriter writer, {typename} record)");	writeline("if (record != null)");	
+else 
+
+private void emitwrite(string typename) {	openscope($"public static void write(this nativewriter writer, {typename} record)");	writeline("if (record != null)");	
+writer writeunsigned 
+
+private void emitwritearray(string typename) {	openscope($"public static void write(this nativewriter writer, list<{typename}> values)");	writeline("if (values == null)");	writeline("{");	
+writer writeunsigned 
+
+private void emitwritearray(string typename) {	openscope($"public static void write(this nativewriter writer, list<{typename}> values)");	writeline("if (values == null)");	writeline("{");	
+return 
+
+private void emitwritearray(string typename) {	openscope($"public static void write(this nativewriter writer, list<{typename}> values)");	writeline("if (values == null)");	writeline("{");	writeline("}");	
+writer writeunsigned uint values count 
+
+private void emitwritearray(string typename) {	openscope($"public static void write(this nativewriter writer, list<{typename}> values)");	writeline("if (values == null)");	writeline("{");	writeline("}");	
+foreach typename value in values 
+
+private void emitwritearray(string typename) {	openscope($"public static void write(this nativewriter writer, list<{typename}> values)");	writeline("if (values == null)");	writeline("{");	writeline("}");	writeline("{");	
+writer write value 
+
+========================= corert sample_1785 =========================
+
+static void main() {	
+hello world 
+
+========================= corert sample_2530 =========================
+
+if (i != 0) _tw.write(", ");	_tw.write(fmt.formatname(owningmethod.instantiation[i]));	}	_tw.write(">");	}	_tw.write("(");	for (int i = 0; i < owningmethod.signature.length; i++) {	if (i != 0) _tw.write(", ");	_tw.write(fmt.formatname(owningmethod.signature[i]));	}	
+cil managed 
+
+========================= corert sample_1324 =========================
+
+}	memoryneeded = memoryneeded.alignup(type.typeinstancefieldalignment);	memoryneeded += type.typeinstancefieldsize;	}	memoryneeded = memoryneeded.alignup(intptr.size);	return memoryneeded;	}	#if ccconverter_trace public unsafe void dumpdebuginfo() {	typesystemcontext context = typesystemcontextfactory.create();	{	
+localvariableset 
+
+private unsafe delegate void setupblockdelegate(void* pbuffer, ref callconversioninterpreterlocals locals);	private static unsafe void setuplocalsblock1(void* pbuffer, ref callconversioninterpreterlocals locals) {	
+setup locals block 
+
+private static unsafe void setuplocalsblock2(void* pbuffer, ref callconversioninterpreterlocals locals) {	
+setup locals block 
+
+private static unsafe void setuptransitionblock(void* pbuffer, ref callconversioninterpreterlocals locals) {	
+setup transition block 
+
+callinterceptorargs args = new callinterceptorargs();	args.argumentsandreturnvalue = locals.locals1;	args.locals = locals.locals2;	locals.interceptor.thunkexecute(ref args);	}	break;	case callconversionoperation.opcode.copy_x_bytes_from_localblock_y_offset_z_in_localblock_to_offset_w_in_transition_block: {	void* psrc = ((byte*)locals.getlocalblock(op.y).getrawmemorypointer()) + op.z;	void* pdst = locals.transitionblockptr + op.w;	buffer.memorycopy(psrc, pdst, op.x, op.x);	
+copy bytes from to 
+
+case callconversionoperation.opcode.copy_x_bytes_from_localblock_y_offset_z_in_localblock_to_offset_w_in_transition_block: {	void* psrc = ((byte*)locals.getlocalblock(op.y).getrawmemorypointer()) + op.z;	void* pdst = locals.transitionblockptr + op.w;	buffer.memorycopy(psrc, pdst, op.x, op.x);	#endif }	break;	case callconversionoperation.opcode.copy_x_bytes_from_localblock_y_pointer_z_to_offset_w_in_transition_block: {	void* psrc = locals.getlocalblock(op.y).getrawmemorypointer()[op.z].topointer();	void* pdst = locals.transitionblockptr + op.w;	buffer.memorycopy(psrc, pdst, op.x, op.x);	
+copy bytes from to 
+
+case callconversionoperation.opcode.copy_x_bytes_from_localblock_y_pointer_z_to_offset_w_in_transition_block: {	void* psrc = locals.getlocalblock(op.y).getrawmemorypointer()[op.z].topointer();	void* pdst = locals.transitionblockptr + op.w;	buffer.memorycopy(psrc, pdst, op.x, op.x);	#endif }	break;	case callconversionoperation.opcode.signextend_x_bytes_from_localblock_y_pointer_z_to_offset_w_in_transition_block: {	void* psrc = locals.getlocalblock(op.y).getrawmemorypointer()[op.z].topointer();	void* pdst = locals.transitionblockptr + op.w;	callconverterthunk.signextend(psrc, pdst, op.x);	
+signextend bytes from to 
+
+case callconversionoperation.opcode.signextend_x_bytes_from_localblock_y_pointer_z_to_offset_w_in_transition_block: {	void* psrc = locals.getlocalblock(op.y).getrawmemorypointer()[op.z].topointer();	void* pdst = locals.transitionblockptr + op.w;	callconverterthunk.signextend(psrc, pdst, op.x);	#endif }	break;	case callconversionoperation.opcode.zeroextend_x_bytes_from_localblock_y_pointer_z_to_offset_w_in_transition_block: {	void* psrc = locals.getlocalblock(op.y).getrawmemorypointer()[op.z].topointer();	void* pdst = locals.transitionblockptr + op.w;	callconverterthunk.zeroextend(psrc, pdst, op.x);	
+zeroextend bytes from to 
+
+case callconversionoperation.opcode.zeroextend_x_bytes_from_localblock_y_pointer_z_to_offset_w_in_transition_block: {	void* psrc = locals.getlocalblock(op.y).getrawmemorypointer()[op.z].topointer();	void* pdst = locals.transitionblockptr + op.w;	callconverterthunk.zeroextend(psrc, pdst, op.x);	#endif }	break;	case callconversionoperation.opcode.copy_x_bytes_to_localblock_y_offset_z_in_localblock_from_offset_w_in_transition_block: {	void* psrc = locals.transitionblockptr + op.w;	void* pdst = ((byte*)locals.getlocalblock(op.y).getrawmemorypointer()) + op.z;	buffer.memorycopy(psrc, pdst, op.x, op.x);	
+copy bytes 
+
+case callconversionoperation.opcode.copy_x_bytes_to_localblock_y_offset_z_in_localblock_from_offset_w_in_transition_block: {	void* psrc = locals.transitionblockptr + op.w;	void* pdst = ((byte*)locals.getlocalblock(op.y).getrawmemorypointer()) + op.z;	buffer.memorycopy(psrc, pdst, op.x, op.x);	#endif }	break;	case callconversionoperation.opcode.copy_x_bytes_to_localblock_y_pointer_z_from_offset_w_in_transition_block: {	void* psrc = locals.transitionblockptr + op.w;	void* pdst = locals.getlocalblock(op.y).getrawmemorypointer()[op.z].topointer();	buffer.memorycopy(psrc, pdst, op.x, op.x);	
+copy bytes from to 
+
+case callconversionoperation.opcode.return_integer_byvalue_from_localblock_x_pointer_y_of_size_z: {	#if x86 callconverterthunk.setupcalleractualreturndata(locals.transitionblockptr);	fixed (returnblock* retblk = &callconverterthunk.t_nonargregisterreturnspace) {	buffer.memorycopy(locals.getlocalblock(op.x).getrawmemorypointer()[op.y].topointer(), retblk, op.z, op.z);	}	locals.intptrreturnval = callconverterthunk.returnintegerpointreturnthunk;	#else byte* returnblock = locals.transitionblockptr + transitionblock.getoffsetofargumentregisters();	memoryhelpers.memset((intptr)returnblock, intptr.size, 0);	buffer.memorycopy(locals.getlocalblock(op.x).getrawmemorypointer()[op.y].topointer(), returnblock, op.z, op.z);	locals.intptrreturnval = callconverterthunk.returnintegerpointreturnthunk;	
+copy bytes from to return block 
+
+break;	case callconversionoperation.opcode.return_signextended_integer_byvalue_from_localblock_x_pointer_y_of_size_z: {	#if x86 callconverterthunk.setupcalleractualreturndata(locals.transitionblockptr);	fixed (returnblock* retblk = &callconverterthunk.t_nonargregisterreturnspace) {	callconverterthunk.signextend(locals.getlocalblock(op.x).getrawmemorypointer()[op.y].topointer(), retblk, op.z);	}	locals.intptrreturnval = callconverterthunk.returnintegerpointreturnthunk;	#else byte* returnblock = locals.transitionblockptr + transitionblock.getoffsetofargumentregisters();	callconverterthunk.signextend(locals.getlocalblock(op.x).getrawmemorypointer()[op.y].topointer(), returnblock, op.z);	locals.intptrreturnval = callconverterthunk.returnintegerpointreturnthunk;	
+signextend bytes from to return block 
+
+break;	case callconversionoperation.opcode.return_zeroextended_integer_byvalue_from_localblock_x_pointer_y_of_size_z: {	#if x86 callconverterthunk.setupcalleractualreturndata(locals.transitionblockptr);	fixed (returnblock* retblk = &callconverterthunk.t_nonargregisterreturnspace) {	callconverterthunk.zeroextend(locals.getlocalblock(op.x).getrawmemorypointer()[op.y].topointer(), retblk, op.z);	}	locals.intptrreturnval = callconverterthunk.returnintegerpointreturnthunk;	#else byte* returnblock = locals.transitionblockptr + transitionblock.getoffsetofargumentregisters();	callconverterthunk.zeroextend(locals.getlocalblock(op.x).getrawmemorypointer()[op.y].topointer(), returnblock, op.z);	locals.intptrreturnval = callconverterthunk.returnintegerpointreturnthunk;	
+zeroextend bytes from to return block 
+
+buffer.memorycopy(locals.getlocalblock(op.x).getrawmemorypointer()[op.y].topointer(), retblk, op.z, op.z);	}	if (op.z == 4) {	locals.intptrreturnval = callconverterthunk.returnfloatingpointreturn4thunk;	}	else {	debug.assert(op.z == 8);	locals.intptrreturnval = callconverterthunk.returnfloatingpointreturn8thunk;	}	#else debug.assert(false);	
+copy bytes from to return block 
+
+calldescrdata.psrc = locals.transitionblockptr + sizeof(transitionblock);	calldescrdata.ptarget = locals.intptrfnptr.topointer();	if (op.op == callconversionoperation.opcode.call_descr_managed_with_retbuf_as_localblock_x_pointer_y_stackslots_z_fpcallinfo_w) runtimeaugments.calldescrworker(new intptr(&calldescrdata));	else runtimeaugments.calldescrworkernative(new intptr(&calldescrdata));	}	break;	case callconversionoperation.opcode.copy_x_bytes_from_retbuf_to_localblock_y_pointer_z: {	void* psrc = locals.intptrreturnval.topointer();	void* pdst = locals.getlocalblock(op.y).getrawmemorypointer()[op.z].topointer();	buffer.memorycopy(psrc, pdst, op.x, op.x);	
+copy bytes from to 
+
+public static unsafe void makedynamiccall(intptr address, dynamiccallsignature callsignature, localvariableset arguments) {	
+makedynamiccall executing 
+
+========================= corert sample_1264 =========================
+
+syntax.defineoption("ildump", ref _ildump, "dump il assembly listing for compiler-generated il");	syntax.defineoption("stacktracedata", ref _emitstacktracedata, "emit data to support generating stack trace strings at runtime");	syntax.defineoption("targetarch", ref _targetarchitecturestr, "target architecture for cross compilation");	syntax.defineoption("targetos", ref _targetosstr, "target os for cross compilation");	syntax.defineoption("singlemethodtypename", ref _singlemethodtypename, "single method compilation: name of the owning type");	syntax.defineoption("singlemethodname", ref _singlemethodname, "single method compilation: name of the method");	syntax.defineoptionlist("singlemethodgenericarg", ref _singlemethodgenericargs, "single method compilation: generic arguments to the method");	syntax.defineparameterlist("in", ref inputfiles, "input file(s) to compile");	});	if (waitfordebugger) {	
+waiting for debugger to attach press enter to continue 
+
+}	inputmodules.add(module);	}	compilationgroup = new multifilesharedcompilationmodulegroup(typesystemcontext, inputmodules);	}	else {	if (entrypointmodule == null && !_nativelib) throw new exception("no entrypoint module");	compilationroots.add(new exportedmethodsrootprovider((ecmamodule)typesystemcontext.systemmodule));	compilationgroup = new singlefilecompilationmodulegroup(typesystemcontext);	}	
+warning rd xml processing will change before release https foreach var rdxmlfilepath in rdxmlfilepaths 
+
+private void diffcompilationresults<t>(ref bool result, ienumerable<t> set1, ienumerable<t> set2, string prefix, string set1name, string set2name, predicate<t> filter) {	hashset<t> diff = new hashset<t>(set1);	diff.exceptwith(set2);	diff.removewhere(filter);	if (diff.count > 0) {	result = true;	
+prefix but not 
+
+private static bool dumpreproarguments(codegenerationfailedexception ex) {	
+to repro add following arguments to the command line 
+
+#if debug try {	return new program().run(args);	}	catch (codegenerationfailedexception ex) when (dumpreproarguments(ex)) {	throw new notsupportedexception();	}	#else try {	return new program().run(args);	}	catch (exception e) {	
+error 
+
+========================= corert sample_2534 =========================
+
+public void addexportedmethods(ienumerable<ecmamethod> methods) => _methods.addrange(methods.where(m => m.module != _context.systemmodule));	public void emitexportedmethods() {	filestream filestream = new filestream(_exportsfile, filemode.create);	using (streamwriter streamwriter = new streamwriter(filestream)) {	if (_context.target.iswindows) {	
+exports 
+
+public void addexportedmethods(ienumerable<ecmamethod> methods) => _methods.addrange(methods.where(m => m.module != _context.systemmodule));	public void emitexportedmethods() {	filestream filestream = new filestream(_exportsfile, filemode.create);	using (streamwriter streamwriter = new streamwriter(filestream)) {	if (_context.target.iswindows) {	
+method getnativecallableexportname 
+
+public void addexportedmethods(ienumerable<ecmamethod> methods) => _methods.addrange(methods.where(m => m.module != _context.systemmodule));	public void emitexportedmethods() {	filestream filestream = new filestream(_exportsfile, filemode.create);	using (streamwriter streamwriter = new streamwriter(filestream)) {	if (_context.target.iswindows) {	}	else {	
+method getnativecallableexportname 
+
+========================= corert sample_1314 =========================
+
+testwithstruct(new mystruct2(), new mystruct2(), new mystruct2());	console.writeline("====================");	s_ifoostring = "mystruct3.imethod1<system.int32>(1,2)";	s_ifooobject = "mystruct3.imethod1<system.int32>(3,4)";	s_ifooint = "mystruct3.ifoo<int>.imethod1<system.int32>(5,6)";	testwithstruct(new mystruct3(), new mystruct3(), new mystruct3());	console.writeline("====================");	}	{	string res = ((iface<string>)new anotherderivedclass<string>()).ifacegvmethod1<string>("string1", "string2");	
+anotherbaseclass 
+
+console.writeline("====================");	s_ifoostring = "mystruct3.imethod1<system.int32>(1,2)";	s_ifooobject = "mystruct3.imethod1<system.int32>(3,4)";	s_ifooint = "mystruct3.ifoo<int>.imethod1<system.int32>(5,6)";	testwithstruct(new mystruct3(), new mystruct3(), new mystruct3());	console.writeline("====================");	}	{	string res = ((iface<string>)new anotherderivedclass<string>()).ifacegvmethod1<string>("string1", "string2");	res = ((ibar<int>)new barimplementor()).ibargvmethod<string>((i) => "barimplementor:" + i.tostring());	
+barimplementor 
+
+s_ifooint = "mystruct3.ifoo<int>.imethod1<system.int32>(5,6)";	testwithstruct(new mystruct3(), new mystruct3(), new mystruct3());	console.writeline("====================");	}	{	string res = ((iface<string>)new anotherderivedclass<string>()).ifacegvmethod1<string>("string1", "string2");	res = ((ibar<int>)new barimplementor()).ibargvmethod<string>((i) => "barimplementor:" + i.tostring());	yahoo<int> y = new yahooderived();	writelinewithverification("yahooderived:456", y.yahoogvm<string>((i) => "yahooderived:" + i.tostring()));	icovariant<object> cov = new covariant<string>();	
+covariant string icovariantgvm exception 
+
+static foo() {	
+foo cctor 
+
+static bar() {	
+bar cctor 
+
+private static void verify<t>(t expected, t actual) {	if (!actual.equals(expected)) {	
+actual 
+
+private static void verify<t>(t expected, t actual) {	if (!actual.equals(expected)) {	
+expected 
+
+private static void testdynamicinvokestubs() {	
+testing dynamic invoke stubs 
+
+if (testfieldaccess.s_fooclasstypecctorcount != 1) s_numerrors++;	foo<structtype>.s_longfield1 = 0xff00;	foo<structtype>.s_longfield2 = 0xff00;	foo<structtype>.s_longfield3 = 0xff00;	if (testfieldaccess.s_foostructtypecctorcount != 1) s_numerrors++;	bar.s_longfield1 = 0xff00;	bar.s_longfield2 = 0xff00;	bar.s_longfield3 = 0xff00;	if (testfieldaccess.s_barcctorcount != 1) s_numerrors++;	}	
+testing static fields on type foo classtype 
+
+verify("1122", result.key);	verify("3344", result.value);	typeof(foo<classtype>).gettypeinfo().getdeclaredfield("s_stringfield").setvalue(null, "thisisastring1");	typeof(foo<classtype>).gettypeinfo().getdeclaredfield("s_objectfield").setvalue(null, "thisisastring2");	typeof(foo<classtype>).gettypeinfo().getdeclaredfield("s_kvp").setvalue(null, new keyvaluepair<string, string>("thisis", "astring"));	verify("thisisastring1", (string)foo<classtype>.s_stringfield);	verify("thisisastring2", (string)foo<classtype>.s_objectfield);	verify("thisis", (string)foo<classtype>.s_kvp.key);	verify("astring", (string)foo<classtype>.s_kvp.value);	}	
+testing static fields on type foo structtype 
+
+verify("4433", result.key);	verify("2211", result.value);	typeof(foo<structtype>).gettypeinfo().getdeclaredfield("s_stringfield").setvalue(null, "thisisastring3");	typeof(foo<structtype>).gettypeinfo().getdeclaredfield("s_objectfield").setvalue(null, "thisisastring4");	typeof(foo<structtype>).gettypeinfo().getdeclaredfield("s_kvp").setvalue(null, new keyvaluepair<string, string>("thisis1", "astring1"));	verify("thisisastring3", (string)foo<structtype>.s_stringfield);	verify("thisisastring4", (string)foo<structtype>.s_objectfield);	verify("thisis1", (string)foo<structtype>.s_kvp.key);	verify("astring1", (string)foo<structtype>.s_kvp.value);	}	
+testing static fields on type bar 
+
+private static void testinstancefields() {	foo<classtype> fooclasstype = new foo<classtype> {	m_intfield = 1212, m_stringfield = "2323", m_floatfield = 34.34f, m_objectfield = "4545", };	foo<structtype> foostructtype = new foo<structtype> {	m_intfield = 2323, m_stringfield = "3434", m_floatfield = 45.45f, m_objectfield = "5656", };	bar bar = new bar {	m_intfield = 3434, m_stringfield = "4545", m_floatfield = 56.56f, m_objectfield = "6767", };	
+testing instance fields on type foo classtype 
+
+verify("2323", (string)fi.getvalue(fooclasstype));	fi = typeof(foo<classtype>).gettypeinfo().getdeclaredfield("m_floatfield");	verify(34.34f, (float)fi.getvalue(fooclasstype));	fi = typeof(foo<classtype>).gettypeinfo().getdeclaredfield("m_objectfield");	verify("4545", fi.getvalue(fooclasstype));	typeof(foo<classtype>).gettypeinfo().getdeclaredfield("m_stringfield").setvalue(fooclasstype, "thisisastring7");	typeof(foo<classtype>).gettypeinfo().getdeclaredfield("m_objectfield").setvalue(fooclasstype, "thisisastring8");	verify("thisisastring7", (string)fooclasstype.m_stringfield);	verify("thisisastring8", (string)fooclasstype.m_objectfield);	}	
+testing instance fields on type foo structtype 
+
+verify("3434", (string)fi.getvalue(foostructtype));	fi = typeof(foo<structtype>).gettypeinfo().getdeclaredfield("m_floatfield");	verify(45.45f, (float)fi.getvalue(foostructtype));	fi = typeof(foo<structtype>).gettypeinfo().getdeclaredfield("m_objectfield");	verify("5656", fi.getvalue(foostructtype));	typeof(foo<structtype>).gettypeinfo().getdeclaredfield("m_stringfield").setvalue(foostructtype, "thisisastring9");	typeof(foo<structtype>).gettypeinfo().getdeclaredfield("m_objectfield").setvalue(foostructtype, "thisisastring10");	verify("thisisastring9", (string)foostructtype.m_stringfield);	verify("thisisastring10", (string)foostructtype.m_objectfield);	}	
+testing instance fields on type bar 
+
+========================= corert sample_2 =========================
+
+public bool trygetgenericvirtualtargetfortypeandslot(runtimetypehandle targethandle, ref runtimetypehandle declaringtype, runtimetypehandle[] genericarguments, ref string methodname, ref runtimesignature methodsignature, out intptr methodpointer, out intptr dictionarypointer, out bool slotupdated) {	methodnameandsignature methodnameandsignature = new methodnameandsignature(methodname, methodsignature);	
+gvm resolution starting for on a target of type 
+
+for (uint l = 0; l < numifacesigs; l++) entryparser.getunsigned();	continue;	}	for (uint l = 0; l < numifacesigs; l++) {	runtimetypehandle currentifacetypehandle = default(runtimetypehandle);	nativeparser ifacesigparser = new nativeparser(nativelayoutreader, extrefs.getexternalnativelayoutoffset(entryparser.getunsigned()));	if (typeloaderenvironment.instance.gettypefromsignatureandcontext(ref ifacesigparser, module.handle, targettypeinstantiation, null, out currentifacetypehandle)) {	#if gvm_resolution_trace debug.writeline("         -> current interface on type = " + gettypenamedebug(currentifacetypehandle));	#endif debug.assert(!currentifacetypehandle.isnull());	if ((!variantdispatch && declaringtype.equals(currentifacetypehandle)) || (variantdispatch && runtimeaugments.isassignablefrom(declaringtype, currentifacetypehandle))) {	
+exact variant compatible match found on this target type 
+
+========================= corert sample_1221 =========================
+
+private static void testblittabletype() {	
+testing marshalling blittable types 
+
+private static void testboolean() {	
+testing marshalling boolean 
+
+private static void testunichar() {	
+testing unichar 
+
+private static void testarrays() {	
+testing marshalling int arrays 
+
+private static void testarrays() {	const int arraysize = 100;	int[] arr = new int[arraysize];	for (int i = 0; i < arraysize; i++) arr[i] = i;	throwifnotequals(0, checkincremental(arr, arraysize), "array marshalling failed");	
+testing marshalling blittable struct arrays 
+
+private static void testbyref() {	
+testing marshalling by ref 
+
+private static void teststring() {	
+testing marshalling string 
+
+private static void teststringbuilder() {	
+testing marshalling string builder 
+
+private static void teststringarray() {	
+testing marshalling string array 
+
+private static void testlasterror() {	
+testing last error 
+
+private static void testsafehandle() {	
+testing marshalling safehandle 
+
+private static void testsafehandle() {	safememoryhandle hnd = safememoryhandle.allocatememory(1000);	intptr hndintptr = hnd.dangerousgethandle();	long val = hndintptr.toint64();	throwifnotequals(true, safehandletest(hnd, val), "safehandle marshalling failed.");	
+testing marshalling out safehandle 
+
+private static void testsizeparamindex() {	
+testing sizeparamindex 
+
+private static void testdelegate() {	
+testing delegate 
+
+private static void teststruct() {	
+testing structs 
+
+========================= corert sample_3 =========================
+
+nativehashtable typetemplateshashtable = loadhashtable(moduleinfo.handle, reflectionmapblob.metadatabasedtypetemplatemap, out externalfixupstable);	if (typetemplateshashtable.isnull) continue;	var enumerator = typetemplateshashtable.lookup(hashcode);	var nativemetadataunit = nativemetadatatype.context.resolvemetadataunit(moduleinfo);	nativeparser entryparser;	while (!(entryparser = enumerator.getnext()).isnull) {	var entrytypehandle = entryparser.getunsigned().ashandle();	typedesc typedesc = nativemetadataunit.gettype(entrytypehandle);	debug.assert(typedesc != null);	if (typedesc == canonform) {	
+found metadata template for type 
+
+nativehashtable methodtemplateshashtable = loadhashtable(moduleinfo.handle, reflectionmapblob.metadatabasedgenericmethodstemplatemap, out externalfixupstable);	if (methodtemplateshashtable.isnull) continue;	var enumerator = methodtemplateshashtable.lookup(hashcode);	var nativemetadataunit = nativemetadatatype.context.resolvemetadataunit(moduleinfo);	nativeparser entryparser;	while (!(entryparser = enumerator.getnext()).isnull) {	var entrytypehandle = entryparser.getunsigned().ashandle();	methoddesc methoddesc = nativemetadataunit.getmethod(entrytypehandle, null);	debug.assert(methoddesc != null);	if (methoddesc == canonform) {	
+found metadata template for method 
+
+foreach (nativeformatmoduleinfo moduleinfo in modulelist.enumeratemodules()) {	externalreferencestable externalfixupstable;	nativehashtable typetemplateshashtable = loadhashtable(moduleinfo, reflectionmapblob.typetemplatemap, out externalfixupstable);	if (typetemplateshashtable.isnull) continue;	var enumerator = typetemplateshashtable.lookup(hashcode);	nativeparser entryparser;	while (!(entryparser = enumerator.getnext()).isnull) {	runtimetypehandle candidatetemplatetypehandle = externalfixupstable.getruntimetypehandlefromindex(entryparser.getunsigned());	typedesc candidatetemplate = concretetype.context.resolveruntimetypehandle(candidatetemplatetypehandle);	if (canonform == candidatetemplate.converttocanonform(kind)) {	
+found template for type 
+
+nativehashtable typetemplateshashtable = loadhashtable(moduleinfo, reflectionmapblob.typetemplatemap, out externalfixupstable);	if (typetemplateshashtable.isnull) continue;	var enumerator = typetemplateshashtable.lookup(hashcode);	nativeparser entryparser;	while (!(entryparser = enumerator.getnext()).isnull) {	runtimetypehandle candidatetemplatetypehandle = externalfixupstable.getruntimetypehandlefromindex(entryparser.getunsigned());	typedesc candidatetemplate = concretetype.context.resolveruntimetypehandle(candidatetemplatetypehandle);	if (canonform == candidatetemplate.converttocanonform(kind)) {	nativelayoutinfotoken = (uint)externalfixupstable.getexternalnativelayoutoffset(entryparser.getunsigned());	if (nativelayoutinfotoken == badtokenfixupvalue) {	
+error template not fixed up skipping 
+
+nativelayoutinfotoken = (uint)externalfixupstable.getexternalnativelayoutoffset(entryparser.getunsigned());	if (nativelayoutinfotoken == badtokenfixupvalue) {	continue;	}	debug.assert( (kind != canonicalformkind.universal) || (kind == canonicalformkind.universal && candidatetemplate == candidatetemplate.converttocanonform(kind)));	nativelayoutinfomodule = moduleinfo;	return candidatetemplate;	}	}	}	
+error cannot find a suitable template for type 
+
+if (genericmethodtemplateshashtable.isnull) continue;	var context = new nativelayoutinfoloadcontext {	_typesystemcontext = concretemethod.context, _typeargumenthandles = concretemethod.owningtype.instantiation, _methodargumenthandles = concretemethod.instantiation, _module = moduleinfo };	var enumerator = genericmethodtemplateshashtable.lookup(hashcode);	nativeparser entryparser;	while (!(entryparser = enumerator.getnext()).isnull) {	var methodsignatureparser = new nativeparser(nativelayoutreader, externalfixupstable.getexternalnativelayoutoffset(entryparser.getunsigned()));	var candidatetemplate = (instantiatedmethod)context.getmethod(ref methodsignatureparser);	debug.assert(candidatetemplate.instantiation.length > 0);	if (canonform == candidatetemplate.getcanonmethodtarget(kind)) {	
+found template for generic method 
+
+var enumerator = genericmethodtemplateshashtable.lookup(hashcode);	nativeparser entryparser;	while (!(entryparser = enumerator.getnext()).isnull) {	var methodsignatureparser = new nativeparser(nativelayoutreader, externalfixupstable.getexternalnativelayoutoffset(entryparser.getunsigned()));	var candidatetemplate = (instantiatedmethod)context.getmethod(ref methodsignatureparser);	debug.assert(candidatetemplate.instantiation.length > 0);	if (canonform == candidatetemplate.getcanonmethodtarget(kind)) {	nativelayoutinfomodule = moduleinfo;	nativelayoutinfotoken = (uint)externalfixupstable.getexternalnativelayoutoffset(entryparser.getunsigned());	if (nativelayoutinfotoken == badtokenfixupvalue) {	
+error template not fixed up skipping 
+
+nativelayoutinfomodule = moduleinfo;	nativelayoutinfotoken = (uint)externalfixupstable.getexternalnativelayoutoffset(entryparser.getunsigned());	if (nativelayoutinfotoken == badtokenfixupvalue) {	continue;	}	debug.assert( (kind != canonicalformkind.universal) || (kind == canonicalformkind.universal && candidatetemplate == candidatetemplate.getcanonmethodtarget(kind)));	return candidatetemplate;	}	}	}	
+error cannot find a suitable template for generic method 
+
+========================= corert sample_1220 =========================
+
+private static void main(string[] args) {	
+hello world 
+
+========================= corert sample_2531 =========================
+
+public void compilemethod(cppmethodcodenode methodcodenodeneedingcode) {	methoddesc method = methodcodenodeneedingcode.method;	if (_compilation.logger.isverbose) {	string methodname = method.tostring();	
+compiling 
+
+sb.append("(");	appendcppmethodcallparamlist(sb, unboxingstubnode.method, true);	sb.append(");");	sb.exdent();	sb.appendline();	sb.append("}");	out.write(sb.tostring());	}	public void outputcode(ienumerable<dependencynode> nodes, nodefactory factory) {	buildmethodlists(nodes);	
+include 
+
+sb.append("(");	appendcppmethodcallparamlist(sb, unboxingstubnode.method, true);	sb.append(");");	sb.exdent();	sb.appendline();	sb.append("}");	out.write(sb.tostring());	}	public void outputcode(ienumerable<dependencynode> nodes, nodefactory factory) {	buildmethodlists(nodes);	
+include 
+
+========================= corert sample_2069 =========================
+
+public static int run() {	int iterationcount = 0;	while (!visited && iterationcount++ < 10000) {	gc.keepalive(new dummy());	gc.collect();	}	if (visited) {	
+finalizetest passed 
+
+public static int run() {	int iterationcount = 0;	while (!visited && iterationcount++ < 10000) {	gc.keepalive(new dummy());	gc.collect();	}	if (visited) {	return program.pass;	}	else {	
+finalizetest failed 
+
+private static void expect(bool condition, string message) {	if (condition) {	interlocked.increment(ref s_passed);	}	else {	interlocked.increment(ref s_failed);	
+error 
+
+public static int run() {	s_event = new autoresetevent(false);	s_timer = new timer(timercallback, null, 200, timeout.infinite);	bool timerfired = s_event.waitone(timespan.fromseconds(5));	if (!timerfired) {	
+the timer test failed timer has not fired 
+
+s_event = new autoresetevent(false);	s_timer = new timer(timercallback, null, 200, timeout.infinite);	bool timerfired = s_event.waitone(timespan.fromseconds(5));	if (!timerfired) {	return program.fail;	}	s_event.reset();	s_timer.change(3000000, timeout.infinite);	timerfired = s_event.waitone(500);	if (timerfired) {	
+the timer test failed timer fired earlier than expected 
+
+s_event.reset();	s_timer.change(3000000, timeout.infinite);	timerfired = s_event.waitone(500);	if (timerfired) {	return program.fail;	}	s_event.reset();	s_timer.change(200, timeout.infinite);	timerfired = s_event.waitone(timespan.fromseconds(5));	if (!timerfired) {	
+the timer test failed failed to change the existing timer 
+
+timerfired = s_event.waitone(timespan.fromseconds(5));	if (!timerfired) {	return program.fail;	}	s_periodictimercount = 0;	s_event.reset();	s_timer = new timer(periodictimercallback, null, 200, 20);	while (s_periodictimercount < 3) {	timerfired = s_event.waitone(timespan.fromseconds(5));	if (!timerfired) {	
+the timer test failed the periodic timer has not fired 
+
+========================= corert sample_7 =========================
+
+public void emitsource() {	
+using system 
+
+public void emitsource() {	
+using system reflection 
+
+public void emitsource() {	
+using system collections generic 
+
+public void emitsource() {	writeline();	
+pragma warning disable writeline pragma warning disable writeline 
+
+========================= corert sample_1788 =========================
+
+public static int main(string[] args) {	int result = pass;	if (!testpreinitprimitivedata()) {	
+failed 
+
+public static int main(string[] args) {	int result = pass;	if (!testpreinitprimitivedata()) {	result = fail;	}	if (!testpreinitintdata()) {	
+failed 
+
+public static int main(string[] args) {	int result = pass;	if (!testpreinitprimitivedata()) {	result = fail;	}	if (!testpreinitintdata()) {	result = fail;	}	if (!testpreinittypedata()) {	
+failed 
+
+if (!testpreinitprimitivedata()) {	result = fail;	}	if (!testpreinitintdata()) {	result = fail;	}	if (!testpreinittypedata()) {	result = fail;	}	if (!testpreinitmethoddata()) {	
+failed 
+
+if (!testpreinitintdata()) {	result = fail;	}	if (!testpreinittypedata()) {	result = fail;	}	if (!testpreinitmethoddata()) {	result = fail;	}	if (!testotherstatics()) {	
+failed 
+
+static bool testpreinitprimitivedata() {	
+testing preinitialized primitive data 
+
+static bool testpreinitintdata() {	
+testing preinitialized int array 
+
+static bool testpreinittypedata() {	
+testing preinitialized type array 
+
+public delegate void func1proc(int a);	public delegate void func2proc(float a);	static bool testpreinitmethoddata() {	
+testing preinitialized method array 
+
+static bool testotherstatics() {	
+testing other statics work well with preinitialized data in the same type 
+
+========================= corert sample_4 =========================
+
+public static int teststaticbases() {	
+testing static bases in library code are available 
+
+public static int testsharedgenerics() {	
+testing generic dictionaries can be folded properly 
+
+public static int testgenerictls() {	
+testing thread statics on generic types shared between modules are shared properly 
+
+public static int testinjectedenummethods() {	
+testing context injected methods on enums 
+
+========================= corert sample_5 =========================
+
+dictionary.add(simplename, fullfilename);	}	empty = false;	}	}	if (empty) {	if (strict) {	throw new commandlineexception("no files matching " + pattern);	}	else {	
+warning no files matching 
+
+========================= corert sample_1799 =========================
+
+foreach (dependencynodecore<nodefactory> dependency in obj) {	var methodcodenodeneedingcode = dependency as methodcodenode;	if (methodcodenodeneedingcode == null) {	var dependencymethod = (shadowconcretemethodnode)dependency;	methodcodenodeneedingcode = (methodcodenode)dependencymethod.canonicalmethodnode;	}	if (methodcodenodeneedingcode.staticdependenciesarecomputed) continue;	methoddesc method = methodcodenodeneedingcode.method;	if (logger.isverbose) {	string methodname = method.tostring();	
+compiling 
+
+methoddesc method = methodcodenodeneedingcode.method;	if (logger.isverbose) {	string methodname = method.tostring();	}	try {	_corinfo.compilemethod(methodcodenodeneedingcode);	}	catch (typesystemexception ex) {	methodil throwingil = typesystemthrowingilemitter.emitil(method, ex);	_corinfo.compilemethod(methodcodenodeneedingcode, throwingil);	
+warning method method will always throw because ex message 
+
+========================= corert sample_1356 =========================
+
+process.start();	task copyoutput = process.standardoutput.basestream.copytoasync(outputstream);	task copyerror = process.standarderror.basestream.copytoasync(errorstream);	bool completed = process.waitforexit(timeout);	copyoutput.wait(timeout);	copyerror.wait(timeout);	if (completed) {	exitcode = process.exitcode;	}	else {	
+cmdline timed out 
+
+process.start();	task copyoutput = process.standardoutput.basestream.copytoasync(outputstream);	task copyerror = process.standarderror.basestream.copytoasync(errorstream);	bool completed = process.waitforexit(timeout);	copyoutput.wait(timeout);	copyerror.wait(timeout);	if (completed) {	exitcode = process.exitcode;	}	else {	
+cmdline timed out 
+
+task copyoutput = process.standardoutput.basestream.copytoasync(outputstream);	task copyerror = process.standarderror.basestream.copytoasync(errorstream);	bool completed = process.waitforexit(timeout);	copyoutput.wait(timeout);	copyerror.wait(timeout);	if (completed) {	exitcode = process.exitcode;	}	else {	}	
+test harness exitcode is 
+
+========================= corert sample_1 =========================
+
+ienumerable<metadatarecord> records = _visitor.graph.vertices.where(v => v != _visitor.metasourcevertex);	var writer = new nativewriter();	var section = writer.newsection();	_metadataheader.scopedefinitions = scopedefinitions;	section.place(_metadataheader);	foreach (var rec in records) {	section.place(rec);	}	writer.save(stream);	if (logwriter != null) {	
+handle kind name children 
+
+========================= corert sample_2467 =========================
+
+itfs[48] = new foo48();	itfs[49] = new foo49();	stringbuilder sb = new stringbuilder();	int counter = 0;	for (int i = 0; i < 50; i++) {	sb.append(itfs[i].getastring());	counter += itfs[i].getanint();	}	string expected = "foo0foo1foo2foo3foo4foo5foo6foo7foo8foo9foo10foo11foo12foo13foo14foo15foo16foo17foo18foo19foo20foo21foo22foo23foo24foo25foo26foo27foo28foo29foo30foo31foo32foo33foo34foo35foo36foo37foo38foo39foo40foo41foo42foo43foo44foo45foo46foo47foo48foo49";	if (!expected.equals(sb.tostring())) {	
+concatenating strings from interface calls failed 
+
+}	string expected = "foo0foo1foo2foo3foo4foo5foo6foo7foo8foo9foo10foo11foo12foo13foo14foo15foo16foo17foo18foo19foo20foo21foo22foo23foo24foo25foo26foo27foo28foo29foo30foo31foo32foo33foo34foo35foo36foo37foo38foo39foo40foo41foo42foo43foo44foo45foo46foo47foo48foo49";	if (!expected.equals(sb.tostring())) {	console.write("expected: ");	console.writeline(expected);	console.write(" actual: ");	console.writeline(sb.tostring());	return fail;	}	if (counter != 1225) {	
+summing ints from interface calls failed 
+
+}	string expected = "foo0foo1foo2foo3foo4foo5foo6foo7foo8foo9foo10foo11foo12foo13foo14foo15foo16foo17foo18foo19foo20foo21foo22foo23foo24foo25foo26foo27foo28foo29foo30foo31foo32foo33foo34foo35foo36foo37foo38foo39foo40foo41foo42foo43foo44foo45foo46foo47foo48foo49";	if (!expected.equals(sb.tostring())) {	console.write("expected: ");	console.writeline(expected);	console.write(" actual: ");	console.writeline(sb.tostring());	return fail;	}	if (counter != 1225) {	
+expected 
+
+private static int testmultipleinterfaces() {	testclass<int> testint = new testclass<int>(5);	myinterface myinterface = testint as myinterface;	if (!myinterface.getastring().equals("testclass")) {	console.write("on type testclass, myinterface.getastring() returned ");	console.write(myinterface.getastring());	
+expected testclass 
+
+testclass<int> testint = new testclass<int>(5);	myinterface myinterface = testint as myinterface;	if (!myinterface.getastring().equals("testclass")) {	console.write("on type testclass, myinterface.getastring() returned ");	console.write(myinterface.getastring());	return fail;	}	if (myinterface.getanint() != 1) {	console.write("on type testclass, myinterface.getanint() returned ");	console.write(myinterface.getanint());	
+expected 
+
+}	if (myinterface.getanint() != 1) {	console.write("on type testclass, myinterface.getanint() returned ");	console.write(myinterface.getanint());	return fail;	}	interface<int> itf = testint as interface<int>;	if (itf.gett() != 5) {	console.write("on type testclass, interface<int>::gett() returned ");	console.write(itf.gett());	
+expected 
+
+private static int testarrayinterfaces() {	{	object stringarray = new string[] { "a", "b", "c", "d" };	
+testing ienumerable t on array 
+
+private static int testarrayinterfaces() {	{	object stringarray = new string[] { "a", "b", "c", "d" };	string result = string.empty;	foreach (var s in (system.collections.generic.ienumerable<string>)stringarray) result += s;	if (result != "abcd") {	
+failed 
+
+{	object stringarray = new string[] { "a", "b", "c", "d" };	string result = string.empty;	foreach (var s in (system.collections.generic.ienumerable<string>)stringarray) result += s;	if (result != "abcd") {	return fail;	}	}	{	object stringarray = new string[] { "a", "b", "c", "d" };	
+testing ienumerable on array 
+
+foreach (var s in (system.collections.generic.ienumerable<string>)stringarray) result += s;	if (result != "abcd") {	return fail;	}	}	{	object stringarray = new string[] { "a", "b", "c", "d" };	string result = string.empty;	foreach (var s in (system.collections.ienumerable)stringarray) result += s;	if (result != "abcd") {	
+failed 
+
+{	object stringarray = new string[] { "a", "b", "c", "d" };	string result = string.empty;	foreach (var s in (system.collections.ienumerable)stringarray) result += s;	if (result != "abcd") {	return fail;	}	}	{	object intarray = new int[5, 5];	
+testing ilist on mdarray 
+
+object stringarray = new string[] { "a", "b", "c", "d" };	string result = string.empty;	foreach (var s in (system.collections.ienumerable)stringarray) result += s;	if (result != "abcd") {	return fail;	}	}	{	object intarray = new int[5, 5];	if (((system.collections.ilist)intarray).count != 25) {	
+failed 
+
+========================= corert sample_13 =========================
+
+public void registerforpreparation(typedesc type) {	
+register for preparation 
+
+public void preparemethod(methoddesc method) {	
+preparing method 
+
+private void allocateruntimemethoddictionary(instantiatedmethod method) {	debug.assert(method.runtimemethoddictionary == intptr.zero && method.dictionary != null);	intptr rmd = method.dictionary.allocate();	method.associatewithruntimemethoddictionary(rmd);	
+allocated new method dictionary for method 
+
+private void copydictionaryfromtypetoappropriateslotinderivedtype(typedesc basetype, typebuilderstate derivedtypestate) {	var basetypestate = basetype.getorcreatetypebuilderstate();	if (basetypestate.hasdictionaryinvtable) {	runtimetypehandle basetypehandle = getruntimetypehandle(basetype);	intptr dictionaryentry = basetypestate.halfbakeddictionary;	if (dictionaryentry == intptr.zero) dictionaryentry = basetypehandle.getdictionary();	debug.assert(dictionaryentry != intptr.zero);	int dictionaryslot = eetypecreator.getdictionaryslotinvtable(basetype);	debug.assert(dictionaryslot >= 0);	derivedtypestate.halfbakedruntimetypehandle.setdictionary(dictionaryslot, dictionaryentry);	
+setting basetype dictionary on type 
+
+private void finishruntimetype(typedesc type) {	
+finishing type 
+
+if (mdarraynewtypescount[i] == 0) continue;	var mdarraycache = typesystemcontext.getarraytypescache(true, i);	mdarraycache.reserve(mdarraycache.count + mdarraynewtypescount[i]);	}	}	typesystemcontext.pointertypescache.reserve(typesystemcontext.pointertypescache.count + newpointertypescount);	typesystemcontext.byreftypescache.reserve(typesystemcontext.byreftypescache.count + newbyreftypescount);	registergenerictypesandmethods();	for (int i = 0; i < _typesthatneedtypehandles.count; i++) {	_typesthatneedtypehandles[i].setruntimetypehandleunsafe(_typesthatneedtypehandles[i].gettypebuilderstate().halfbakedruntimetypehandle);	
+successfully registered type 
+
+private void buildmethod(instantiatedmethod method) {	
+dynamically allocating new method instantiation for 
+
+private unsafe intptr buildgenericlookuptarget(typesystemcontext typesystemcontext, intptr context, intptr signature, out intptr auxresult) {	
+buildgenericlookuptarget for 
+
+private unsafe intptr buildfloatingdictionary(typesystemcontext typesystemcontext, intptr context, bool istypecontext, intptr fixeddictionary, out bool isnewlyallocateddictionary) {	isnewlyallocateddictionary = true;	nativeparser nativelayoutparser;	nativelayoutinfoloadcontext nlilcontext;	if (istypecontext) {	typedesc typecontext = typesystemcontext.resolveruntimetypehandle(*(runtimetypehandle*)&context);	
+building floating dictionary layout for type 
+
+nlilcontext = state.nativelayoutinfo.loadcontext;	}	else {	runtimetypehandle declaringtypehandle;	methodnameandsignature nameandsignature;	runtimetypehandle[] genericmethodarghandles;	bool success = typeloaderenvironment.instance.trygetgenericmethodcomponents(context, out declaringtypehandle, out nameandsignature, out genericmethodarghandles);	debug.assert(success);	deftype declaringtype = (deftype)typesystemcontext.resolveruntimetypehandle(declaringtypehandle);	instantiatedmethod methodcontext = (instantiatedmethod)typesystemcontext.resolvegenericmethodinstantiation( false, declaringtype, nameandsignature, typesystemcontext.resolveruntimetypehandles(genericmethodarghandles), intptr.zero, false);	
+building floating dictionary layout for method 
+
+========================= corert sample_1239 =========================
+
+public static void runtimefailfast(rhfailfastreason reason, exception exception, intptr pexaddress, intptr pexcontext) {	try {	if (!safetoperformrichexceptionsupport) return;	bool minimalfailfast = infailfast.value || (exception is outofmemoryexception);	string failfastmessage = "";	if (!minimalfailfast) {	if ((reason == rhfailfastreason.pn_unhandledexception) && (exception != null)) {	
+unhandled exception 
+
+========================= corert sample_918 =========================
+
+public void emitsource() {	
+pragma warning disable 
+
+public void emitsource() {	writeline();	
+using system 
+
+public void emitsource() {	writeline();	
+using system io 
+
+public void emitsource() {	writeline();	
+using system collections generic 
+
+public void emitsource() {	writeline();	
+using system reflection 
+
+public void emitsource() {	writeline();	
+using internal nativeformat 
+
+private void emitreadcollection(string typename) {	string collectiontypename = $"{typename}collection";	openscope($"public static uint read(this nativereader reader, uint offset, out {collectiontypename} values)");	writeline($"values = new {collectiontypename}(reader, offset);");	
+uint count 
+
+private void emitreadcollection(string typename) {	string collectiontypename = $"{typename}collection";	openscope($"public static uint read(this nativereader reader, uint offset, out {collectiontypename} values)");	writeline($"values = new {collectiontypename}(reader, offset);");	writeline("offset = reader.decodeunsigned(offset, out count);");	writeline("for (uint i = 0; i < count; ++i)");	writeline("{");	writeline("    offset = reader.skipinteger(offset);");	writeline("}");	
+return offset 
+
+private void emitreadprimitivecollection(string typename) {	string collectiontypename = $"{typename}collection";	openscope($"public static unsafe uint read(this nativereader reader, uint offset, out {collectiontypename} values)");	writeline($"values = new {collectiontypename}(reader, offset);");	
+uint count 
+
+private void emitreadprimitivecollection(string typename) {	string collectiontypename = $"{typename}collection";	openscope($"public static unsafe uint read(this nativereader reader, uint offset, out {collectiontypename} values)");	writeline($"values = new {collectiontypename}(reader, offset);");	writeline("offset = reader.decodeunsigned(offset, out count);");	writeline($"offset = checked(offset + count * sizeof({typename}));");	
+return offset 
+
+private void emitreadenum(enumtype enumtype) {	openscope($"public static uint read(this nativereader reader, uint offset, out {enumtype.name} value)");	
+uint ivalue 
+
+private void emitreadenum(enumtype enumtype) {	openscope($"public static uint read(this nativereader reader, uint offset, out {enumtype.name} value)");	writeline("offset = reader.decodeunsigned(offset, out ivalue);");	writeline($"value = ({enumtype.name})ivalue;");	
+return offset 
+
+private void emitread(string typename) {	openscope($"public static uint read(this nativereader reader, uint offset, out {typename} handle)");	
+uint value 
+
+private void emitread(string typename) {	openscope($"public static uint read(this nativereader reader, uint offset, out {typename} handle)");	writeline("offset = reader.decodeunsigned(offset, out value);");	writeline($"handle = new {typename}((int)value);");	
+handle validate 
+
+private void emitread(string typename) {	openscope($"public static uint read(this nativereader reader, uint offset, out {typename} handle)");	writeline("offset = reader.decodeunsigned(offset, out value);");	writeline($"handle = new {typename}((int)value);");	
+return offset 
+
+========================= corert sample_1782 =========================
+
+private unsafe delegate void invoketargetdel(void* allocatedbuffer, ref callconversionparameters conversionparams);	[debuggerguidedstepthroughattribute]	unsafe private static intptr callconversionthunk(intptr callertransitionblockparam, intptr callconversionid) {	callconversionparameters conversionparams = default(callconversionparameters);	try {	conversionparams = new callconversionparameters(callconversioninfo.getconverter(callconversionid.toint32()), callertransitionblockparam);	#if ccconverter_trace system.threading.interlocked.increment(ref s_numconversionsexecuted);	callingconventionconverterlogger.writeline("callconversionthunk executing... count = " + s_numconversionsexecuted.lowleveltostring());	
+executing thunk of type 
+
+========================= corert sample_1229 =========================
+
+private void help(string helptext) {	
+ilverify version 
+
+syntax.defineoptionlist("r|reference", ref referencefiles, "reference metadata from the specified assembly");	syntax.defineoptionlist("i|include", ref includepatterns, "use only methods/types/namespaces, which match the given regular expression(s)");	syntax.defineoption("include-file", ref includefile, "same as --include, but the regular expression(s) are declared line by line in the specified file.");	syntax.defineoptionlist("e|exclude", ref excludepatterns, "skip methods/types/namespaces, which match the given regular expression(s)");	syntax.defineoption("exclude-file", ref excludefile, "same as --exclude, but the regular expression(s) are declared line by line in the specified file.");	syntax.defineparameterlist("in", ref inputfiles, "input file(s)");	});	foreach (var input in inputfiles) helpers.appendexpandedpaths(_inputfilepaths, input, true);	foreach (var reference in referencefiles) helpers.appendexpandedpaths(_referencefilepaths, reference, false);	if (!string.isnullorempty(includefile)) {	
+warning include file takes precedence over include 
+
+syntax.defineoption("exclude-file", ref excludefile, "same as --exclude, but the regular expression(s) are declared line by line in the specified file.");	syntax.defineparameterlist("in", ref inputfiles, "input file(s)");	});	foreach (var input in inputfiles) helpers.appendexpandedpaths(_inputfilepaths, input, true);	foreach (var reference in referencefiles) helpers.appendexpandedpaths(_referencefilepaths, reference, false);	if (!string.isnullorempty(includefile)) {	includepatterns = file.readalllines(includefile);	}	_includepatterns = stringpatternstoregexlist(includepatterns);	if (!string.isnullorempty(excludefile)) {	
+warning exclude file takes precedence over exclude 
+
+if (_inputfilepaths.count == 0) throw new commandlineexception("no input files specified");	_verifier = new verifier(this);	_verifier.setsystemmodulename(_systemmodule);	foreach (var kvp in _inputfilepaths) {	var results = verifyassembly(new assemblyname(kvp.key), out ecmamodule module);	int numerrors = 0;	foreach (var result in results) {	numerrors++;	printresult(result, module, kvp.value);	}	
+error s verifying 
+
+if (_inputfilepaths.count == 0) throw new commandlineexception("no input files specified");	_verifier = new verifier(this);	_verifier.setsystemmodulename(_systemmodule);	foreach (var kvp in _inputfilepaths) {	var results = verifyassembly(new assemblyname(kvp.key), out ecmamodule module);	int numerrors = 0;	foreach (var result in results) {	numerrors++;	printresult(result, module, kvp.value);	}	
+all classes and methods in verified 
+
+private static int main(string[] args) {	try {	return new program().run(args);	}	catch (exception e) {	
+error 
+
+========================= corert sample_1687 =========================
+
+public void emitsource() {	
+pragma warning disable 
+
+public void emitsource() {	writeline();	
+using system 
+
+public void emitsource() {	writeline();	
+using system io 
+
+public void emitsource() {	writeline();	
+using system collections generic 
+
+public void emitsource() {	writeline();	
+using system reflection 
+
+public void emitsource() {	writeline();	
+using system threading 
+
+public void emitsource() {	writeline();	
+using internal lowlevellinq 
+
+public void emitsource() {	writeline();	
+using internal metadata nativeformat writer 
+
+public void emitsource() {	writeline();	
+using internal nativeformat 
+
+private void emitrecord(recorddef record) {	bool isconstantstringvalue = record.name == "constantstringvalue";	openscope($"public partial class {record.name} : metadatarecord");	if ((record.flags & recorddefflags.reentrantequals) != 0) {	openscope($"public {record.name}()");	writeline("_equalsreentrancyguard = new threadlocal<reentrancyguardstack>(() => new reentrancyguardstack());");	closescope();	}	openscope("public override handletype handletype");	openscope("get");	
+return handletype record name 
+
+openscope("get");	closescope();	closescope("handletype");	openscope("internal override void visit(irecordvisitor visitor)");	foreach (var member in record.members) {	if ((member.flags & memberdefflags.recordref) == 0) continue;	writeline($"{member.name} = visitor.visit(this, {member.name});");	}	closescope("visit");	openscope("public override sealed bool equals(object obj)");	
+if object referenceequals this obj return true 
+
+openscope("internal override void visit(irecordvisitor visitor)");	foreach (var member in record.members) {	if ((member.flags & memberdefflags.recordref) == 0) continue;	writeline($"{member.name} = visitor.visit(this, {member.name});");	}	closescope("visit");	openscope("public override sealed bool equals(object obj)");	writeline($"var other = obj as {record.name};");	writeline("if (other == null) return false;");	if ((record.flags & recorddefflags.reentrantequals) != 0) {	
+if equalsreentrancyguard value contains other 
+
+openscope("internal override void visit(irecordvisitor visitor)");	foreach (var member in record.members) {	if ((member.flags & memberdefflags.recordref) == 0) continue;	writeline($"{member.name} = visitor.visit(this, {member.name});");	}	closescope("visit");	openscope("public override sealed bool equals(object obj)");	writeline($"var other = obj as {record.name};");	writeline("if (other == null) return false;");	if ((record.flags & recorddefflags.reentrantequals) != 0) {	
+return true 
+
+openscope("internal override void visit(irecordvisitor visitor)");	foreach (var member in record.members) {	if ((member.flags & memberdefflags.recordref) == 0) continue;	writeline($"{member.name} = visitor.visit(this, {member.name});");	}	closescope("visit");	openscope("public override sealed bool equals(object obj)");	writeline($"var other = obj as {record.name};");	writeline("if (other == null) return false;");	if ((record.flags & recorddefflags.reentrantequals) != 0) {	
+equalsreentrancyguard value push other 
+
+openscope("internal override void visit(irecordvisitor visitor)");	foreach (var member in record.members) {	if ((member.flags & memberdefflags.recordref) == 0) continue;	writeline($"{member.name} = visitor.visit(this, {member.name});");	}	closescope("visit");	openscope("public override sealed bool equals(object obj)");	writeline($"var other = obj as {record.name};");	writeline("if (other == null) return false;");	if ((record.flags & recorddefflags.reentrantequals) != 0) {	
+try 
+
+writeline($"var other = obj as {record.name};");	writeline("if (other == null) return false;");	if ((record.flags & recorddefflags.reentrantequals) != 0) {	writeline("{");	}	foreach (var member in record.members) {	if ((member.flags & memberdefflags.notpersisted) != 0) continue;	if ((record.flags & recorddefflags.customcompare) != 0 && (member.flags & memberdefflags.compare) == 0) continue;	if ((member.flags & memberdefflags.sequence) != 0) {	if ((member.flags & memberdefflags.customcompare) != 0) writeline($"if (!{member.name}.sequenceequal(other.{member.name}, {member.typename}comparer.instance)) return false;");	
+if member name sequenceequal other member name return false 
+
+if ((record.flags & recorddefflags.reentrantequals) != 0) {	writeline("{");	}	foreach (var member in record.members) {	if ((member.flags & memberdefflags.notpersisted) != 0) continue;	if ((record.flags & recorddefflags.customcompare) != 0 && (member.flags & memberdefflags.compare) == 0) continue;	if ((member.flags & memberdefflags.sequence) != 0) {	if ((member.flags & memberdefflags.customcompare) != 0) writeline($"if (!{member.name}.sequenceequal(other.{member.name}, {member.typename}comparer.instance)) return false;");	}	else if ((member.flags & (memberdefflags.map | memberdefflags.recordref)) != 0) {	
+if object equals member name other member name return false 
+
+}	foreach (var member in record.members) {	if ((member.flags & memberdefflags.notpersisted) != 0) continue;	if ((record.flags & recorddefflags.customcompare) != 0 && (member.flags & memberdefflags.compare) == 0) continue;	if ((member.flags & memberdefflags.sequence) != 0) {	if ((member.flags & memberdefflags.customcompare) != 0) writeline($"if (!{member.name}.sequenceequal(other.{member.name}, {member.typename}comparer.instance)) return false;");	}	else if ((member.flags & (memberdefflags.map | memberdefflags.recordref)) != 0) {	}	else if ((member.flags & memberdefflags.customcompare) != 0) {	
+if customcomparer equals member name other member name return false 
+
+else if ((member.flags & (memberdefflags.map | memberdefflags.recordref)) != 0) {	}	else if ((member.flags & memberdefflags.customcompare) != 0) {	}	else {	writeline($"if ({member.name} != other.{member.name}) return false;");	}	}	if ((record.flags & recorddefflags.reentrantequals) != 0) {	writeline("}");	
+finally 
+
+else if ((member.flags & memberdefflags.customcompare) != 0) {	}	else {	writeline($"if ({member.name} != other.{member.name}) return false;");	}	}	if ((record.flags & recorddefflags.reentrantequals) != 0) {	writeline("}");	writeline("{");	writeline("    var popped = _equalsreentrancyguard.value.pop();");	
+debug assert object referenceequals other popped 
+
+else {	writeline($"if ({member.name} != other.{member.name}) return false;");	}	}	if ((record.flags & recorddefflags.reentrantequals) != 0) {	writeline("}");	writeline("{");	writeline("    var popped = _equalsreentrancyguard.value.pop();");	writeline("}");	}	
+return true 
+
+if ((record.flags & recorddefflags.reentrantequals) != 0) {	writeline("}");	writeline("{");	writeline("    var popped = _equalsreentrancyguard.value.pop();");	writeline("}");	}	closescope("equals");	if ((record.flags & recorddefflags.reentrantequals) != 0) writeline("private threadlocal<reentrancyguardstack> _equalsreentrancyguard;");	openscope("public override sealed int gethashcode()");	writeline("if (_hash != 0)");	
+return hash 
+
+if ((record.flags & recorddefflags.reentrantequals) != 0) {	writeline("}");	writeline("{");	writeline("    var popped = _equalsreentrancyguard.value.pop();");	writeline("}");	}	closescope("equals");	if ((record.flags & recorddefflags.reentrantequals) != 0) writeline("private threadlocal<reentrancyguardstack> _equalsreentrancyguard;");	openscope("public override sealed int gethashcode()");	writeline("if (_hash != 0)");	
+entergethashcode 
+
+writeline("    }");	writeline("}");	}	else if ((member.flags & memberdefflags.recordref) != 0 || isconstantstringvalue) {	writeline($"hash = ((hash << 13) - (hash >> 19)) ^ ({member.name} == null ? 0 : {member.name}.gethashcode());");	}	else {	writeline($"hash = ((hash << 13) - (hash >> 19)) ^ {member.name}.gethashcode();");	}	}	
+leavegethashcode 
+
+writeline("}");	}	else if ((member.flags & memberdefflags.recordref) != 0 || isconstantstringvalue) {	writeline($"hash = ((hash << 13) - (hash >> 19)) ^ ({member.name} == null ? 0 : {member.name}.gethashcode());");	}	else {	writeline($"hash = ((hash << 13) - (hash >> 19)) ^ {member.name}.gethashcode();");	}	}	writeline("_hash = hash;");	
+return hash 
+
+}	else {	writeline($"hash = ((hash << 13) - (hash >> 19)) ^ {member.name}.gethashcode();");	}	}	writeline("_hash = hash;");	closescope("gethashcode");	openscope("internal override void save(nativewriter writer)");	if (isconstantstringvalue) {	writeline("if (value == null)");	
+return 
+
+if (typeset != null) {	if ((member.flags & (memberdefflags.list | memberdefflags.map)) != 0) {	writeline($"debug.assert({member.name}.trueforall(handle => handle == null ||");	for (int i = 0; i < typeset.length; i++) writeline($"    handle.handletype == handletype.{typeset[i]}" + ((i == typeset.length - 1) ? "));" : " ||"));	}	else {	writeline($"debug.assert({member.name} == null ||");	for (int i = 0; i < typeset.length; i++) writeline($"    {member.name}.handletype == handletype.{typeset[i]}" + ((i == typeset.length - 1) ? ");" : " ||"));	}	}	
+writer write member name 
+
+else {	writeline($"debug.assert({member.name} == null ||");	for (int i = 0; i < typeset.length; i++) writeline($"    {member.name}.handletype == handletype.{typeset[i]}" + ((i == typeset.length - 1) ? ");" : " ||"));	}	}	}	closescope("save");	openscope($"internal static {record.name}handle ashandle({record.name} record)");	writeline("if (record == null)");	writeline("{");	
+return new record name handle 
+
+writeline($"debug.assert({member.name} == null ||");	for (int i = 0; i < typeset.length; i++) writeline($"    {member.name}.handletype == handletype.{typeset[i]}" + ((i == typeset.length - 1) ? ");" : " ||"));	}	}	}	closescope("save");	openscope($"internal static {record.name}handle ashandle({record.name} record)");	writeline("if (record == null)");	writeline("{");	writeline("}");	
+else 
+
+for (int i = 0; i < typeset.length; i++) writeline($"    {member.name}.handletype == handletype.{typeset[i]}" + ((i == typeset.length - 1) ? ");" : " ||"));	}	}	}	closescope("save");	openscope($"internal static {record.name}handle ashandle({record.name} record)");	writeline("if (record == null)");	writeline("{");	writeline("}");	writeline("{");	
+return record handle 
+
+writeline("if (record == null)");	writeline("{");	writeline("}");	writeline("{");	writeline("}");	closescope("ashandle");	openscope($"internal new {record.name}handle handle");	openscope("get");	if (isconstantstringvalue) {	writeline("if (value == null)");	
+return new constantstringvaluehandle 
+
+writeline("if (record == null)");	writeline("{");	writeline("}");	writeline("{");	writeline("}");	closescope("ashandle");	openscope($"internal new {record.name}handle handle");	openscope("get");	if (isconstantstringvalue) {	writeline("if (value == null)");	
+else 
+
+writeline("if (record == null)");	writeline("{");	writeline("}");	writeline("{");	writeline("}");	closescope("ashandle");	openscope($"internal new {record.name}handle handle");	openscope("get");	if (isconstantstringvalue) {	writeline("if (value == null)");	
+return new constantstringvaluehandle handleoffset 
+
+writeline("}");	writeline("{");	writeline("}");	closescope("ashandle");	openscope($"internal new {record.name}handle handle");	openscope("get");	if (isconstantstringvalue) {	writeline("if (value == null)");	}	else {	
+return new record name handle handleoffset 
+
+closescope();	closescope("handle");	writelineifneeded();	foreach (var member in record.members) {	if ((member.flags & memberdefflags.notpersisted) != 0) continue;	string fieldtype = member.getmembertype(membertypekind.writerfield);	if ((member.flags & (memberdefflags.list | memberdefflags.map)) != 0) {	writeline($"public {fieldtype} {member.name} = new {fieldtype}();");	}	else {	
+public fieldtype member name 
+
+========================= corert sample_1786 =========================
+
+private computedstaticfieldlayout parsestaticregionsizesfromnativelayout(typedesc type) {	layoutint nongcdatasize = layoutint.zero;	layoutint gcdatasize = layoutint.zero;	layoutint threaddatasize = layoutint.zero;	typebuilderstate state = type.getorcreatetypebuilderstate();	nativeparser typeinfoparser = state.getparserfornativelayoutinfo();	bagelementkind kind;	while ((kind = typeinfoparser.getbagelementkind()) != bagelementkind.end) {	switch (kind) {	
+found bagelementkind nongcstaticdatasize 
+
+layoutint nongcdatasize = layoutint.zero;	layoutint gcdatasize = layoutint.zero;	layoutint threaddatasize = layoutint.zero;	typebuilderstate state = type.getorcreatetypebuilderstate();	nativeparser typeinfoparser = state.getparserfornativelayoutinfo();	bagelementkind kind;	while ((kind = typeinfoparser.getbagelementkind()) != bagelementkind.end) {	switch (kind) {	nongcdatasize = new layoutint(checked((int)typeinfoparser.getunsigned()));	break;	
+found bagelementkind gcstaticdatasize 
+
+layoutint threaddatasize = layoutint.zero;	typebuilderstate state = type.getorcreatetypebuilderstate();	nativeparser typeinfoparser = state.getparserfornativelayoutinfo();	bagelementkind kind;	while ((kind = typeinfoparser.getbagelementkind()) != bagelementkind.end) {	switch (kind) {	nongcdatasize = new layoutint(checked((int)typeinfoparser.getunsigned()));	break;	gcdatasize = new layoutint(checked((int)typeinfoparser.getunsigned()));	break;	
+found bagelementkind threadstaticdatasize 
+
+========================= corert sample_1248 =========================
+
+public override deftype[] computeruntimeinterfaces(typedesc type) {	typebuilderstate state = type.getorcreatetypebuilderstate();	int totalinterfaces = runtimeaugments.getinterfacecount(state.templatetype.runtimetypehandle);	typeloaderlogger.writeline("building runtime interfaces for type " + type.tostring() + " (total interfaces = " + totalinterfaces.lowleveltostring() + ") ...");	deftype[] interfaces = new deftype[totalinterfaces];	int numinterfaces = 0;	if (type.basetype != null) {	foreach (var baseinterface in type.basetype.runtimeinterfaces) {	debug.assert(!interfaceinset(interfaces, numinterfaces, baseinterface));	interfaces[numinterfaces++] = baseinterface;	
+added basetype interface on type 
+
+}	nativeparser typeinfoparser = state.getparserfornativelayoutinfo();	nativeparser interfaceparser = typeinfoparser.getparserforbagelementkind(bagelementkind.implementedinterfaces);	typedesc[] implementedinterfaces;	if (!interfaceparser.isnull) implementedinterfaces = state.nativelayoutinfo.loadcontext.gettypesequence(ref interfaceparser);	else implementedinterfaces = typedesc.emptytypes;	foreach (typedesc interfacetype in implementedinterfaces) {	deftype interfacetypeasdeftype = (deftype)interfacetype;	if (interfaceinset(interfaces, numinterfaces, interfacetypeasdeftype)) continue;	interfaces[numinterfaces++] = interfacetypeasdeftype;	
+added interface on type 
+
+typedesc[] implementedinterfaces;	if (!interfaceparser.isnull) implementedinterfaces = state.nativelayoutinfo.loadcontext.gettypesequence(ref interfaceparser);	else implementedinterfaces = typedesc.emptytypes;	foreach (typedesc interfacetype in implementedinterfaces) {	deftype interfacetypeasdeftype = (deftype)interfacetype;	if (interfaceinset(interfaces, numinterfaces, interfacetypeasdeftype)) continue;	interfaces[numinterfaces++] = interfacetypeasdeftype;	foreach (var inheritedinterface in interfacetypeasdeftype.runtimeinterfaces) {	if (interfaceinset(interfaces, numinterfaces, inheritedinterface)) continue;	interfaces[numinterfaces++] = inheritedinterface;	
+added inherited interface on type 
+
+========================= corert sample_1249 =========================
+
+public static int main() {	
+waitsubsystemtests doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	
+waitsubsystemtests manualreseteventtest 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	
+waitsubsystemtests autoreseteventtest 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	
+waitsubsystemtests semaphoretest 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	
+waitsubsystemtests mutextest 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	
+waitsubsystemtests waitdurationtest 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	
+threadpooltests runprocessorcountitemsinparallel 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	
+threadpooltests runmorethanmaxjobsmakesonejobwaitforstarvationdetection 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	
+threadpooltests threadpoolcanpickuponejobwhenthreadisavailable 
+
+public static int main() {	waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	
+threadpooltests threadpoolcanpickupmultiplejobswhenthreadsareavailable 
+
+waitsubsystemtests.doublesetoneventwithtimedoutwaitershouldnotstayinwaiterslist();	waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	
+threadpooltests workqueuedepletiontest 
+
+waitsubsystemtests.manualreseteventtest();	waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	
+threadpooltests workerthreadstatereset 
+
+waitsubsystemtests.autoreseteventtest();	waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	
+waitthreadtests signalingregisteredhandlecallscalback 
+
+waitsubsystemtests.semaphoretest();	waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	
+waitthreadtests timingoutregisteredhandlecallscallback 
+
+waitsubsystemtests.mutextest();	waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	
+waitthreadtests unregisteringbeforesignalingdoesnotcallcallback 
+
+waitsubsystemtests.waitdurationtest();	threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	
+waitthreadtests repeatingwaitfiresuntilunregistered 
+
+threadpooltests.runprocessorcountitemsinparallel();	threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	
+waitthreadtests unregistereventsignaledwhenunregistered 
+
+threadpooltests.runmorethanmaxjobsmakesonejobwaitforstarvationdetection();	threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	
+waitthreadtests 
+
+threadpooltests.threadpoolcanpickuponejobwhenthreadisavailable();	threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	waitthreadtests.canregistermorethan64waits();	
+waitthreadtests stateispasssedthroughtocallback 
+
+threadpooltests.threadpoolcanpickupmultiplejobswhenthreadsareavailable();	threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	waitthreadtests.canregistermorethan64waits();	waitthreadtests.stateispasssedthroughtocallback();	
+waitthreadtests unregistercallbackisnotcalledaftercallbackfinishesifanothercallbackonsamewaitrunning 
+
+threadpooltests.workqueuedepletiontest();	threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	waitthreadtests.canregistermorethan64waits();	waitthreadtests.stateispasssedthroughtocallback();	waitthreadtests.unregistercallbackisnotcalledaftercallbackfinishesifanothercallbackonsamewaitrunning();	
+waitthreadtests callingunregisteronautomaticallyunregisteredhandlereturnstrue 
+
+threadpooltests.workerthreadstatereset();	waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	waitthreadtests.canregistermorethan64waits();	waitthreadtests.stateispasssedthroughtocallback();	waitthreadtests.unregistercallbackisnotcalledaftercallbackfinishesifanothercallbackonsamewaitrunning();	waitthreadtests.callingunregisteronautomaticallyunregisteredhandlereturnstrue();	
+waitthreadtests eventsetafterunregisternotobservedonwaitthread 
+
+waitthreadtests.signalingregisteredhandlecallscalback();	waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	waitthreadtests.canregistermorethan64waits();	waitthreadtests.stateispasssedthroughtocallback();	waitthreadtests.unregistercallbackisnotcalledaftercallbackfinishesifanothercallbackonsamewaitrunning();	waitthreadtests.callingunregisteronautomaticallyunregisteredhandlereturnstrue();	waitthreadtests.eventsetafterunregisternotobservedonwaitthread();	
+waitthreadtests blockingunregister 
+
+waitthreadtests.timingoutregisteredhandlecallscallback();	waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	waitthreadtests.canregistermorethan64waits();	waitthreadtests.stateispasssedthroughtocallback();	waitthreadtests.unregistercallbackisnotcalledaftercallbackfinishesifanothercallbackonsamewaitrunning();	waitthreadtests.callingunregisteronautomaticallyunregisteredhandlereturnstrue();	waitthreadtests.eventsetafterunregisternotobservedonwaitthread();	waitthreadtests.blockingunregister();	
+waitthreadtests candisposeeventafterunblockingunregister 
+
+waitthreadtests.unregisteringbeforesignalingdoesnotcallcallback();	waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	waitthreadtests.canregistermorethan64waits();	waitthreadtests.stateispasssedthroughtocallback();	waitthreadtests.unregistercallbackisnotcalledaftercallbackfinishesifanothercallbackonsamewaitrunning();	waitthreadtests.callingunregisteronautomaticallyunregisteredhandlereturnstrue();	waitthreadtests.eventsetafterunregisternotobservedonwaitthread();	waitthreadtests.blockingunregister();	waitthreadtests.candisposeeventafterunblockingunregister();	
+waitthreadtests unregistereventsignaledwhenunregisteredevenifautounregistered 
+
+waitthreadtests.repeatingwaitfiresuntilunregistered();	waitthreadtests.unregistereventsignaledwhenunregistered();	waitthreadtests.canregistermorethan64waits();	waitthreadtests.stateispasssedthroughtocallback();	waitthreadtests.unregistercallbackisnotcalledaftercallbackfinishesifanothercallbackonsamewaitrunning();	waitthreadtests.callingunregisteronautomaticallyunregisteredhandlereturnstrue();	waitthreadtests.eventsetafterunregisternotobservedonwaitthread();	waitthreadtests.blockingunregister();	waitthreadtests.candisposeeventafterunblockingunregister();	waitthreadtests.unregistereventsignaledwhenunregisteredevenifautounregistered();	
+waitthreadtests blockingunregisterblocksevenifcallbackexecuting 
+
+public static void false(bool condition) {	if (!condition) return;	
+assertion failure assert false 
+
+public static void true(bool condition) {	if (condition) return;	
+assertion failure assert true 
+
+public static void same<t>(t expected, t actual) where t : class {	if (expected == actual) return;	
+assertion failure assert same 
+
+public static void equal<t>(t expected, t actual) {	if (equalitycomparer<t>.default.equals(expected, actual)) return;	
+assertion failure assert equal 
+
+public static void notequal<t>(t notexpected, t actual) {	if (!equalitycomparer<t>.default.equals(notexpected, actual)) return;	
+assertion failure assert notequal 
+
+public static void null(object value) {	if (value == null) return;	
+assertion failure assert null 
+
+public static void notnull(object value) {	if (value != null) return;	
+assertion failure assert notnull 
+
+========================= corert sample_12 =========================
+
+}	if (currentparsemode == parsemode.returntypes) {	thunkreturntypes[t.thunktypename] = t;	}	break;	case parsemode.functions: functions.add(new functiondecl(currentline, thunkreturntypes, thunktypes));	break;	}	}	catch (exception e) {	
+error parsing line 
+
+");	#if false foreach (functiondecl decl in functiondata) {	string returntype = decl.returntype.managedtypename;	tr.write("        " + returntype + " " + decl.functionname + "(");	tr.write("intptr thishandle");	foreach (parameter param in decl.parameters) {	tr.write(", ");	tr.write(param.type.managedtypename + " " + param.name);	}	tr.writeline(")");	
+throw new notimplementedexception 
+
+tr.write("        " + returntype + " " + decl.functionname + "(");	tr.write("intptr thishandle");	foreach (parameter param in decl.parameters) {	tr.write(", ");	tr.write(param.type.managedtypename + " " + param.name);	}	tr.writeline(")");	}	tr.writeline();	#endif foreach (functiondecl decl in functiondata) {	
+unmanagedfunctionpointerattribute default callingconvention 
+
+tr.write("ref ");	}	tr.write(param.name);	}	tr.write(");");	tr.write(@" }	catch (exception ex) {	");	if (!isvoid) {	string retuntypewithoutmarshalas = marshalas == -1 ? returntype : returntype.substring(marshalas + 1);	
+return default 
+
+string retuntypewithoutmarshalas = marshalas == -1 ? returntype : returntype.substring(marshalas + 1);	}	else if (decl.returnasparm) {	tr.writeline("                _return = default(" + decl.returntype.managedtypename + ");");	}	tr.writeline(@"            }");	tr.writeline("        }");	tr.writeline();	}	int total = functiondata.count();	
+static intptr getunmanagedcallbacks out object keepalive 
+
+tw.write(decl.returntype.nativetypename + " _ret = ");	}	tw.write("_callbacks->" + decl.functionname + "(_thishandle, &pexception");	foreach (parameter param in decl.parameters) {	tw.write(", " + param.name);	}	tw.write(@");	if (pexception != nullptr) throw pexception;	");	if (decl.returntype.nativetypename != "void") {	
+return ret 
+
+static void main(string[] args) {	ienumerable<functiondecl> functions = parseinput(new streamreader(args[0]));	using (textwriter tw = new streamwriter(args[1])) {	
+generating 
+
+static void main(string[] args) {	ienumerable<functiondecl> functions = parseinput(new streamreader(args[0]));	using (textwriter tw = new streamwriter(args[1])) {	writemanagedthunkinterface(tw, functions);	}	using (textwriter tw = new streamwriter(args[2])) {	
+generating 
+
+========================= corert sample_26 =========================
+
+public cswriter(string filename) {	_writer = new streamwriter(filename);	
+writer writeline writer writeline 
+
+public cswriter(string filename) {	_writer = new streamwriter(filename);	
+writer writeline 
+
+========================= corert sample_1783 =========================
+
