@@ -1,5 +1,4 @@
 # Characterizing the Natural Language Descriptions in Software Logging Statements 
-## (_ASE Paper Submission #217_)
 
 ## Code-Log Project List
 The repository contains _<code, log>_ pairs that are extracted from 10 Java projects and 7 C# projects. The projects are listed as follows:
