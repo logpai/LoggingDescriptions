@@ -1,3 +1,7 @@
+<p align="center"> <img src="https://github.com/logpai/logpai.github.io/blob/master/img/logpai_logo.jpg" width="500" height="125"/>
+</p>
+
+
 # Characterizing the Natural Language Descriptions in Software Logging Statements 
 
 ## Code-Log Project List
