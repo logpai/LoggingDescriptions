@@ -83,6 +83,16 @@ exception 3 happens
 1. Logging statement "LOGGER.error(e2);" can not produce a _<code, log>_ pair since it does not contain any descriptive text except a variable. This kind of statement is treated as an ordinary code line, see **_<code, log>_ pair 2**, while others with descriptive text will not appear in the code part of any pairs, see **_<code, log>_ pair 1**.
 2. In **_<code, log>_ pair 1**, the code text contains only 5 (<6) code lines, but it will not include code outside the function.
 
+## Cite
+If you use this dataset, please cite our paper using the following reference:<br /><br />
+> @inproceedings{he2018characterizing, <br />
+  title={Characterizing the natural language descriptions in software logging statements}, <br />
+  author={He, Pinjia and Chen, Zhuangbin and He, Shilin and Lyu, Michael R}, <br />
+  booktitle={Proceedings of the 33rd ACM/IEEE International Conference on Automated Software Engineering}, <br />
+  pages={178--189}, <br />
+  year={2018}, <br />
+  organization={ACM} <br />
+} <br />
 
 ## License
 All datasets in this repository will follow the MIT license for free reuse.
