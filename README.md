@@ -1,10 +1,13 @@
 <p align="center"> <a href="https://github.com/logpai"> <img src="https://github.com/logpai/logpai.github.io/blob/master/img/logpai_logo.jpg" width="500" height="125"/>  </a>
 </p>
 
-# Characterizing the Natural Language Descriptions in Software Logging Statements 
+# LoggingDescriptions
+This repository maintains a set of _<code, log>_ pairs extracted from open-source projects, which are amendable to logging description generation research. You can read our paper for more details about the dataset.
 
-## Code-Log Project List
-The repository contains _<code, log>_ pairs that are extracted from 10 Java projects and 7 C# projects. The projects are listed as follows:
++ Pinjia He, Zhuangbin Chen, Shilin He, Michael R. Lyu. [Characterizing the Natural Language Descriptions in Software Logging Statements](https://pinjiahe.github.io/papers/ASE18.pdf), *in Proc. of the 33rd ACM/IEEE International Conference on Automated
+Software Engineering (ASE)*, 2018.
+
+The projects are listed as follows, including 10 Java projects and 7 C# projects. 
 
 | No | Java Projects        | C# Projects            |  
 | :------:|:-------------: |:-------------:|
@@ -18,8 +21,6 @@ The repository contains _<code, log>_ pairs that are extracted from 10 Java proj
 |  08 |Hive		|		|
 | 09  |Synapse		|		|
 | 10  |Ignite  		| 		|
-
-Details including project description, version, LOC, # of Logs, etc can be found in the submitted paper.
 
 ## Data Extraction
 In the paper, each _<code, log>_  pair is extracted from a single function and composed of two parts: the code text and the logging description. The code text contains 10 lines (if it has) of code statements preceeding the studied logging statement. The logging description contains the descriptive text in the studied logging statement. Non-description parts such as variables are removed.
