@@ -1,5 +1,4 @@
-<p align="center"> <a href="https://github.com/logpai"> <img src="https://github.com/logpai/logpai.github.io/blob/master/img/logpai_logo.jpg" width="500" height="125"/>  </a>
-</p>
+<p align="center"> <a href="https://github.com/logpai"> <img src="https://github.com/logpai/logpai.github.io/blob/master/img/logpai_logo.jpg" width="425"></a></p>
 
 # LoggingDescriptions
 This repository maintains a set of _<code, log>_ pairs extracted from open-source projects, which are amendable to logging description generation research. You can read our paper for more details about the dataset.
