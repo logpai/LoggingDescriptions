@@ -23,7 +23,7 @@ The projects are listed as follows, including 10 Java projects and 7 C# projects
 
 Each folder of a project includes the following two files:
 
-* *(project)_code_log_pairs.txt*: This contains all the code-log pairs extracted from the project. The pairs from differnt files of the project are separated.
+* *(project)_code_log_pairs.txt*: This file contains all the code-log pairs extracted from the project. The pairs from different files of the project are separated.
 * *file_trace.txt*: To facilitate our data processing, different files of a project are renamed in the form of "sameple_ID". This file is used to help readers trace back to the original file.
 
 ## Data Extraction
