@@ -1,38 +1,43 @@
 <p align="center"> <a href="https://github.com/logpai"> <img src="https://github.com/logpai/logpai.github.io/blob/master/img/logpai_logo.jpg" width="425"></a></p>
 
 # LoggingDescriptions
-This repository maintains a set of _<code, log>_ pairs extracted from open-source projects, which are amendable to logging description generation research. You can read our paper for more details about the dataset.
+This repository maintains a set of _<code, log>_ pairs extracted from popular open-source projects, which are amendable to logging description generation research. More details about the dataset can be found in our paper:
 
 + Pinjia He, Zhuangbin Chen, Shilin He, Michael R. Lyu. [Characterizing the Natural Language Descriptions in Software Logging Statements](https://pinjiahe.github.io/papers/ASE18.pdf), *in Proc. of the 33rd ACM/IEEE International Conference on Automated
 Software Engineering (ASE)*, 2018.
 
-The projects are listed as follows, including 10 Java projects and 7 C# projects. 
+The projects are listed as follows, including 10 Java projects and 7 C# projects:
 
 | No | Java Projects        | C# Projects            |  
 | :------:|:-------------: |:-------------:|
-| 01  |ActiveMQ		|Azure SDK	|
-| 02  |Ambari		|CoreRT		|
-|  03 |Brooklyn		|CoreFX		|
-|  04 |Camel      	|Mono		|
-|  05 |CloudStack 	|MonoDevelop	|
-|  06 |Hadoop    	|Orleans	|
-|  07 |Hbase     	|SharpDevelop	|
-|  08 |Hive		|		|
-| 09  |Synapse		|		|
-| 10  |Ignite  		| 		|
+| 01 |ActiveMQ		|Azure SDK	|
+| 02 |Ambari		|CoreRT		|
+| 03 |Brooklyn		|CoreFX		|
+| 04 |Camel      	|Mono		|
+| 05 |CloudStack 	|MonoDevelop	|
+| 06 |Hadoop    	|Orleans	|
+| 07 |Hbase     	|SharpDevelop	|
+| 08 |Hive		|		|
+| 09 |Synapse		|		|
+| 10 |Ignite  		| 		|
+
+Each folder of a project includes the following two files:
+
+* *(project)_code_log_pairs.txt*: This contains all the code-log pairs extracted from the project. The pairs from differnt files of the project are separated.
+* *file_trace.txt*: To facilitate our data processing, different files of a project are renamed in the form of "sameple_ID". This file is used to help readers trace back to the original file.
 
 ## Data Extraction
-In the paper, each _<code, log>_  pair is extracted from a single function and composed of two parts: the code text and the logging description. The code text contains 10 lines (if it has) of code statements preceeding the studied logging statement. The logging description contains the descriptive text in the studied logging statement. Non-description parts such as variables are removed.
+In the paper, each _<code, log>_  pair is extracted from a single function and composed of two parts: the code text and the logging description. The code text contains 10 lines (if it has) of code statements preceeding the studied logging statement. The logging description contains the descriptive text in the same logging statement. Non-description parts such as variables are removed.
 
 Processing Details:
 1. All empty lines are skipped.
 2. All English characters are converted to their lower cases.
 3. In code text part, code lines are separeted by \tab.
-4. Log statements that do not contain any description text are not considered as logging descriptions in this dataset. Instead, we regard this type of logging statement as an ordinary code line.
-5. The extracted preceeding 10 lines of code statements cannot exceed current function scope (See the following example for details).
+4. Log statements that do not contain any description text are not considered as logging description but ordinary code statement in this dataset.
+5. The extracted preceeding 10 lines of code statements do not exceed current function scope (see the following example for details).
 
 ## A Simplified Example 
-For easy demonstration, in the following Java example, we only extract **6 lines** of code insteaed of 10 for the code text part.
+For easy demonstration, in the following Java example, we simply extract **6 lines** of code insteaed of 10 for the code text part.
 
 ```java
 public	void catchException() {
