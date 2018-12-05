@@ -13271,7 +13271,7 @@ usage mdbdump assembly
 
 ========================= mono sample_1285 =========================
 
-public delegate object delobj (object g, int i);	public delegate object delstr (object g, int i);	public class main {	public static int work () {	gen<string> gs = new gen<string> ();	gen<object> go = new gen<object> ();	methodinfo miobj = typeof (gen<object>).getmethod ("newarr", bindingflags.public | bindingflags.instance);	methodinfo mistr = typeof (gen<string>).getmethod ("newarr", bindingflags.public | bindingflags.instance);	if (miobj == mistr) {	
+public delegate object delobj (object g, int i);	public delegate object delstr (object g, int i);	public static int work () {	gen<string> gs = new gen<string> ();	gen<object> go = new gen<object> ();	methodinfo miobj = typeof (gen<object>).getmethod ("newarr", bindingflags.public | bindingflags.instance);	methodinfo mistr = typeof (gen<string>).getmethod ("newarr", bindingflags.public | bindingflags.instance);	if (miobj == mistr) {	
 methods equal 
 
 gen<object> go = new gen<object> ();	methodinfo miobj = typeof (gen<object>).getmethod ("newarr", bindingflags.public | bindingflags.instance);	methodinfo mistr = typeof (gen<string>).getmethod ("newarr", bindingflags.public | bindingflags.instance);	if (miobj == mistr) {	return 1;	}	objarrdel oad = go.newobjdel ();	strarrdel sad = gs.newstrdel ();	strarrdel sad2 = (strarrdel)delegate.createdelegate (typeof (strarrdel), null, mistr);	if (oad.method != miobj) {	

@@ -3341,7 +3341,7 @@ compacted bloom chunk from max keys bytes to max keys bytes
 long now = EnvironmentEdgeManager.currentTime();	long minTimeAllowed = (long) (deltaSize long elapsedTime = now - operation.lastControlTime;	operation.lastControlSize = operation.totalSize;	if (elapsedTime >= minTimeAllowed) {	operation.lastControlTime = EnvironmentEdgeManager.currentTime();	return 0;	}	long sleepTime = minTimeAllowed - elapsedTime;	if (LOG.isDebugEnabled()) {	if (now - operation.lastLogTime > 5L * 1000) {	
 deltasize bytes elapsetime ns 
 
-protected abstract boolean skipControl(long deltaSize, long controlSize);	public void finish(String opName) {	ActiveOperation operation = activeOperations.remove(opName);	maxThroughputPerOperation = getMaxThroughput() / activeOperations.size();	long elapsedTime = EnvironmentEdgeManager.currentTime() - operation.startTime;	
+protected abstract boolean skipControl(long deltaSize, long controlSize);	ActiveOperation operation = activeOperations.remove(opName);	maxThroughputPerOperation = getMaxThroughput() / activeOperations.size();	long elapsedTime = EnvironmentEdgeManager.currentTime() - operation.startTime;	
 average throughput is slept time s and total slept time is ms active operations remaining total limit is 
 
 ========================= hbase sample_2542 =========================
@@ -5496,7 +5496,7 @@ sleeping for to add jitter
 public void run() {	int jitter = RandomUtils.nextInt(0, (int) periodMs);	Threads.sleep(jitter);	while (!isStopped()) {	long start = System.currentTimeMillis();	runOneIteration();	if (isStopped()) return;	long sleepTime = periodMs - (System.currentTimeMillis() - start);	if (sleepTime > 0) {	
 sleeping for 
 
-protected abstract void runOneIteration();	public void init(PolicyContext context) throws Exception {	super.init(context);	
+protected abstract void runOneIteration();	super.init(context);	
 using chaosmonkey policy period 
 
 ========================= hbase sample_3285 =========================
@@ -5830,7 +5830,7 @@ call calltime ms
 public void cancelConnections(ServerName sn) {	synchronized (connections) {	for (T connection : connections.values()) {	ConnectionId remoteId = connection.remoteId();	if (remoteId.address.getPort() == sn.getPort() && remoteId.address.getHostName().equals(sn.getHostname())) {	
 the server on is dead stopping the connection 
 
-protected abstract void closeInternal();	public void close() {	if (LOG.isDebugEnabled()) {	
+protected abstract void closeInternal();	if (LOG.isDebugEnabled()) {	
 stopping rpc client 
 
 ========================= hbase sample_255 =========================
@@ -6803,7 +6803,7 @@ appended bulk load marker
 
 ========================= hbase sample_2564 =========================
 
-protected abstract void execute(Table table) throws IOException;	public void testRpcTimeout() throws IOException {	Configuration c = new Configuration(TEST_UTIL.getConfiguration());	try (Table table = TEST_UTIL.getConnection().getTableBuilder(tableName, null) .setRpcTimeout(SleepCoprocessor.SLEEP_TIME / 2) .setReadRpcTimeout(SleepCoprocessor.SLEEP_TIME / 2) .setWriteRpcTimeout(SleepCoprocessor.SLEEP_TIME / 2) .setOperationTimeout(SleepCoprocessor.SLEEP_TIME * 100).build()) {	execute(table);	fail("Get should not have succeeded");	} catch (RetriesExhaustedException e) {	
+protected abstract void execute(Table table) throws IOException;	Configuration c = new Configuration(TEST_UTIL.getConfiguration());	try (Table table = TEST_UTIL.getConnection().getTableBuilder(tableName, null) .setRpcTimeout(SleepCoprocessor.SLEEP_TIME / 2) .setReadRpcTimeout(SleepCoprocessor.SLEEP_TIME / 2) .setWriteRpcTimeout(SleepCoprocessor.SLEEP_TIME / 2) .setOperationTimeout(SleepCoprocessor.SLEEP_TIME * 100).build()) {	execute(table);	fail("Get should not have succeeded");	} catch (RetriesExhaustedException e) {	
 we received an exception as expected 
 
 }	c.setInt(HConstants.HBASE_RPC_TIMEOUT_KEY, SleepCoprocessor.SLEEP_TIME / 2);	c.setInt(HConstants.HBASE_RPC_READ_TIMEOUT_KEY, SleepCoprocessor.SLEEP_TIME / 2);	c.setInt(HConstants.HBASE_RPC_WRITE_TIMEOUT_KEY, SleepCoprocessor.SLEEP_TIME / 2);	c.setInt(HConstants.HBASE_CLIENT_OPERATION_TIMEOUT, SleepCoprocessor.SLEEP_TIME * 100);	try (Connection conn = ConnectionFactory.createConnection(c)) {	try (Table table = conn.getTable(tableName)) {	execute(table);	fail("Get should not have succeeded");	} catch (RetriesExhaustedException e) {	
@@ -7965,7 +7965,7 @@ dropping authorizations requested by user
 
 ========================= hbase sample_2303 =========================
 
-protected abstract boolean setNewStartKey();	protected abstract ScannerCallable createScannerCallable();	protected boolean moveToNextRegion() {	try {	closeScanner();	} catch (IOException e) {	if (LOG.isDebugEnabled()) {	
+protected abstract boolean setNewStartKey();	try {	closeScanner();	} catch (IOException e) {	if (LOG.isDebugEnabled()) {	
 close scanner for failed 
 
 } catch (IOException e) {	if (LOG.isDebugEnabled()) {	}	}	if (currentRegion != null) {	if (!setNewStartKey()) {	return false;	}	scan.resetMvccReadPoint();	if (LOG.isTraceEnabled()) {	
@@ -10842,7 +10842,7 @@ loading coprocessor class with path and priority
 public E checkAndLoadInstance(Class<?> implClass, int priority, Configuration conf) throws IOException {	C impl;	try {	impl = checkAndGetInstance(implClass);	if (impl == null) {	
 cannot load coprocessor 
 
-public abstract E createEnvironment(C instance, int priority, int sequence, Configuration conf);	public abstract C checkAndGetInstance(Class<?> implClass) throws InstantiationException, IllegalAccessException;	public void shutdown(E e) {	assert e instanceof BaseEnvironment;	if (LOG.isDebugEnabled()) {	
+public abstract E createEnvironment(C instance, int priority, int sequence, Configuration conf);	public void shutdown(E e) {	assert e instanceof BaseEnvironment;	if (LOG.isDebugEnabled()) {	
 stop coprocessor 
 
 protected void abortServer(final String coprocessorName, final Throwable e) {	String message = "The coprocessor " + coprocessorName + " threw " + e.toString();	LOG.error(message, e);	if (abortable != null) {	abortable.abort(message, e);	} else {	
@@ -17268,8 +17268,11 @@ chore service for had on shutdown
 
 ========================= hbase sample_1100 =========================
 
-public Response get(final @Context UriInfo uriInfo, if (LOG.isTraceEnabled()) {	
+public Response get(final @Context UriInfo uriInfo, @QueryParam("n") int maxRows, final @QueryParam("c") int maxValues) {	if (LOG.isTraceEnabled()) {	
 get 
+
+return Response.status(Response.Status.GONE) .type(MIMETYPE_TEXT).entity("Gone" + CRLF) .build();	} catch (IllegalArgumentException e) {	Throwable t = e.getCause();	if (t instanceof TableNotFoundException) {	return Response.status(Response.Status.NOT_FOUND) .type(MIMETYPE_TEXT).entity("Not found" + CRLF) .build();	}	throw e;	}	if (value == null) {	if (LOG.isTraceEnabled()) {	
+generator exhausted 
 
 public Response getBinary(final @Context UriInfo uriInfo) {	if (LOG.isTraceEnabled()) {	
 get as 
@@ -18318,7 +18321,7 @@ problem scanning file system
 
 ========================= hbase sample_2242 =========================
 
-protected abstract AbstractRpcClient<?> createRpcClientRTEDuringConnectionSetup( Configuration conf) throws IOException;	public void testRTEDuringConnectionSetup() throws Exception {	Configuration conf = HBaseConfiguration.create();	RpcServer rpcServer = createRpcServer(null, "testRpcServer", Lists.newArrayList(new RpcServer.BlockingServiceAndInterface( SERVICE, null)), new InetSocketAddress("localhost", 0), CONF, new FifoRpcScheduler(CONF, 1));	try (AbstractRpcClient<?> client = createRpcClientRTEDuringConnectionSetup(conf)) {	rpcServer.start();	BlockingInterface stub = newBlockingStub(client, rpcServer.getListenerAddress());	stub.ping(null, EmptyRequestProto.getDefaultInstance());	fail("Expected an exception to have been thrown!");	} catch (Exception e) {	
+protected abstract AbstractRpcClient<?> createRpcClientRTEDuringConnectionSetup( Configuration conf) throws IOException;	Configuration conf = HBaseConfiguration.create();	RpcServer rpcServer = createRpcServer(null, "testRpcServer", Lists.newArrayList(new RpcServer.BlockingServiceAndInterface( SERVICE, null)), new InetSocketAddress("localhost", 0), CONF, new FifoRpcScheduler(CONF, 1));	try (AbstractRpcClient<?> client = createRpcClientRTEDuringConnectionSetup(conf)) {	rpcServer.start();	BlockingInterface stub = newBlockingStub(client, rpcServer.getListenerAddress());	stub.ping(null, EmptyRequestProto.getDefaultInstance());	fail("Expected an exception to have been thrown!");	} catch (Exception e) {	
 caught expected exception 
 
 rpcServer.start();	BlockingInterface stub = newBlockingStub(client, rpcServer.getListenerAddress());	StringBuilder message = new StringBuilder(1200);	for (int i = 0; i < 200; i++) {	message.append("hello.");	}	EchoRequestProto param = EchoRequestProto.newBuilder().setMessage(message.toString()).build();	stub.echo( new HBaseRpcControllerImpl(CellUtil.createCellScanner(ImmutableList.<Cell> of(CELL))), param);	fail("RPC should have failed because it exceeds max request size");	} catch (ServiceException e) {	
@@ -18330,7 +18333,7 @@ caught expected exception
 int ms = 1000;	int timeout = 100;	for (int i = 0; i < 10; i++) {	pcrc.reset();	pcrc.setCallTimeout(timeout);	long startTime = System.nanoTime();	try {	stub.pause(pcrc, PauseRequestProto.newBuilder().setMs(ms).build());	} catch (ServiceException e) {	long waitTime = (System.nanoTime() - startTime) / 1000000;	
 caught expected exception 
 
-public void testConnectionCloseWithOutstandingRPCs() throws InterruptedException, IOException {	Configuration conf = new Configuration(CONF);	RpcServer rpcServer = createTestFailingRpcServer(null, "testRpcServer", Lists.newArrayList(new RpcServer.BlockingServiceAndInterface( SERVICE, null)), new InetSocketAddress("localhost", 0), CONF, new FifoRpcScheduler(CONF, 1));	try (AbstractRpcClient<?> client = createRpcClient(conf)) {	rpcServer.start();	BlockingInterface stub = newBlockingStub(client, rpcServer.getListenerAddress());	EchoRequestProto param = EchoRequestProto.newBuilder().setMessage("hello").build();	stub.echo(null, param);	fail("RPC should have failed because connection closed");	} catch (ServiceException e) {	
+protected abstract RpcServer createTestFailingRpcServer(final Server server, final String name, final List<BlockingServiceAndInterface> services, final InetSocketAddress bindAddress, Configuration conf, RpcScheduler scheduler) throws IOException;	Configuration conf = new Configuration(CONF);	RpcServer rpcServer = createTestFailingRpcServer(null, "testRpcServer", Lists.newArrayList(new RpcServer.BlockingServiceAndInterface( SERVICE, null)), new InetSocketAddress("localhost", 0), CONF, new FifoRpcScheduler(CONF, 1));	try (AbstractRpcClient<?> client = createRpcClient(conf)) {	rpcServer.start();	BlockingInterface stub = newBlockingStub(client, rpcServer.getListenerAddress());	EchoRequestProto param = EchoRequestProto.newBuilder().setMessage("hello").build();	stub.echo(null, param);	fail("RPC should have failed because connection closed");	} catch (ServiceException e) {	
 caught expected exception 
 
 AbstractRpcClient<?> client = createRpcClient(CONF);	RpcServer rpcServer = createRpcServer(null, "testRpcServer", Lists.newArrayList(new RpcServer.BlockingServiceAndInterface( SERVICE, null)), new InetSocketAddress("localhost", 0), CONF, new FifoRpcScheduler(CONF, 1));	try {	rpcServer.start();	Interface stub = newStub(client, rpcServer.getListenerAddress());	BlockingRpcCallback<EmptyResponseProto> callback = new BlockingRpcCallback<>();	HBaseRpcController pcrc = new HBaseRpcControllerImpl();	stub.error(pcrc, EmptyRequestProto.getDefaultInstance(), callback);	assertNull(callback.get());	assertTrue(pcrc.failed());	

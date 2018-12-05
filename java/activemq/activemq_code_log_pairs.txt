@@ -3034,10 +3034,10 @@ caught exception while shutting down the broker
 connection.close();	connection = null;	} catch (Exception e) {	}	try {	broker.stop();	broker.waitUntilStopped();	broker = null;	} catch (Exception e) {	}	
 connection closed 
 
-protected abstract JmsResourceProvider getJmsResourceProvider();	public void testSendReceiveTransactedBatches() throws Exception {	TextMessage message = session.createTextMessage("Batch Message");	for (int j = 0; j < batchCount; j++) {	
+protected abstract JmsResourceProvider getJmsResourceProvider();	TextMessage message = session.createTextMessage("Batch Message");	for (int j = 0; j < batchCount; j++) {	
 producing bacth of messages 
 
-protected abstract JmsResourceProvider getJmsResourceProvider();	public void testSendReceiveTransactedBatches() throws Exception {	TextMessage message = session.createTextMessage("Batch Message");	for (int j = 0; j < batchCount; j++) {	beginTx();	for (int i = 0; i < batchSize; i++) {	producer.send(message);	}	messageSent();	commitTx();	
+protected abstract JmsResourceProvider getJmsResourceProvider();	TextMessage message = session.createTextMessage("Batch Message");	for (int j = 0; j < batchCount; j++) {	beginTx();	for (int i = 0; i < batchSize; i++) {	producer.send(message);	}	messageSent();	commitTx();	
 consuming bacth of messages 
 
 producer.send(outbound[0]);	commitTx();	beginTx();	producer.send(session.createTextMessage("I'm going to get rolled back."));	rollbackTx();	beginTx();	producer.send(outbound[1]);	commitTx();	beginTx();	ArrayList<Message> messages = new ArrayList<Message>();	
@@ -4796,13 +4796,10 @@ jms connector started
 localConnection.get().close();	} catch (Exception e) {	}	}	for (DestinationBridge bridge : inboundBridges) {	bridge.stop();	}	for (DestinationBridge bridge : outboundBridges) {	bridge.stop();	}	
 jms connector stopped 
 
-protected abstract void initializeLocalConnection() throws Exception;	protected abstract void initializeForeignConnection() throws Exception;	void handleConnectionFailure(Connection connection) {	if (connection == null || !this.started.get()) {	return;	}	
-jmsconnector handling loss of connection 
-
-try {	bridge.stop();	} catch(Exception e) {	}	}	this.connectionService.execute(new Runnable() {	public void run() {	try {	doInitializeConnection(false);	} catch (Exception e) {	
+public void run() {	try {	doInitializeConnection(false);	} catch (Exception e) {	
 failed to initialize foreign connection for the jmsconnector 
 
-try {	bridge.stop();	} catch(Exception e) {	}	}	this.connectionService.execute(new Runnable() {	public void run() {	try {	doInitializeConnection(true);	} catch (Exception e) {	
+public void run() {	try {	doInitializeConnection(true);	} catch (Exception e) {	
 failed to initialize local connection for the jmsconnector 
 
 private void scheduleAsyncLocalConnectionReconnect() {	this.connectionService.execute(new Runnable() {	public void run() {	try {	doInitializeConnection(true);	} catch (Exception e) {	
@@ -8814,7 +8811,7 @@ running parallel threads
 
 ========================= activemq sample_1493 =========================
 
-public abstract byte getDestinationType();	protected abstract void createClient() throws JMSException;	protected void before() throws Throwable {	
+public abstract byte getDestinationType();	protected abstract void createClient() throws JMSException;	
 starting 
 
 protected void after() {	
@@ -10550,10 +10547,10 @@ can t use property which is of type value
 
 ========================= activemq sample_1062 =========================
 
-protected abstract void configurePersistenceAdapter(final BrokerService broker) throws IOException;	public void testMessagesAreValid() throws Exception {	if (this.useTopic) {	Assume.assumeTrue(reduceMemoryFootPrint);	}	ExecutorService tasks = Executors.newFixedThreadPool(NUM_TASKS);	for (int i = 0; i < NUM_CONSUMERS; i++) {	
+protected abstract void configurePersistenceAdapter(final BrokerService broker) throws IOException;	if (this.useTopic) {	Assume.assumeTrue(reduceMemoryFootPrint);	}	ExecutorService tasks = Executors.newFixedThreadPool(NUM_TASKS);	for (int i = 0; i < NUM_CONSUMERS; i++) {	
 created consumer 
 
-protected abstract void configurePersistenceAdapter(final BrokerService broker) throws IOException;	public void testMessagesAreValid() throws Exception {	if (this.useTopic) {	Assume.assumeTrue(reduceMemoryFootPrint);	}	ExecutorService tasks = Executors.newFixedThreadPool(NUM_TASKS);	for (int i = 0; i < NUM_CONSUMERS; i++) {	tasks.execute(new HelloWorldConsumer(useTopic));	}	for (int i = 0; i < NUM_PRODUCERS; i++) {	
+protected abstract void configurePersistenceAdapter(final BrokerService broker) throws IOException;	if (this.useTopic) {	Assume.assumeTrue(reduceMemoryFootPrint);	}	ExecutorService tasks = Executors.newFixedThreadPool(NUM_TASKS);	for (int i = 0; i < NUM_CONSUMERS; i++) {	tasks.execute(new HelloWorldConsumer(useTopic));	}	for (int i = 0; i < NUM_PRODUCERS; i++) {	
 created producer 
 
 public void run() {	try {	ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(getBrokerURI());	Connection connection = connectionFactory.createConnection();	connection.start();	Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);	Destination destination = useTopic ? session.createTopic(testTopicName) : session.createTopic("VirtualTopic.AMQ6218Test");	MessageProducer producer = session.createProducer(destination);	
@@ -15310,7 +15307,7 @@ parallel add and remove
 executor.execute(new Job(i, PListTestSupport.TaskType.ADD, iterations*2));	}	for (int k=0;k<numConsumer; k++) {	executor.execute(new Job(i, TaskType.ITERATE_REMOVE, iterations/4));	}	}	for (int i=numLists; i<numLists*10; i++) {	executor.execute(new Job(i, PListTestSupport.TaskType.ADD, iterations));	}	executor.shutdown();	
 wait for parallel work to complete 
 
-public void testConcurrentAddIterate() throws Exception {	File directory = store.getDirectory();	store.stop();	IOHelper.mkdirs(directory);	IOHelper.deleteChildren(directory);	store = createConcurrentAddIteratePListStore();	store.setDirectory(directory);	store.start();	final int iterations = 250;	final int numLists = 10;	
+protected abstract PListStore createConcurrentAddIterateRemovePListStore(boolean enablePageCache);	File directory = store.getDirectory();	store.stop();	IOHelper.mkdirs(directory);	IOHelper.deleteChildren(directory);	store = createConcurrentAddIteratePListStore();	store.setDirectory(directory);	store.start();	final int iterations = 250;	final int numLists = 10;	
 create 
 
 IOHelper.mkdirs(directory);	IOHelper.deleteChildren(directory);	store = createConcurrentAddIteratePListStore();	store.setDirectory(directory);	store.start();	final int iterations = 250;	final int numLists = 10;	for (int i=0; i<numLists;i++) {	new Job(i, PListTestSupport.TaskType.CREATE, iterations).run();	}	

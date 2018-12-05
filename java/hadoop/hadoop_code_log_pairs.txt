@@ -729,10 +729,10 @@ disk validator is loaded
 StaticMapping.addNodeToRack(hosts[invalidIdx], racks[validIdx]);	
 datanode came up with network location 
 
-StaticMapping.addNodeToRack(hosts[invalidIdx], racks[validIdx]);	cluster.restartDataNode(invalidIdx);	Thread.sleep(5000);	while (true) {	info = nn.getDatanodeReport(DatanodeReportType.LIVE);	if (info.length == 2) {	break;	}	if (info.length == 0) {	
+StaticMapping.addNodeToRack(hosts[invalidIdx], racks[validIdx]);	Thread.sleep(5000);	while (true) {	info = nn.getDatanodeReport(DatanodeReportType.LIVE);	if (info.length == 2) {	break;	}	if (info.length == 0) {	
 got no valid dns 
 
-StaticMapping.addNodeToRack(hosts[invalidIdx], racks[validIdx]);	cluster.restartDataNode(invalidIdx);	Thread.sleep(5000);	while (true) {	info = nn.getDatanodeReport(DatanodeReportType.LIVE);	if (info.length == 2) {	break;	}	if (info.length == 0) {	} else if (info.length == 1) {	
+StaticMapping.addNodeToRack(hosts[invalidIdx], racks[validIdx]);	Thread.sleep(5000);	while (true) {	info = nn.getDatanodeReport(DatanodeReportType.LIVE);	if (info.length == 2) {	break;	}	if (info.length == 0) {	} else if (info.length == 1) {	
 got one valid dn at 
 
 ========================= hadoop sample_7075 =========================
@@ -4871,10 +4871,10 @@ removing attempt from app
 public RMStateStoreState transition(RMStateStore store, RMStateStoreEvent event) {	if (!(event instanceof RMStateStoreRemoveAppAttemptEvent)) {	return RMStateStoreState.ACTIVE;	}	boolean isFenced = false;	ApplicationAttemptId attemptId = ((RMStateStoreRemoveAppAttemptEvent) event).getApplicationAttemptId();	ApplicationId appId = attemptId.getApplicationId();	try {	store.removeApplicationAttemptInternal(attemptId);	} catch (Exception e) {	
 error removing attempt 
 
-protected abstract void closeInternal() throws Exception;	public void checkVersion() throws Exception {	Version loadedVersion = loadVersion();	
+protected abstract void closeInternal() throws Exception;	Version loadedVersion = loadVersion();	
 loaded rm state version info 
 
-protected abstract void closeInternal() throws Exception;	public void checkVersion() throws Exception {	Version loadedVersion = loadVersion();	if (loadedVersion != null && loadedVersion.equals(getCurrentVersion())) {	return;	}	if (loadedVersion == null) {	loadedVersion = getCurrentVersion();	}	if (loadedVersion.isCompatibleTo(getCurrentVersion())) {	
+protected abstract void closeInternal() throws Exception;	Version loadedVersion = loadVersion();	if (loadedVersion != null && loadedVersion.equals(getCurrentVersion())) {	return;	}	if (loadedVersion == null) {	loadedVersion = getCurrentVersion();	}	if (loadedVersion.isCompatibleTo(getCurrentVersion())) {	
 storing rm state version info 
 
 protected void handleStoreEvent(RMStateStoreEvent event) {	this.writeLock.lock();	try {	if (LOG.isDebugEnabled()) {	
@@ -5633,6 +5633,9 @@ running distcp
 
 ========================= hadoop sample_6239 =========================
 
+}	if (userQuery != null && !userQuery.isEmpty()) {	Set<String> users = new HashSet<String>(1);	users.add(userQuery);	request.setUsers(users);	}	List<ApplicationReport> appReports = null;	try {	appReports = rm.getClientRMService().getApplications(request) .getApplicationList();	} catch (YarnException e) {	
+unable to retrieve apps from clientrmservice 
+
 try {	callerUGI .doAs(new PrivilegedExceptionAction<SubmitApplicationResponse>() {	public SubmitApplicationResponse run() throws IOException, YarnException {	return rm.getClientRMService().submitApplication(req);	}	});	} catch (UndeclaredThrowableException ue) {	if (ue.getCause() instanceof YarnException) {	throw new BadRequestException(ue.getCause().getMessage());	}	
 submit app request failed 
 
@@ -5665,6 +5668,9 @@ update reservation request failed
 
 resRespInfo = callerUGI .doAs(new PrivilegedExceptionAction<ReservationDeleteResponseInfo>() {	public ReservationDeleteResponseInfo run() throws IOException, YarnException {	rm.getClientRMService().deleteReservation(reservation);	return new ReservationDeleteResponseInfo();	}	});	} catch (UndeclaredThrowableException ue) {	if (ue.getCause() instanceof YarnException) {	throw new BadRequestException(ue.getCause().getMessage());	}	
 update reservation request failed 
+
+try {	resRespInfo = callerUGI .doAs(new PrivilegedExceptionAction<ReservationListResponse>() {	public ReservationListResponse run() throws IOException, YarnException {	return rm.getClientRMService().listReservations(request);	}	});	} catch (UndeclaredThrowableException ue) {	if (ue.getCause() instanceof YarnException) {	throw new BadRequestException(ue.getCause().getMessage());	}	
+list reservation request failed 
 
 rm.getRMContext().getRMAdminService().refreshQueues();	} catch (IOException | YarnException e) {	provider.confirmPendingMutation(false);	throw e;	}	provider.confirmPendingMutation(true);	return null;	}	});	} catch (IOException e) {	
 exception thrown when modifying configuration 
@@ -5841,7 +5847,7 @@ exception while getting located blocks
 
 ========================= hadoop sample_7214 =========================
 
-DefaultMetricsSystem.setMiniClusterMode(true);	}	Configuration config;	File hdfsDir;	public static String getFullHostName() {	try {	return DNS.getDefaultHost("default");	} catch (UnknownHostException e) {	
+DefaultMetricsSystem.setMiniClusterMode(true);	}	Configuration config;	File hdfsDir;	try {	return DNS.getDefaultHost("default");	} catch (UnknownHostException e) {	
 unable to determine hostname may interfere with obtaining valid test results 
 
 ========================= hadoop sample_7644 =========================
@@ -7838,7 +7844,7 @@ connecting to mrhistoryserver at
 
 ========================= hadoop sample_4463 =========================
 
-public Writable call(Server server, String protocol, Writable rpcRequest, long receiveTime) throws Exception ;	}	static final Logger LOG = LoggerFactory.getLogger(RPC.class);	static Class<?>[] getSuperInterfaces(Class<?>[] childInterfaces) {	List<Class<?>> allInterfaces = new ArrayList<Class<?>>();	for (Class<?> childInterface : childInterfaces) {	if (VersionedProtocol.class.isAssignableFrom(childInterface)) {	allInterfaces.add(childInterface);	allInterfaces.addAll( Arrays.asList( getSuperInterfaces(childInterface.getInterfaces())));	} else {	
+public Writable call(Server server, String protocol, Writable rpcRequest, long receiveTime) throws Exception ;	}	static final Logger LOG = LoggerFactory.getLogger(RPC.class);	List<Class<?>> allInterfaces = new ArrayList<Class<?>>();	for (Class<?> childInterface : childInterfaces) {	if (VersionedProtocol.class.isAssignableFrom(childInterface)) {	allInterfaces.add(childInterface);	allInterfaces.addAll( Arrays.asList( getSuperInterfaces(childInterface.getInterfaces())));	} else {	
 interface ignored because it does not extend versionedprotocol 
 
 public static <T> ProtocolProxy<T> waitForProtocolProxy(Class<T> protocol, long clientVersion, InetSocketAddress addr, Configuration conf, int rpcTimeout, RetryPolicy connectionRetryPolicy, long timeout) throws IOException {	long startTime = Time.now();	IOException ioe;	while (true) {	try {	return getProtocolProxy(protocol, clientVersion, addr, UserGroupInformation.getCurrentUser(), conf, NetUtils .getDefaultSocketFactory(conf), rpcTimeout, connectionRetryPolicy);	} catch(ConnectException se) {	
@@ -9843,47 +9849,113 @@ processed url but encountered exception took ms
 throw new BadRequestException(invalidNumMsg + " is not a numeric value.");	} else if (e instanceof IllegalArgumentException) {	throw new BadRequestException(e.getMessage() == null ? "Requested Invalid Field." : e.getMessage());	} else if (e instanceof NotFoundException) {	throw (NotFoundException)e;	} else if (e instanceof TimelineParseException) {	throw new BadRequestException(e.getMessage() == null ? "Filter Parsing failed." : e.getMessage());	} else if (e instanceof BadRequestException) {	throw (BadRequestException)e;	} else {	
 error while processing rest request 
 
-public TimelineAbout about( init(res);	return TimelineUtils.createTimelineAbout("Timeline Reader API");	}	public Set<TimelineEntity> getEntities( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+public Set<TimelineEntity> getEntities( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("uid") String uId, @PathParam("uid") String uId, @PathParam("entitytype") String entityType, @PathParam("entitytype") String entityType, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("relatesto") String relatesTo, @QueryParam("relatesto") String relatesTo, @QueryParam("isrelatedto") String isRelatedTo, @QueryParam("isrelatedto") String isRelatedTo, @QueryParam("infofilters") String infofilters, @QueryParam("infofilters") String infofilters, @QueryParam("conffilters") String conffilters, @QueryParam("conffilters") String conffilters, @QueryParam("metricfilters") String metricfilters, @QueryParam("metricfilters") String metricfilters, @QueryParam("eventfilters") String eventfilters, @QueryParam("eventfilters") String eventfilters, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("fromid") String fromId) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public Set<TimelineEntity> getEntities( return getEntities(req, res, null, appId, entityType, userId, flowName, flowRunId, limit, createdTimeStart, createdTimeEnd, relatesTo, isRelatedTo, infofilters, conffilters, metricfilters, eventfilters, confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd, fromId);	}	public Set<TimelineEntity> getEntities( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+}	context.setEntityType( TimelineReaderWebServicesUtils.parseStr(entityType));	entities = timelineReaderManager.getEntities(context, TimelineReaderWebServicesUtils.createTimelineEntityFilters( limit, createdTimeStart, createdTimeEnd, relatesTo, isRelatedTo, infofilters, conffilters, metricfilters, eventfilters, fromId), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "createdTime start/end or limit or flowrunid");	}	long endTime = Time.monotonicNow();	if (entities == null) {	entities = Collections.emptySet();	}	
+processed url took ms 
+
+public Set<TimelineEntity> getEntities( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @PathParam("appid") String appId, @PathParam("appid") String appId, @PathParam("entitytype") String entityType, @PathParam("entitytype") String entityType, @QueryParam("userid") String userId, @QueryParam("userid") String userId, @QueryParam("flowname") String flowName, @QueryParam("flowname") String flowName, @QueryParam("flowrunid") String flowRunId, @QueryParam("flowrunid") String flowRunId, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("relatesto") String relatesTo, @QueryParam("relatesto") String relatesTo, @QueryParam("isrelatedto") String isRelatedTo, @QueryParam("isrelatedto") String isRelatedTo, @QueryParam("infofilters") String infofilters, @QueryParam("infofilters") String infofilters, @QueryParam("conffilters") String conffilters, @QueryParam("conffilters") String conffilters, @QueryParam("metricfilters") String metricfilters, @QueryParam("metricfilters") String metricfilters, @QueryParam("eventfilters") String eventfilters, @QueryParam("eventfilters") String eventfilters, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("fromid") String fromId) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public TimelineEntity getEntity( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+try {	TimelineReaderContext context = TimelineReaderWebServicesUtils .createTimelineReaderContext(clusterId, userId, flowName, flowRunId, appId, entityType, null, null);	entities = timelineReaderManager.getEntities(context, TimelineReaderWebServicesUtils.createTimelineEntityFilters( limit, createdTimeStart, createdTimeEnd, relatesTo, isRelatedTo, infofilters, conffilters, metricfilters, eventfilters, fromId), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "createdTime start/end or limit or flowrunid");	}	long endTime = Time.monotonicNow();	if (entities == null) {	entities = Collections.emptySet();	}	
+processed url took ms 
+
+public TimelineEntity getEntity( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("uid") String uId, @PathParam("uid") String uId, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public TimelineEntity getEntity( return getEntity(req, res, null, appId, entityType, entityId, userId, flowName, flowRunId, confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd, entityIdPrefix);	}	public TimelineEntity getEntity( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+TimelineReaderContext context = TimelineUIDConverter.GENERIC_ENTITY_UID.decodeUID(uId);	if (context == null) {	throw new BadRequestException("Incorrect UID " +  uId);	}	entity = timelineReaderManager.getEntity(context, TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	
+processed url but entity not found took ms 
+
+throw new BadRequestException("Incorrect UID " +  uId);	}	entity = timelineReaderManager.getEntity(context, TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	throw new NotFoundException("Timeline entity with uid: " + uId + "is not found");	}	
+processed url took ms 
+
+public TimelineEntity getEntity( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @PathParam("appid") String appId, @PathParam("appid") String appId, @PathParam("entitytype") String entityType, @PathParam("entitytype") String entityType, @PathParam("entityid") String entityId, @PathParam("entityid") String entityId, @QueryParam("userid") String userId, @QueryParam("userid") String userId, @QueryParam("flowname") String flowName, @QueryParam("flowname") String flowName, @QueryParam("flowrunid") String flowRunId, @QueryParam("flowrunid") String flowRunId, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("entityidprefix") String entityIdPrefix) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public TimelineEntity getFlowRun( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+init(res);	TimelineReaderManager timelineReaderManager = getTimelineReaderManager();	TimelineEntity entity = null;	try {	entity = timelineReaderManager.getEntity( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, userId, flowName, flowRunId, appId, entityType, entityIdPrefix, entityId), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	
+processed url but entity not found took ms 
+
+TimelineEntity entity = null;	try {	entity = timelineReaderManager.getEntity( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, userId, flowName, flowRunId, appId, entityType, entityIdPrefix, entityId), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	throw new NotFoundException("Timeline entity {id: " + entityId + ", type: " + entityType + " } is not found");	}	
+processed url took ms 
+
+public TimelineEntity getFlowRun( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("uid") String uId, @PathParam("uid") String uId, @QueryParam("metricstoretrieve") String metricsToRetrieve) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public Set<TimelineEntity> getFlowRuns( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+if (context == null) {	throw new BadRequestException("Incorrect UID " +  uId);	}	context.setEntityType(TimelineEntityType.YARN_FLOW_RUN.toString());	entity = timelineReaderManager.getEntity(context, TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( null, metricsToRetrieve, null, null, null, null));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	
+processed url but flowrun not found took ms 
+
+}	context.setEntityType(TimelineEntityType.YARN_FLOW_RUN.toString());	entity = timelineReaderManager.getEntity(context, TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( null, metricsToRetrieve, null, null, null, null));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	throw new NotFoundException("Flowrun with uid: " + uId + "is not found");	}	
+processed url took ms 
+
+public TimelineEntity getFlowRun( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @PathParam("userid") String userId, @PathParam("userid") String userId, @PathParam("flowname") String flowName, @PathParam("flowname") String flowName, @PathParam("flowrunid") String flowRunId, @PathParam("flowrunid") String flowRunId, @QueryParam("metricstoretrieve") String metricsToRetrieve) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public Set<TimelineEntity> getFlowRuns( return getFlowRuns(req, res, null, userId, flowName, limit, createdTimeStart, createdTimeEnd, metricsToRetrieve, fields, fromId);	}	public Set<TimelineEntity> getFlowRuns( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+init(res);	TimelineReaderManager timelineReaderManager = getTimelineReaderManager();	TimelineEntity entity = null;	try {	entity = timelineReaderManager.getEntity( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, userId, flowName, flowRunId, null, TimelineEntityType.YARN_FLOW_RUN.toString(), null, null), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( null, metricsToRetrieve, null, null, null, null));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	
+processed url but flowrun not found took ms 
+
+TimelineEntity entity = null;	try {	entity = timelineReaderManager.getEntity( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, userId, flowName, flowRunId, null, TimelineEntityType.YARN_FLOW_RUN.toString(), null, null), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( null, metricsToRetrieve, null, null, null, null));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	throw new NotFoundException("Flow run {flow name: " + TimelineReaderWebServicesUtils.parseStr(flowName) + ", run id: " + TimelineReaderWebServicesUtils.parseLongStr(flowRunId) + " } is not found");	}	
+processed url took ms 
+
+public Set<TimelineEntity> getFlowRuns( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("uid") String uId, @PathParam("uid") String uId, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("fromid") String fromId) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public Set<TimelineEntity> getFlows( return getFlows(req, res, null, limit, dateRange, fromId);	}	public Set<TimelineEntity> getFlows( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+}	context.setEntityType(TimelineEntityType.YARN_FLOW_RUN.toString());	entities = timelineReaderManager.getEntities(context, TimelineReaderWebServicesUtils.createTimelineEntityFilters( limit, createdTimeStart, createdTimeEnd, null, null, null, null, null, null, fromId), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( null, metricsToRetrieve, fields, null, null, null));	} catch (Exception e) {	handleException(e, url, startTime, "createdTime start/end or limit or fromId");	}	long endTime = Time.monotonicNow();	if (entities == null) {	entities = Collections.emptySet();	}	
+processed url took ms 
+
+public Set<TimelineEntity> getFlowRuns( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @PathParam("userid") String userId, @PathParam("userid") String userId, @PathParam("flowname") String flowName, @PathParam("flowname") String flowName, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("fromid") String fromId) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public TimelineEntity getApp( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+Set<TimelineEntity> entities = null;	try {	entities = timelineReaderManager.getEntities( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, userId, flowName, null, null, TimelineEntityType.YARN_FLOW_RUN.toString(), null, null), TimelineReaderWebServicesUtils.createTimelineEntityFilters( limit, createdTimeStart, createdTimeEnd, null, null, null, null, null, null, fromId), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( null, metricsToRetrieve, fields, null, null, null));	} catch (Exception e) {	handleException(e, url, startTime, "createdTime start/end or limit or fromId");	}	long endTime = Time.monotonicNow();	if (entities == null) {	entities = Collections.emptySet();	}	
+processed url took ms 
+
+public Set<TimelineEntity> getFlows( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("daterange") String dateRange, @QueryParam("daterange") String dateRange, @QueryParam("fromid") String fromId) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public TimelineEntity getApp( return getApp(req, res, null, appId, flowName, flowRunId, userId, confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd);	}	public TimelineEntity getApp( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+DateRange range = parseDateRange(dateRange);	TimelineEntityFilters entityFilters = TimelineReaderWebServicesUtils.createTimelineEntityFilters( limit, range.dateStart, range.dateEnd, null, null, null, null, null, null, fromId);	entities = timelineReaderManager.getEntities( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, null, null, null, null, TimelineEntityType.YARN_FLOW_ACTIVITY.toString(), null, null), entityFilters, TimelineReaderWebServicesUtils. createTimelineDataToRetrieve(null, null, null, null, null, null));	} catch (Exception e) {	handleException(e, url, startTime, "limit");	}	long endTime = Time.monotonicNow();	if (entities == null) {	entities = Collections.emptySet();	}	
+processed url took ms 
+
+public TimelineEntity getApp( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("uid") String uId, @PathParam("uid") String uId, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public Set<TimelineEntity> getFlowRunApps( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+if (context == null) {	throw new BadRequestException("Incorrect UID " +  uId);	}	context.setEntityType(TimelineEntityType.YARN_APPLICATION.toString());	entity = timelineReaderManager.getEntity(context, TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	
+processed url but app not found took ms 
+
+}	context.setEntityType(TimelineEntityType.YARN_APPLICATION.toString());	entity = timelineReaderManager.getEntity(context, TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	throw new NotFoundException("App with uid " + uId + " not found");	}	
+processed url took ms 
+
+public TimelineEntity getApp( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @PathParam("appid") String appId, @PathParam("appid") String appId, @QueryParam("flowname") String flowName, @QueryParam("flowname") String flowName, @QueryParam("flowrunid") String flowRunId, @QueryParam("flowrunid") String flowRunId, @QueryParam("userid") String userId, @QueryParam("userid") String userId, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public TimelineEntity getContainer(@Context HttpServletRequest req, return getContainer(req, res, null, appId, containerId, userId, flowName, flowRunId, confsToRetrieve, metricsToRetrieve, fields, metricsLimit, entityIdPrefix, metricsTimeStart, metricsTimeEnd);	}	public TimelineEntity getContainer(@Context HttpServletRequest req, return getEntity(req, res, clusterId, appId, TimelineEntityType.YARN_CONTAINER.toString(), containerId, userId, flowName, flowRunId, confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd, entityIdPrefix);	}	public Set<String> getEntityTypes( return getEntityTypes(req, res, null, appId, flowName, flowRunId, userId);	}	public Set<String> getEntityTypes( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+init(res);	TimelineReaderManager timelineReaderManager = getTimelineReaderManager();	TimelineEntity entity = null;	try {	entity = timelineReaderManager.getEntity( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, userId, flowName, flowRunId, appId, TimelineEntityType.YARN_APPLICATION.toString(), null, null), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	
+processed url but app not found took ms 
+
+TimelineEntity entity = null;	try {	entity = timelineReaderManager.getEntity( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, userId, flowName, flowRunId, appId, TimelineEntityType.YARN_APPLICATION.toString(), null, null), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	if (entity == null) {	throw new NotFoundException("App " + appId + " not found");	}	
+processed url took ms 
+
+public Set<TimelineEntity> getFlowRunApps( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("uid") String uId, @PathParam("uid") String uId, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("relatesto") String relatesTo, @QueryParam("relatesto") String relatesTo, @QueryParam("isrelatedto") String isRelatedTo, @QueryParam("isrelatedto") String isRelatedTo, @QueryParam("infofilters") String infofilters, @QueryParam("infofilters") String infofilters, @QueryParam("conffilters") String conffilters, @QueryParam("conffilters") String conffilters, @QueryParam("metricfilters") String metricfilters, @QueryParam("metricfilters") String metricfilters, @QueryParam("eventfilters") String eventfilters, @QueryParam("eventfilters") String eventfilters, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("fromid") String fromId) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public Set<TimelineEntity> getSubAppEntities( return getSubAppEntities(req, res, null, userId, entityType, limit, createdTimeStart, createdTimeEnd, relatesTo, isRelatedTo, infofilters, conffilters, metricfilters, eventfilters, confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd, fromId);	}	public Set<TimelineEntity> getSubAppEntities( String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+}	context.setEntityType(TimelineEntityType.YARN_APPLICATION.toString());	entities = timelineReaderManager.getEntities(context, TimelineReaderWebServicesUtils.createTimelineEntityFilters( limit, createdTimeStart, createdTimeEnd, relatesTo, isRelatedTo, infofilters, conffilters, metricfilters, eventfilters, fromId), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "createdTime start/end or limit or flowrunid");	}	long endTime = Time.monotonicNow();	if (entities == null) {	entities = Collections.emptySet();	}	
+processed url took ms 
+
+public Set<String> getEntityTypes( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @PathParam("appid") String appId, @PathParam("appid") String appId, @QueryParam("flowname") String flowName, @QueryParam("flowname") String flowName, @QueryParam("flowrunid") String flowRunId, @QueryParam("flowrunid") String flowRunId, @QueryParam("userid") String userId) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
 
-public Set<TimelineEntity> getSubAppEntities(@Context HttpServletRequest req, return getSubAppEntities(req, res, null, userId, entityType, entityId, confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd, entityIdPrefix);	}	public Set<TimelineEntity> getSubAppEntities(@Context HttpServletRequest req, String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+long startTime = Time.monotonicNow();	init(res);	TimelineReaderManager timelineReaderManager = getTimelineReaderManager();	Set<String> results = null;	try {	results = timelineReaderManager.getEntityTypes( TimelineReaderWebServicesUtils.createTimelineReaderContext( clusterId, userId, flowName, flowRunId, appId, null, null, null));	} catch (Exception e) {	handleException(e, url, startTime, "flowrunid");	}	long endTime = Time.monotonicNow();	
+processed url took ms 
+
+public Set<TimelineEntity> getSubAppEntities( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @PathParam("userid") String userId, @PathParam("userid") String userId, @PathParam("entitytype") String entityType, @PathParam("entitytype") String entityType, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimestart") String createdTimeStart, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("createdtimeend") String createdTimeEnd, @QueryParam("relatesto") String relatesTo, @QueryParam("relatesto") String relatesTo, @QueryParam("isrelatedto") String isRelatedTo, @QueryParam("isrelatedto") String isRelatedTo, @QueryParam("infofilters") String infofilters, @QueryParam("infofilters") String infofilters, @QueryParam("conffilters") String conffilters, @QueryParam("conffilters") String conffilters, @QueryParam("metricfilters") String metricfilters, @QueryParam("metricfilters") String metricfilters, @QueryParam("eventfilters") String eventfilters, @QueryParam("eventfilters") String eventfilters, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("fromid") String fromId) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
 received url from user 
+
+try {	TimelineReaderContext context = TimelineReaderWebServicesUtils.createTimelineReaderContext(clusterId, null, null, null, null, entityType, null, null, userId);	entities = timelineReaderManager.getEntities(context, TimelineReaderWebServicesUtils.createTimelineEntityFilters( limit, createdTimeStart, createdTimeEnd, relatesTo, isRelatedTo, infofilters, conffilters, metricfilters, eventfilters, fromId), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "createdTime start/end or limit");	}	long endTime = Time.monotonicNow();	if (entities == null) {	entities = Collections.emptySet();	}	
+processed url took ms 
+
+public Set<TimelineEntity> getSubAppEntities(@Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("clusterid") String clusterId, @PathParam("clusterid") String clusterId, @PathParam("userid") String userId, @PathParam("userid") String userId, @PathParam("entitytype") String entityType, @PathParam("entitytype") String entityType, @PathParam("entityid") String entityId, @PathParam("entityid") String entityId, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("confstoretrieve") String confsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("metricstoretrieve") String metricsToRetrieve, @QueryParam("fields") String fields, @QueryParam("fields") String fields, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricslimit") String metricsLimit, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimestart") String metricsTimeStart, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("metricstimeend") String metricsTimeEnd, @QueryParam("entityidprefix") String entityIdPrefix) {	String url = req.getRequestURI() + (req.getQueryString() == null ? "" : QUERY_STRING_SEP + req.getQueryString());	UserGroupInformation callerUGI = TimelineReaderWebServicesUtils.getUser(req);	
+received url from user 
+
+try {	TimelineReaderContext context = TimelineReaderWebServicesUtils .createTimelineReaderContext(clusterId, null, null, null, null, entityType, entityIdPrefix, entityId, userId);	entities = timelineReaderManager.getEntities(context, new TimelineEntityFilters.Builder().build(), TimelineReaderWebServicesUtils.createTimelineDataToRetrieve( confsToRetrieve, metricsToRetrieve, fields, metricsLimit, metricsTimeStart, metricsTimeEnd));	} catch (Exception e) {	handleException(e, url, startTime, "");	}	long endTime = Time.monotonicNow();	if (entities == null) {	entities = Collections.emptySet();	}	
+processed url took ms 
 
 ========================= hadoop sample_330 =========================
 
@@ -10478,10 +10550,10 @@ queue s has max resources s less than min resources s
 public void setFairShare(Resource fairShare) {	this.fairShare = fairShare;	metrics.setFairShare(fairShare);	if (LOG.isDebugEnabled()) {	
 the updated fairshare for is 
 
-public abstract List<FSQueue> getChildQueues();	public abstract void collectSchedulerApplications( Collection<ApplicationAttemptId> apps);	public abstract int getNumRunnableApps();	boolean assignContainerPreCheck(FSSchedulerNode node) {	if (node.getReservedContainer() != null) {	if (LOG.isDebugEnabled()) {	
+public abstract List<FSQueue> getChildQueues();	if (node.getReservedContainer() != null) {	if (LOG.isDebugEnabled()) {	
 assigning container failed on node because it has reserved containers 
 
-public abstract List<FSQueue> getChildQueues();	public abstract void collectSchedulerApplications( Collection<ApplicationAttemptId> apps);	public abstract int getNumRunnableApps();	boolean assignContainerPreCheck(FSSchedulerNode node) {	if (node.getReservedContainer() != null) {	if (LOG.isDebugEnabled()) {	}	return false;	} else if (!Resources.fitsIn(getResourceUsage(), getMaxShare())) {	if (LOG.isDebugEnabled()) {	
+public abstract List<FSQueue> getChildQueues();	if (node.getReservedContainer() != null) {	if (LOG.isDebugEnabled()) {	}	return false;	} else if (!Resources.fitsIn(getResourceUsage(), getMaxShare())) {	if (LOG.isDebugEnabled()) {	
 assigning container failed on node because queue resource usage is larger than maxshare 
 
 ========================= hadoop sample_982 =========================
@@ -10512,7 +10584,7 @@ datanode responded with a block volume id we did not request omitting
 
 ========================= hadoop sample_6789 =========================
 
-protected abstract Object doExecute(Object... arguments) throws Exception;	public Object execute(Object... arguments) throws Exception {	Exception latestException;	int counter = 0;	while (true) {	try {	return doExecute(arguments);	} catch(Exception exception) {	
+protected abstract Object doExecute(Object... arguments) throws Exception;	Exception latestException;	int counter = 0;	while (true) {	try {	return doExecute(arguments);	} catch(Exception exception) {	
 failure in retriable command 
 
 ========================= hadoop sample_6273 =========================
@@ -11957,7 +12029,7 @@ missing distributed cache files under the directory that are needed for gridmix 
 
 ========================= hadoop sample_6121 =========================
 
-public void testFilterFileSystem() throws Exception {	int errors = 0;	for (Method m : FileSystem.class.getDeclaredMethods()) {	if (Modifier.isStatic(m.getModifiers()) || Modifier.isPrivate(m.getModifiers()) || Modifier.isFinal(m.getModifiers())) {	continue;	}	try {	MustNotImplement.class.getMethod(m.getName(), m.getParameterTypes());	try {	FilterFileSystem.class.getDeclaredMethod(m.getName(), m.getParameterTypes());	
+}	int errors = 0;	for (Method m : FileSystem.class.getDeclaredMethods()) {	if (Modifier.isStatic(m.getModifiers()) || Modifier.isPrivate(m.getModifiers()) || Modifier.isFinal(m.getModifiers())) {	continue;	}	try {	MustNotImplement.class.getMethod(m.getName(), m.getParameterTypes());	try {	FilterFileSystem.class.getDeclaredMethod(m.getName(), m.getParameterTypes());	
 filterfilesystem must not implement 
 
 MustNotImplement.class.getMethod(m.getName(), m.getParameterTypes());	try {	FilterFileSystem.class.getDeclaredMethod(m.getName(), m.getParameterTypes());	errors++;	} catch (NoSuchMethodException ex) {	}	} catch (NoSuchMethodException exc) {	try{	FilterFileSystem.class.getDeclaredMethod(m.getName(), m.getParameterTypes());	} catch(NoSuchMethodException exc2){	
@@ -19228,7 +19300,7 @@ corrupted the gs for block id
 } while (gsNew == gsOld);	block.setGenerationStamp(gsNew);	corruptedGs = true;	} else if (corruptOneBlockLen && !corruptedLen) {	long lenOld = block.getNumBytes();	long lenNew;	do {	lenNew = rand.nextInt((int)lenOld - 1);	} while (lenNew == lenOld);	block.setNumBytes(lenNew);	
 corrupted the length for block id 
 
-protected abstract void sendBlockReports(DatanodeRegistration dnR, String poolId, StorageBlockReport[] reports) throws IOException;	public void blockReport_01() throws IOException {	final String METHOD_NAME = GenericTestUtils.getMethodName();	Path filePath = new Path("/" + METHOD_NAME + ".dat");	ArrayList<Block> blocks = prepareForRide(filePath, METHOD_NAME, FILE_SIZE);	if(LOG.isDebugEnabled()) {	
+protected abstract void sendBlockReports(DatanodeRegistration dnR, String poolId, StorageBlockReport[] reports) throws IOException;	final String METHOD_NAME = GenericTestUtils.getMethodName();	Path filePath = new Path("/" + METHOD_NAME + ".dat");	ArrayList<Block> blocks = prepareForRide(filePath, METHOD_NAME, FILE_SIZE);	if(LOG.isDebugEnabled()) {	
 number of blocks allocated 
 
 final String METHOD_NAME = GenericTestUtils.getMethodName();	Path filePath = new Path("/" + METHOD_NAME + ".dat");	ArrayList<Block> blocks = prepareForRide(filePath, METHOD_NAME, FILE_SIZE);	if(LOG.isDebugEnabled()) {	}	long[] oldLengths = new long[blocks.size()];	int tempLen;	for (int i = 0; i < blocks.size(); i++) {	Block b = blocks.get(i);	if(LOG.isDebugEnabled()) {	
@@ -20966,7 +21038,7 @@ permissions on staging directory are incorrect fixing permissions to correct val
 
 ========================= hadoop sample_4922 =========================
 
-public abstract boolean signalContainer(ContainerSignalContext ctx) throws IOException;	public abstract void deleteAsUser(DeletionAsUserContext ctx) throws IOException, InterruptedException;	public abstract void symLink(String target, String symlink) throws IOException;	public abstract boolean isContainerAlive(ContainerLivenessContext ctx) throws IOException;	public int reacquireContainer(ContainerReacquisitionContext ctx) throws IOException, InterruptedException {	Container container = ctx.getContainer();	String user = ctx.getUser();	ContainerId containerId = ctx.getContainerId();	Path pidPath = getPidFilePath(containerId);	if (pidPath == null) {	
+public abstract void startLocalizer(LocalizerStartContext ctx) throws IOException, InterruptedException;	Container container = ctx.getContainer();	String user = ctx.getUser();	ContainerId containerId = ctx.getContainerId();	Path pidPath = getPidFilePath(containerId);	if (pidPath == null) {	
 is not active returning terminated error 
 
 String user = ctx.getUser();	ContainerId containerId = ctx.getContainerId();	Path pidPath = getPidFilePath(containerId);	if (pidPath == null) {	return ExitCode.TERMINATED.getExitCode();	}	String pid = ProcessIdFileReader.getProcessId(pidPath);	if (pid == null) {	throw new IOException("Unable to determine pid for " + containerId);	}	
@@ -22057,13 +22129,13 @@ shuffle secret missing from task credentials using job token secret as shuffle s
 
 ========================= hadoop sample_5165 =========================
 
-return TimelineUtils.createTimelineAbout("Timeline API");	}	public TimelineEntities getEntities( init(res);	try {	return timelineDataManager.getEntities( parseStr(entityType), parsePairStr(primaryFilter, ":"), parsePairsStr(secondaryFilter, ",", ":"), parseLongStr(windowStart), parseLongStr(windowEnd), parseStr(fromId), parseLongStr(fromTs), parseLongStr(limit), parseFieldsStr(fields, ","), getUser(req));	} catch (NumberFormatException e) {	throw new BadRequestException( "windowStart, windowEnd, fromTs or limit is not a numeric value: " + e);	} catch (IllegalArgumentException e) {	throw new BadRequestException("requested invalid field: " + e);	} catch (Exception e) {	
+public TimelineEntities getEntities( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("entityType") String entityType, @PathParam("entityType") String entityType, @QueryParam("primaryFilter") String primaryFilter, @QueryParam("primaryFilter") String primaryFilter, @QueryParam("secondaryFilter") String secondaryFilter, @QueryParam("secondaryFilter") String secondaryFilter, @QueryParam("windowStart") String windowStart, @QueryParam("windowStart") String windowStart, @QueryParam("windowEnd") String windowEnd, @QueryParam("windowEnd") String windowEnd, @QueryParam("fromId") String fromId, @QueryParam("fromId") String fromId, @QueryParam("fromTs") String fromTs, @QueryParam("fromTs") String fromTs, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("fields") String fields) {	init(res);	try {	return timelineDataManager.getEntities( parseStr(entityType), parsePairStr(primaryFilter, ":"), parsePairsStr(secondaryFilter, ",", ":"), parseLongStr(windowStart), parseLongStr(windowEnd), parseStr(fromId), parseLongStr(fromTs), parseLongStr(limit), parseFieldsStr(fields, ","), getUser(req));	} catch (NumberFormatException e) {	throw new BadRequestException( "windowStart, windowEnd, fromTs or limit is not a numeric value: " + e);	} catch (IllegalArgumentException e) {	throw new BadRequestException("requested invalid field: " + e);	} catch (Exception e) {	
 error getting entities 
 
-public TimelineEntity getEntity( init(res);	TimelineEntity entity = null;	try {	entity = timelineDataManager.getEntity( parseStr(entityType), parseStr(entityId), parseFieldsStr(fields, ","), getUser(req));	} catch (IllegalArgumentException e) {	throw new BadRequestException(e);	} catch (Exception e) {	
+public TimelineEntity getEntity( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("entityType") String entityType, @PathParam("entityType") String entityType, @PathParam("entityId") String entityId, @PathParam("entityId") String entityId, @QueryParam("fields") String fields) {	init(res);	TimelineEntity entity = null;	try {	entity = timelineDataManager.getEntity( parseStr(entityType), parseStr(entityId), parseFieldsStr(fields, ","), getUser(req));	} catch (IllegalArgumentException e) {	throw new BadRequestException(e);	} catch (Exception e) {	
 error getting entity 
 
-public TimelineEvents getEvents( init(res);	try {	return timelineDataManager.getEvents( parseStr(entityType), parseArrayStr(entityId, ","), parseArrayStr(eventType, ","), parseLongStr(windowStart), parseLongStr(windowEnd), parseLongStr(limit), getUser(req));	} catch (NumberFormatException e) {	throw (BadRequestException)new BadRequestException( "windowStart, windowEnd or limit is not a numeric value.") .initCause(e);	} catch (Exception e) {	
+public TimelineEvents getEvents( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("entityType") String entityType, @PathParam("entityType") String entityType, @QueryParam("entityId") String entityId, @QueryParam("entityId") String entityId, @QueryParam("eventType") String eventType, @QueryParam("eventType") String eventType, @QueryParam("windowStart") String windowStart, @QueryParam("windowStart") String windowStart, @QueryParam("windowEnd") String windowEnd, @QueryParam("windowEnd") String windowEnd, @QueryParam("limit") String limit) {	init(res);	try {	return timelineDataManager.getEvents( parseStr(entityType), parseArrayStr(entityId, ","), parseArrayStr(eventType, ","), parseLongStr(windowStart), parseLongStr(windowEnd), parseLongStr(limit), getUser(req));	} catch (NumberFormatException e) {	throw (BadRequestException)new BadRequestException( "windowStart, windowEnd or limit is not a numeric value.") .initCause(e);	} catch (Exception e) {	
 error getting entity timelines 
 
 if (callerUGI == null) {	String msg = "The owner of the posted timeline entities is not set";	LOG.error(msg);	throw new ForbiddenException(msg);	}	try {	return timelineDataManager.postEntities(entities, callerUGI);	} catch (BadRequestException bre) {	throw bre;	} catch (Exception e) {	
@@ -22074,6 +22146,12 @@ error putting domain
 
 }	domain.setOwner(callerUGI.getShortUserName());	try {	timelineDataManager.putDomain(domain, callerUGI);	} catch (YarnException e) {	LOG.error(e.getMessage(), e);	throw new ForbiddenException(e);	} catch (RuntimeException e) {	throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);	} catch (IOException e) {	
 error putting domain 
+
+public TimelineDomain getDomain( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("domainId") String domainId) {	init(res);	domainId = parseStr(domainId);	if (domainId == null || domainId.length() == 0) {	throw new BadRequestException("Domain ID is not specified.");	}	TimelineDomain domain = null;	try {	domain = timelineDataManager.getDomain( parseStr(domainId), getUser(req));	} catch (Exception e) {	
+error getting domain 
+
+if (owner == null || owner.length() == 0) {	if (callerUGI == null) {	throw new BadRequestException("Domain owner is not specified.");	} else {	owner = callerUGI.getShortUserName();	}	}	try {	return timelineDataManager.getDomains(owner, callerUGI);	} catch (Exception e) {	
+error getting domains 
 
 ========================= hadoop sample_2073 =========================
 
@@ -23541,10 +23619,10 @@ exiting getcurrentversion method
 KeyVersion keyVersion = user.doAs( new PrivilegedExceptionAction<KeyVersion>() {	public KeyVersion run() throws Exception {	return provider.getCurrentKey(name);	}	}	);	Object json = KMSServerJSONUtils.toJSON(keyVersion);	kmsAudit.ok(user, KMSOp.GET_CURRENT_KEY, name, "");	return Response.ok().type(MediaType.APPLICATION_JSON).entity(json) .build();	} catch (Exception e) {	
 exception in getcurrentversion 
 
-public Response getKeyVersion( try {	
+public Response getKeyVersion( @PathParam("versionName") final String versionName) throws Exception {	try {	
 entering getkeyversion method 
 
-public Response getKeyVersion( try {	UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(versionName, "versionName");	KMSWebApp.getKeyCallsMeter().mark();	assertAccess(KMSACLs.Type.GET, user, KMSOp.GET_KEY_VERSION);	
+public Response getKeyVersion( @PathParam("versionName") final String versionName) throws Exception {	try {	UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(versionName, "versionName");	KMSWebApp.getKeyCallsMeter().mark();	assertAccess(KMSACLs.Type.GET, user, KMSOp.GET_KEY_VERSION);	
 getting key with version name 
 
 KeyVersion keyVersion = user.doAs( new PrivilegedExceptionAction<KeyVersion>() {	public KeyVersion run() throws Exception {	return provider.getKeyVersion(versionName);	}	}	);	if (keyVersion != null) {	kmsAudit.ok(user, KMSOp.GET_KEY_VERSION, keyVersion.getName(), "");	}	Object json = KMSServerJSONUtils.toJSON(keyVersion);	
@@ -23553,13 +23631,13 @@ exiting getkeyversion method
 return provider.getKeyVersion(versionName);	}	}	);	if (keyVersion != null) {	kmsAudit.ok(user, KMSOp.GET_KEY_VERSION, keyVersion.getName(), "");	}	Object json = KMSServerJSONUtils.toJSON(keyVersion);	return Response.ok().type(MediaType.APPLICATION_JSON).entity(json) .build();	} catch (Exception e) {	
 exception in getkeyversion 
 
-public Response generateEncryptedKeys( throws Exception {	try {	
+public Response generateEncryptedKeys( @PathParam("name") final String name, @PathParam("name") final String name, @QueryParam(KMSRESTConstants.EEK_OP) String edekOp, @QueryParam(KMSRESTConstants.EEK_OP) String edekOp, @DefaultValue("1") @DefaultValue("1") @QueryParam(KMSRESTConstants.EEK_NUM_KEYS) final int numKeys) @QueryParam(KMSRESTConstants.EEK_NUM_KEYS) final int numKeys) throws Exception {	try {	
 entering generateencryptedkeys method 
 
-public Response generateEncryptedKeys( throws Exception {	try {	UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(name, "name");	KMSClientProvider.checkNotNull(edekOp, "eekOp");	
+public Response generateEncryptedKeys( @PathParam("name") final String name, @PathParam("name") final String name, @QueryParam(KMSRESTConstants.EEK_OP) String edekOp, @QueryParam(KMSRESTConstants.EEK_OP) String edekOp, @DefaultValue("1") @DefaultValue("1") @QueryParam(KMSRESTConstants.EEK_NUM_KEYS) final int numKeys) @QueryParam(KMSRESTConstants.EEK_NUM_KEYS) final int numKeys) throws Exception {	try {	UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(name, "name");	KMSClientProvider.checkNotNull(edekOp, "eekOp");	
 generating encrypted key with name the edek operation is 
 
-public Response generateEncryptedKeys( throws Exception {	try {	UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(name, "name");	KMSClientProvider.checkNotNull(edekOp, "eekOp");	Object retJSON;	if (edekOp.equals(KMSRESTConstants.EEK_GENERATE)) {	
+public Response generateEncryptedKeys( @PathParam("name") final String name, @PathParam("name") final String name, @QueryParam(KMSRESTConstants.EEK_OP) String edekOp, @QueryParam(KMSRESTConstants.EEK_OP) String edekOp, @DefaultValue("1") @DefaultValue("1") @QueryParam(KMSRESTConstants.EEK_NUM_KEYS) final int numKeys) @QueryParam(KMSRESTConstants.EEK_NUM_KEYS) final int numKeys) throws Exception {	try {	UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(name, "name");	KMSClientProvider.checkNotNull(edekOp, "eekOp");	Object retJSON;	if (edekOp.equals(KMSRESTConstants.EEK_GENERATE)) {	
 edek operation is generate 
 
 UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(name, "name");	KMSClientProvider.checkNotNull(edekOp, "eekOp");	Object retJSON;	if (edekOp.equals(KMSRESTConstants.EEK_GENERATE)) {	assertAccess(KMSACLs.Type.GENERATE_EEK, user, KMSOp.GENERATE_EEK, name);	final List<EncryptedKeyVersion> retEdeks = new LinkedList<EncryptedKeyVersion>();	try {	user.doAs( new PrivilegedExceptionAction<Void>() {	public Void run() throws Exception {	
@@ -23574,10 +23652,10 @@ exiting generateencryptedkeys method
 error.append(" value, it must be ");	error.append(KMSRESTConstants.EEK_GENERATE);	error.append(" or ");	error.append(KMSRESTConstants.EEK_DECRYPT);	LOG.error(error.toString());	throw new IllegalArgumentException(error.toString());	}	KMSWebApp.getGenerateEEKCallsMeter().mark();	return Response.ok().type(MediaType.APPLICATION_JSON).entity(retJSON) .build();	} catch (Exception e) {	
 exception in generateencryptedkeys 
 
-public Response decryptEncryptedKey( Map jsonPayload) throws Exception {	try {	
+public Response decryptEncryptedKey( @PathParam("versionName") final String versionName, @PathParam("versionName") final String versionName, @QueryParam(KMSRESTConstants.EEK_OP) String eekOp, @QueryParam(KMSRESTConstants.EEK_OP) String eekOp, Map jsonPayload) throws Exception {	try {	
 entering decryptencryptedkey method 
 
-public Response decryptEncryptedKey( Map jsonPayload) throws Exception {	try {	UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(versionName, "versionName");	KMSClientProvider.checkNotNull(eekOp, "eekOp");	
+public Response decryptEncryptedKey( @PathParam("versionName") final String versionName, @PathParam("versionName") final String versionName, @QueryParam(KMSRESTConstants.EEK_OP) String eekOp, @QueryParam(KMSRESTConstants.EEK_OP) String eekOp, Map jsonPayload) throws Exception {	try {	UserGroupInformation user = HttpUserGroupInformation.get();	KMSClientProvider.checkNotEmpty(versionName, "versionName");	KMSClientProvider.checkNotNull(eekOp, "eekOp");	
 decrypting key for the edek operation is 
 
 error = new StringBuilder("IllegalArgumentException Wrong ");	error.append(KMSRESTConstants.EEK_OP);	error.append(" value, it must be ");	error.append(KMSRESTConstants.EEK_GENERATE);	error.append(" or ");	error.append(KMSRESTConstants.EEK_DECRYPT);	LOG.error(error.toString());	throw new IllegalArgumentException(error.toString());	}	KMSWebApp.getDecryptEEKCallsMeter().mark();	
@@ -24897,6 +24975,12 @@ invalid hostname in hosts file
 
 if (!storage.getDatanodeDescriptor().isStale(staleInterval)) {	recoveryLocations.add(storage);	}	}	boolean truncateRecovery = uc.getTruncateBlock() != null;	boolean copyOnTruncateRecovery = truncateRecovery && uc.getTruncateBlock().getBlockId() != b.getBlockId();	ExtendedBlock primaryBlock = (copyOnTruncateRecovery) ? new ExtendedBlock(blockPoolId, uc.getTruncateBlock()) : new ExtendedBlock(blockPoolId, b);	DatanodeInfo[] recoveryInfos;	if (recoveryLocations.size() > 1) {	if (recoveryLocations.size() != storages.length) {	
 skipped stale nodes for recovery 
+
+addCacheCommands(blockPoolId, nodeinfo, cmds);	blockManager.addKeyUpdateCommand(cmds, nodeinfo);	if (nodeinfo.getBalancerBandwidth() > 0) {	cmds.add(new BalancerBandwidthCommand(nodeinfo.getBalancerBandwidth()));	nodeinfo.setBalancerBandwidth(0);	}	if (slowPeerTracker != null) {	final Map<String, Double> slowPeersMap = slowPeers.getSlowPeers();	if (!slowPeersMap.isEmpty()) {	if (LOG.isDebugEnabled()) {	
+datanode reported slow peers 
+
+if (LOG.isDebugEnabled()) {	}	for (String slowNodeId : slowPeersMap.keySet()) {	slowPeerTracker.addReport(slowNodeId, nodeReg.getIpcAddr(false));	}	}	}	if (slowDiskTracker != null) {	if (!slowDisks.getSlowDisks().isEmpty()) {	if (LOG.isDebugEnabled()) {	
+datanode reported slow disks 
 
 public void markAllDatanodesStale() {	
 marking all datandoes as stale 
@@ -27135,12 +27219,6 @@ unable to abort stream
 private void disableAndReportErrorOnJournals(List<JournalAndStream> badJournals) {	if (badJournals == null || badJournals.isEmpty()) {	return;	}	for (JournalAndStream j : badJournals) {	
 disabling journal 
 
-for (JournalAndStream jas : journals) {	try {	closure.apply(jas);	} catch (Throwable t) {	if (jas.isRequired()) {	final String msg = "Error: " + status + " failed for required journal (" + jas + ")";	LOG.fatal(msg, t);	abortAllJournals();	terminate(1, msg);	} else {	
-error failed for journal 
-
-abortAllJournals();	terminate(1, msg);	} else {	badJAS.add(jas);	}	}	}	disableAndReportErrorOnJournals(badJAS);	if (!NameNodeResourcePolicy.areResourcesAvailable(journals, minimumRedundantJournals)) {	String message = status + " failed for too many journals";	
-error 
-
 public void setOutputBufferCapacity(final int size) {	try {	mapJournalsAndReportErrors(new JournalClosure() {	public void apply(JournalAndStream jas) throws IOException {	jas.getManager().setOutputBufferCapacity(size);	}	}, "setOutputBufferCapacity");	} catch (IOException e) {	
 error in setting outputbuffer capacity 
 
@@ -27253,10 +27331,10 @@ could not update cgroup for container
 
 ========================= hadoop sample_1843 =========================
 
-public abstract void confirmMutation(boolean isValid) throws Exception;	public abstract Configuration retrieve();	public abstract List<LogMutation> getConfirmedConfHistory(long fromId);	protected abstract Version getConfStoreVersion() throws Exception;	protected abstract void storeVersion() throws Exception;	protected abstract Version getCurrentVersion();	public void checkVersion() throws Exception {	Version loadedVersion = getConfStoreVersion();	
+public abstract void confirmMutation(boolean isValid) throws Exception;	public void checkVersion() throws Exception {	Version loadedVersion = getConfStoreVersion();	
 loaded configuration store version info 
 
-protected abstract Version getCurrentVersion();	public void checkVersion() throws Exception {	Version loadedVersion = getConfStoreVersion();	if (loadedVersion != null && loadedVersion.equals(getCurrentVersion())) {	return;	}	if (loadedVersion == null) {	loadedVersion = getCurrentVersion();	}	if (loadedVersion.isCompatibleTo(getCurrentVersion())) {	
+public abstract void confirmMutation(boolean isValid) throws Exception;	public void checkVersion() throws Exception {	Version loadedVersion = getConfStoreVersion();	if (loadedVersion != null && loadedVersion.equals(getCurrentVersion())) {	return;	}	if (loadedVersion == null) {	loadedVersion = getCurrentVersion();	}	if (loadedVersion.isCompatibleTo(getCurrentVersion())) {	
 storing configuration store version info 
 
 ========================= hadoop sample_924 =========================
@@ -27633,11 +27711,14 @@ storagelocationchecker interrupted during shutdown
 
 ========================= hadoop sample_7885 =========================
 
-public String getPrediction( throws SolverException, SkylineStoreException {	RLESparseResourceAllocation result = skylineStore.getEstimation(pipelineId);	if (result == null) {	RecurrenceId recurrenceId = new RecurrenceId(pipelineId, "*");	Map<RecurrenceId, List<ResourceSkyline>> jobHistory = skylineStore.getHistory(recurrenceId);	result = solver.solve(jobHistory);	}	final String prediction = gson.toJson(result, rleType);	
+public String getPrediction( @PathParam(value = "pipelineId") String pipelineId) @PathParam(value = "pipelineId") String pipelineId) throws SolverException, SkylineStoreException {	RLESparseResourceAllocation result = skylineStore.getEstimation(pipelineId);	if (result == null) {	RecurrenceId recurrenceId = new RecurrenceId(pipelineId, "*");	Map<RecurrenceId, List<ResourceSkyline>> jobHistory = skylineStore.getHistory(recurrenceId);	result = solver.solve(jobHistory);	}	final String prediction = gson.toJson(result, rleType);	
 predict resource requests for pipelineid 
 
-public String getEstimatedResourceAllocation( RLESparseResourceAllocation result = skylineStore.getEstimation(pipelineId);	final String skyline = gson.toJson(result, rleType);	
+public String getEstimatedResourceAllocation( @PathParam("pipelineId") String pipelineId) throws SkylineStoreException {	RLESparseResourceAllocation result = skylineStore.getEstimation(pipelineId);	final String skyline = gson.toJson(result, rleType);	
 query the skyline store for pipelineid 
+
+public void deleteHistoryResourceSkyline( @PathParam("pipelineId") String pipelineId, @PathParam("pipelineId") String pipelineId, @PathParam("runId") String runId) throws SkylineStoreException {	RecurrenceId recurrenceId = new RecurrenceId(pipelineId, runId);	skylineStore.deleteHistory(recurrenceId);	
+delete resourceskyline for recurrenceid 
 
 ========================= hadoop sample_6514 =========================
 
@@ -29325,7 +29406,7 @@ got for id from the native implementation
 public static boolean access(String path, AccessRight desiredAccess) throws IOException {	return access0(path, desiredAccess.accessRight());	}	public static native void extendWorkingSetSize(long delta) throws IOException;	static {	if (NativeCodeLoader.isNativeCodeLoaded()) {	try {	initNative();	nativeLoaded = true;	} catch (Throwable t) {	
 unable to initialize nativeio libraries 
 
-private static native long getMemlockLimit0();	static long getOperatingSystemPageSize() {	try {	Field f = Unsafe.class.getDeclaredField("theUnsafe");	f.setAccessible(true);	Unsafe unsafe = (Unsafe)f.get(null);	return unsafe.pageSize();	} catch (Throwable e) {	
+private static native long getMemlockLimit0();	try {	Field f = Unsafe.class.getDeclaredField("theUnsafe");	f.setAccessible(true);	Unsafe unsafe = (Unsafe)f.get(null);	return unsafe.pageSize();	} catch (Throwable e) {	
 unable to get operating system page size guessing 
 
 owner = stripDomain(owner);	return owner;	} else {	long uid = POSIX.getUIDforFDOwnerforOwner(fd);	CachedUid cUid = uidCache.get(uid);	long now = System.currentTimeMillis();	if (cUid != null && (cUid.timestamp + cacheTimeout) > now) {	return cUid.username;	}	String user = POSIX.getUserName(uid);	
@@ -30873,7 +30954,7 @@ xattr names for
 response = Response.ok(json).type(MediaType.APPLICATION_JSON).build();	break;	}	case LISTSTATUS_BATCH: {	String startAfter = params.get( HttpFSParametersProvider.StartAfterParam.NAME, HttpFSParametersProvider.StartAfterParam.class);	byte[] token = HttpFSUtils.EMPTY_BYTES;	if (startAfter != null) {	token = startAfter.getBytes(Charsets.UTF_8);	}	FSOperations.FSListStatusBatch command = new FSOperations .FSListStatusBatch(path, token);	
 token 
 
-public Response delete(@PathParam("path") String path, throws IOException, FileSystemAccessException {	UserGroupInformation user = HttpUserGroupInformation.get();	Response response;	path = makeAbsolute(path);	MDC.put(HttpFSFileSystem.OP_PARAM, op.value().name());	MDC.put("hostname", request.getRemoteAddr());	switch (op.value()) {	case DELETE: {	Boolean recursive = params.get(RecursiveParam.NAME,  RecursiveParam.class);	
+public Response delete(@PathParam("path") String path, @QueryParam(OperationParam.NAME) OperationParam op, @QueryParam(OperationParam.NAME) OperationParam op, @Context Parameters params, @Context Parameters params, @Context HttpServletRequest request) @Context HttpServletRequest request) throws IOException, FileSystemAccessException {	UserGroupInformation user = HttpUserGroupInformation.get();	Response response;	path = makeAbsolute(path);	MDC.put(HttpFSFileSystem.OP_PARAM, op.value().name());	MDC.put("hostname", request.getRemoteAddr());	switch (op.value()) {	case DELETE: {	Boolean recursive = params.get(RecursiveParam.NAME,  RecursiveParam.class);	
 recursive 
 
 Boolean recursive = params.get(RecursiveParam.NAME,  RecursiveParam.class);	FSOperations.FSDelete command = new FSOperations.FSDelete(path, recursive);	JSONObject json = fsExecute(user, command);	response = Response.ok(json).type(MediaType.APPLICATION_JSON).build();	break;	}	case DELETESNAPSHOT: {	String snapshotName = params.get(SnapshotNameParam.NAME, SnapshotNameParam.class);	FSOperations.FSDeleteSnapshot command = new FSOperations.FSDeleteSnapshot(path, snapshotName);	fsExecute(user, command);	
@@ -31469,7 +31550,7 @@ reading a line from dev null
 
 ========================= hadoop sample_5421 =========================
 
-public MiniYARNCluster( String testName, int numResourceManagers, int numNodeManagers, int numLocalDirs, int numLogDirs, boolean enableAHS) {	super(testName.replace("$", ""));	this.numLocalDirs = numLocalDirs;	this.numLogDirs = numLogDirs;	this.enableAHS = enableAHS;	String testSubDir = testName.replace("$", "");	File targetWorkDir = new File("target", testSubDir);	try {	FileContext.getLocalFSFileContext().delete( new Path(targetWorkDir.getAbsolutePath()), true);	} catch (Exception e) {	
+private boolean enableAHS;	super(testName.replace("$", ""));	this.numLocalDirs = numLocalDirs;	this.numLogDirs = numLogDirs;	this.enableAHS = enableAHS;	String testSubDir = testName.replace("$", "");	File targetWorkDir = new File("target", testSubDir);	try {	FileContext.getLocalFSFileContext().delete( new Path(targetWorkDir.getAbsolutePath()), true);	} catch (Exception e) {	
 could not cleanup 
 
 private synchronized void startResourceManager(final int index) {	try {	resourceManagers[index].start();	if (resourceManagers[index].getServiceState() != STATE.STARTED) {	throw new IOException( "ResourceManager failed to start. Final state is " + resourceManagers[index].getServiceState());	}	} catch (Throwable t) {	throw new YarnRuntimeException(t);	}	Configuration conf = resourceManagers[index].getConfig();	

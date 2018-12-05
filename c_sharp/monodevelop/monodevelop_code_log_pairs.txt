@@ -1165,7 +1165,7 @@ selecting row index of
 
 ========================= monodevelop sample_1401 =========================
 
-#endregion x-ram function pointer definitions #region x-ram tokens private int al_eax_ram_size, al_eax_ram_free, al_storage_automatic, al_storage_hardware, al_storage_accessible;	#endregion x-ram tokens #region constructor / extension loading public xramextension() {	_valid = false;	if (al.isextensionpresent("eax-ram") == false) return;	al_eax_ram_size = al.getenumvalue("al_eax_ram_size");	al_eax_ram_free = al.getenumvalue("al_eax_ram_free");	al_storage_automatic = al.getenumvalue("al_storage_automatic");	al_storage_hardware = al.getenumvalue("al_storage_hardware");	al_storage_accessible = al.getenumvalue("al_storage_accessible");	if (al_eax_ram_size == 0 || al_eax_ram_free == 0 || al_storage_automatic == 0 || al_storage_hardware == 0 || al_storage_accessible == 0) {	
+#endregion x-ram function pointer definitions #region x-ram tokens private int al_eax_ram_size, al_eax_ram_free, al_storage_automatic, al_storage_hardware, al_storage_accessible;	#endregion x-ram tokens #region constructor / extension loading /// <summary> /// <summary> /// constructs a new xramextension instance. /// constructs a new xramextension instance. /// </summary> /// </summary> public xramextension() {	_valid = false;	if (al.isextensionpresent("eax-ram") == false) return;	al_eax_ram_size = al.getenumvalue("al_eax_ram_size");	al_eax_ram_free = al.getenumvalue("al_eax_ram_free");	al_storage_automatic = al.getenumvalue("al_storage_automatic");	al_storage_hardware = al.getenumvalue("al_storage_hardware");	al_storage_accessible = al.getenumvalue("al_storage_accessible");	if (al_eax_ram_size == 0 || al_eax_ram_free == 0 || al_storage_automatic == 0 || al_storage_hardware == 0 || al_storage_accessible == 0) {	
 x ram token values could not be retrieved 
 
 al_storage_hardware = al.getenumvalue("al_storage_hardware");	al_storage_accessible = al.getenumvalue("al_storage_accessible");	if (al_eax_ram_size == 0 || al_eax_ram_free == 0 || al_storage_automatic == 0 || al_storage_hardware == 0 || al_storage_accessible == 0) {	return;	}	try {	imported_getbuffermode = (delegate_getbuffermode)marshal.getdelegateforfunctionpointer(al.getprocaddress("eaxgetbuffermode"), typeof(delegate_getbuffermode));	imported_setbuffermode = (delegate_setbuffermode)marshal.getdelegateforfunctionpointer(al.getprocaddress("eaxsetbuffermode"), typeof(delegate_setbuffermode));	}	catch (exception e) {	
@@ -2361,7 +2361,7 @@ casts
 
 ========================= monodevelop sample_10590 =========================
 
-public abstract control getsectionwidget ();	public async task<bool> addtoproject (cancellationtoken token) {	this.notifyaddingtoproject ();	var result = false;	try {	result = await this.onaddtoproject (token).configureawait (false);	} catch (exception ex) {	
+public abstract control getsectionwidget ();	this.notifyaddingtoproject ();	var result = false;	try {	result = await this.onaddtoproject (token).configureawait (false);	} catch (exception ex) {	
 could not add configuration 
 
 ========================= monodevelop sample_4678 =========================

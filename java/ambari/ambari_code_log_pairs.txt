@@ -326,10 +326,10 @@ reading file
 public Response deleteFile(@PathParam("filePath") String filePath) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	
 deleting file 
 
-public Response updateFile(FileResourceRequest request, try {	filePath = sanitizeFilePath(filePath);	
+public Response updateFile(FileResourceRequest request, @PathParam("filePath") String filePath) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	
 rewriting file 
 
-public Response createFile(FileResourceRequest request, throws IOException, InterruptedException {	try {	
+public Response createFile(FileResourceRequest request, @Context HttpServletResponse response, @Context UriInfo ui) @Context HttpServletResponse response, @Context UriInfo ui) throws IOException, InterruptedException {	try {	
 creating file 
 
 ========================= ambari sample_843 =========================
@@ -516,7 +516,7 @@ hdfs error while getting writing logs to exception
 
 ========================= ambari sample_930 =========================
 
-public StackManager(@Assisted("stackRoot") File stackRoot, MetainfoDAO metaInfoDAO, ActionMetadata actionMetadata, StackDAO stackDao, ExtensionDAO extensionDao, ExtensionLinkDAO linkDao, AmbariManagementHelper helper) throws AmbariException {	
+public StackManager(@Assisted("stackRoot") File stackRoot, @Assisted("commonServicesRoot") @Nullable File commonServicesRoot, @Assisted("commonServicesRoot") @Nullable File commonServicesRoot, @Assisted("extensionRoot") @Nullable File extensionRoot, @Assisted("extensionRoot") @Nullable File extensionRoot, @Assisted OsFamily osFamily, @Assisted boolean validate, @Assisted OsFamily osFamily, @Assisted boolean validate, MetainfoDAO metaInfoDAO, ActionMetadata actionMetadata, StackDAO stackDao, ExtensionDAO extensionDao, ExtensionLinkDAO linkDao, AmbariManagementHelper helper) throws AmbariException {	
 initializing the stack manager 
 
 parseDirectories(stackRoot, commonServicesRoot, extensionRoot);	for (StackModule module : stackModules.values()) {	StackInfo stack = module.getModuleInfo();	List<ExtensionLinkEntity> entities = linkDao.findByStack(stack.getName(), stack.getVersion());	for (ExtensionLinkEntity entity : entities) {	String name = entity.getExtension().getExtensionName();	String version = entity.getExtension().getExtensionVersion();	String key = name + StackManager.PATH_DELIMITER + version;	ExtensionModule extensionModule = extensionModules.get(key);	if (extensionModule != null) {	
@@ -608,7 +608,7 @@ properties map from http response is null
 
 ========================= ambari sample_3581 =========================
 
-protected abstract void doWork(Map<String, Object> properties) throws AmbariException;	protected abstract void finalizeExecution(Map<String, Object> properties) throws AmbariException;	public void execute(JobExecutionContext context) throws JobExecutionException {	JobKey jobKey = context.getJobDetail().getKey();	
+protected abstract void doWork(Map<String, Object> properties) throws AmbariException;	protected abstract void finalizeExecution(Map<String, Object> properties) throws AmbariException;	JobKey jobKey = context.getJobDetail().getKey();	
 executing linear job 
 
 JobKey jobKey = context.getJobDetail().getKey();	JobDataMap jobDataMap = context.getMergedJobDataMap();	if (!executionScheduleManager.continueOnMisfire(context)) {	throw new JobExecutionException("Canceled execution based on misfire" + " toleration threshold, job: " + jobKey + ", scheduleTime = " + context.getScheduledFireTime());	}	Map<String, Object> properties = jobDataMap.getWrappedMap();	boolean finalize = false;	try {	doWork(properties);	} catch (AmbariException e) {	
@@ -683,7 +683,7 @@ simple auth is disabled
 protected void invalidateHostRoleCommandStatusSummaryCache(Long requestId) {	if (!hostRoleCommandStatusSummaryCacheEnabled ) {	return;	}	
 invalidating host role command status summary cache for request 
 
-public HostRoleCommandDAO( this.hostRoleCommandStatusSummaryCacheEnabled = hostRoleCommandStatusSummaryCacheEnabled;	
+public HostRoleCommandDAO( @Named(HRC_STATUS_SUMMARY_CACHE_ENABLED) boolean hostRoleCommandStatusSummaryCacheEnabled, @Named(HRC_STATUS_SUMMARY_CACHE_ENABLED) boolean hostRoleCommandStatusSummaryCacheEnabled, @Named(HRC_STATUS_SUMMARY_CACHE_SIZE) long hostRoleCommandStatusSummaryCacheLimit, @Named(HRC_STATUS_SUMMARY_CACHE_SIZE) long hostRoleCommandStatusSummaryCacheLimit, @Named(HRC_STATUS_SUMMARY_CACHE_EXPIRY_DURATION_MINUTES) long hostRoleCommandStatusSummaryCacheExpiryDurationMins) {	this.hostRoleCommandStatusSummaryCacheEnabled = hostRoleCommandStatusSummaryCacheEnabled;	
 host role command status summary cache enabled disabled 
 
 ========================= ambari sample_4252 =========================
@@ -743,10 +743,10 @@ exception occured while fetching all jobs
 public List<Job> getList(List<JobInfo> jobInfos) {	try {	List<Job> allJobs = getAggregator().readJobsByIds(jobInfos);	for(Job job : allJobs) {	job.setSessionTag(null);	}	return allJobs;	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
 exception occured while fetching all jobs 
 
-public Response create(JobRequest request, @Context HttpServletResponse response, try {	Map jobInfo = PropertyUtils.describe(request.job);	Job job = new JobImpl(jobInfo);	JobController createdJobController = new JobServiceInternal().createJob(job, getResourceManager());	JSONObject jobObject = jsonObjectFromJob(createdJobController);	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), job.getId()));	return Response.ok(jobObject).status(201).build();	} catch (WebApplicationException ex) {	
+public Response create(JobRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {	try {	Map jobInfo = PropertyUtils.describe(request.job);	Job job = new JobImpl(jobInfo);	JobController createdJobController = new JobServiceInternal().createJob(job, getResourceManager());	JSONObject jobObject = jsonObjectFromJob(createdJobController);	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), job.getId()));	return Response.ok(jobObject).status(201).build();	} catch (WebApplicationException ex) {	
 error occurred while creating job 
 
-public Response create(JobRequest request, @Context HttpServletResponse response, try {	Map jobInfo = PropertyUtils.describe(request.job);	Job job = new JobImpl(jobInfo);	JobController createdJobController = new JobServiceInternal().createJob(job, getResourceManager());	JSONObject jobObject = jsonObjectFromJob(createdJobController);	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), job.getId()));	return Response.ok(jobObject).status(201).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (ItemNotFound itemNotFound) {	
+try {	Map jobInfo = PropertyUtils.describe(request.job);	Job job = new JobImpl(jobInfo);	JobController createdJobController = new JobServiceInternal().createJob(job, getResourceManager());	JSONObject jobObject = jsonObjectFromJob(createdJobController);	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), job.getId()));	return Response.ok(jobObject).status(201).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (ItemNotFound itemNotFound) {	
 error occurred while creating job 
 
 Job job = new JobImpl(jobInfo);	JobController createdJobController = new JobServiceInternal().createJob(job, getResourceManager());	JSONObject jobObject = jsonObjectFromJob(createdJobController);	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), job.getId()));	return Response.ok(jobObject).status(201).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (ItemNotFound itemNotFound) {	throw new NotFoundFormattedException(itemNotFound.getMessage(), itemNotFound);	} catch (Throwable ex) {	
@@ -1301,7 +1301,7 @@ failed to remove temporary file to hold keytab exporting the keytab file for may
 } catch (IOException e) {	throw new KerberosOperationException(String.format("Failed to create the temporary file needed to hold the exported keytab file for %s: %s", principal, e.getLocalizedMessage()), e);	}	exportKeytabFile(principal, keytabFile.getAbsolutePath(), getKeyEncryptionTypes());	Keytab keytab = readKeytabFile(keytabFile);	cachedKeytabs.put(principal, keytab);	return keytab;	} finally {	if ((keytabFile != null) && keytabFile.exists()) {	if (!keytabFile.delete()) {	
 failed to remove the temporary keytab file 
 
-protected abstract String[] getKinitCommand(String executableKinit, PrincipalKeyCredential credentials, String credentialsCache);	protected abstract void exportKeytabFile(String principal, String keytabFileDestinationPath, Set<EncryptionType> keyEncryptionTypes) throws KerberosOperationException;	protected boolean init() throws KerberosOperationException {	if (credentialsCacheFile != null) {	if (!credentialsCacheFile.delete()) {	
+protected abstract String[] getKinitCommand(String executableKinit, PrincipalKeyCredential credentials, String credentialsCache);	if (credentialsCacheFile != null) {	if (!credentialsCacheFile.delete()) {	
 failed to remove the orphaned cache file 
 
 ========================= ambari sample_3329 =========================
@@ -1340,7 +1340,7 @@ deleting s d
 
 ========================= ambari sample_1251 =========================
 
-public RegistrationResponse register(Register message, throws WebApplicationException, InvalidStateTransitionException {	RegistrationResponse response = null;	try {	response = hh.handleRegistration(message);	
+public RegistrationResponse register(Register message, @Context HttpServletRequest req) @Context HttpServletRequest req) throws WebApplicationException, InvalidStateTransitionException {	RegistrationResponse response = null;	try {	response = hh.handleRegistration(message);	
 sending registration response 
 
 public HeartBeatResponse heartbeat(HeartBeat message) throws WebApplicationException {	if (LOG.isDebugEnabled()) {	
@@ -1355,8 +1355,17 @@ response details
 public HeartBeatResponse heartbeat(HeartBeat message) throws WebApplicationException {	if (LOG.isDebugEnabled()) {	}	HeartBeatResponse heartBeatResponse;	try {	heartBeatResponse = hh.handleHeartBeat(message);	if (LOG.isDebugEnabled()) {	}	} catch (Exception e) {	
 error in heartbeat 
 
-public ComponentsResponse components( if (LOG.isDebugEnabled()) {	
+public ComponentsResponse components( @PathParam("clusterName") String clusterName) {	if (LOG.isDebugEnabled()) {	
 received components request for cluster 
+
+public ComponentsResponse components( @PathParam("clusterName") String clusterName) {	if (LOG.isDebugEnabled()) {	}	ComponentsResponse componentsResponse;	try {	componentsResponse = hh.handleComponents(clusterName);	if (LOG.isDebugEnabled()) {	
+sending components response 
+
+public ComponentsResponse components( @PathParam("clusterName") String clusterName) {	if (LOG.isDebugEnabled()) {	}	ComponentsResponse componentsResponse;	try {	componentsResponse = hh.handleComponents(clusterName);	if (LOG.isDebugEnabled()) {	
+response details 
+
+public ComponentsResponse components( @PathParam("clusterName") String clusterName) {	if (LOG.isDebugEnabled()) {	}	ComponentsResponse componentsResponse;	try {	componentsResponse = hh.handleComponents(clusterName);	if (LOG.isDebugEnabled()) {	}	} catch (Exception e) {	
+error in components 
 
 ========================= ambari sample_3000 =========================
 
@@ -1487,31 +1496,31 @@ error while getting os family from host attributes
 
 ========================= ambari sample_3057 =========================
 
-}	public TimelineEntities getEntities( init(res);	TimelineEntities entities = null;	try {	entities = store.getEntities( parseStr(entityType), parseLongStr(limit), parseLongStr(windowStart), parseLongStr(windowEnd), parseStr(fromId), parseLongStr(fromTs), parsePairStr(primaryFilter, ":"), parsePairsStr(secondaryFilter, ",", ":"), parseFieldsStr(fields, ","));	} catch (NumberFormatException e) {	throw new BadRequestException( "windowStart, windowEnd or limit is not a numeric value.");	} catch (IllegalArgumentException e) {	throw new BadRequestException("requested invalid field.");	} catch (IOException e) {	
+public TimelineEntities getEntities( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("entityType") String entityType, @PathParam("entityType") String entityType, @QueryParam("primaryFilter") String primaryFilter, @QueryParam("primaryFilter") String primaryFilter, @QueryParam("secondaryFilter") String secondaryFilter, @QueryParam("secondaryFilter") String secondaryFilter, @QueryParam("windowStart") String windowStart, @QueryParam("windowStart") String windowStart, @QueryParam("windowEnd") String windowEnd, @QueryParam("windowEnd") String windowEnd, @QueryParam("fromId") String fromId, @QueryParam("fromId") String fromId, @QueryParam("fromTs") String fromTs, @QueryParam("fromTs") String fromTs, @QueryParam("limit") String limit, @QueryParam("limit") String limit, @QueryParam("fields") String fields) {	init(res);	TimelineEntities entities = null;	try {	entities = store.getEntities( parseStr(entityType), parseLongStr(limit), parseLongStr(windowStart), parseLongStr(windowEnd), parseStr(fromId), parseLongStr(fromTs), parsePairStr(primaryFilter, ":"), parsePairsStr(secondaryFilter, ",", ":"), parseFieldsStr(fields, ","));	} catch (NumberFormatException e) {	throw new BadRequestException( "windowStart, windowEnd or limit is not a numeric value.");	} catch (IllegalArgumentException e) {	throw new BadRequestException("requested invalid field.");	} catch (IOException e) {	
 error getting entities 
 
-public TimelineEntity getEntity( init(res);	TimelineEntity entity = null;	try {	entity = store.getEntity(parseStr(entityId), parseStr(entityType), parseFieldsStr(fields, ","));	} catch (IllegalArgumentException e) {	throw new BadRequestException( "requested invalid field.");	} catch (IOException e) {	
+public TimelineEntity getEntity( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("entityType") String entityType, @PathParam("entityType") String entityType, @PathParam("entityId") String entityId, @PathParam("entityId") String entityId, @QueryParam("fields") String fields) {	init(res);	TimelineEntity entity = null;	try {	entity = store.getEntity(parseStr(entityId), parseStr(entityType), parseFieldsStr(fields, ","));	} catch (IllegalArgumentException e) {	throw new BadRequestException( "requested invalid field.");	} catch (IOException e) {	
 error getting entity 
 
-public TimelineEvents getEvents( init(res);	TimelineEvents events = null;	try {	events = store.getEntityTimelines( parseStr(entityType), parseArrayStr(entityId, ","), parseLongStr(limit), parseLongStr(windowStart), parseLongStr(windowEnd), parseArrayStr(eventType, ","));	} catch (NumberFormatException e) {	throw new BadRequestException( "windowStart, windowEnd or limit is not a numeric value.");	} catch (IOException e) {	
+public TimelineEvents getEvents( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, @PathParam("entityType") String entityType, @PathParam("entityType") String entityType, @QueryParam("entityId") String entityId, @QueryParam("entityId") String entityId, @QueryParam("eventType") String eventType, @QueryParam("eventType") String eventType, @QueryParam("windowStart") String windowStart, @QueryParam("windowStart") String windowStart, @QueryParam("windowEnd") String windowEnd, @QueryParam("windowEnd") String windowEnd, @QueryParam("limit") String limit) {	init(res);	TimelineEvents events = null;	try {	events = store.getEntityTimelines( parseStr(entityType), parseArrayStr(entityId, ","), parseLongStr(limit), parseLongStr(windowStart), parseLongStr(windowEnd), parseArrayStr(eventType, ","));	} catch (NumberFormatException e) {	throw new BadRequestException( "windowStart, windowEnd or limit is not a numeric value.");	} catch (IOException e) {	
 error getting entity timelines 
 
-public TimelinePutResponse postMetrics( TimelineMetrics metrics) {	init(res);	if (metrics == null) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	
+public TimelinePutResponse postMetrics( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, TimelineMetrics metrics) {	init(res);	if (metrics == null) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	
 storing metrics 
 
-public TimelinePutResponse postMetrics( TimelineMetrics metrics) {	init(res);	if (metrics == null) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	}	return timelineMetricStore.putMetrics(metrics);	} catch (Exception e) {	
+public TimelinePutResponse postMetrics( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, TimelineMetrics metrics) {	init(res);	if (metrics == null) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	}	return timelineMetricStore.putMetrics(metrics);	} catch (Exception e) {	
 error saving metrics 
 
-public TimelinePutResponse postAggregatedMetrics( AggregationResult metrics) {	init(res);	if (metrics == null) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	
+public TimelinePutResponse postAggregatedMetrics( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, AggregationResult metrics) {	init(res);	if (metrics == null) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	
 storing aggregated metrics 
 
-public TimelinePutResponse postAggregatedMetrics( AggregationResult metrics) {	init(res);	if (metrics == null) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	}	return timelineMetricStore.putHostAggregatedMetrics(metrics);	} catch (Exception e) {	
+public TimelinePutResponse postAggregatedMetrics( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, AggregationResult metrics) {	init(res);	if (metrics == null) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	}	return timelineMetricStore.putHostAggregatedMetrics(metrics);	} catch (Exception e) {	
 error saving metrics 
 
-public TimelinePutResponse postContainerMetrics( List<ContainerMetric> metrics) {	init(res);	if (metrics == null || metrics.isEmpty()) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	
+public TimelinePutResponse postContainerMetrics( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, List<ContainerMetric> metrics) {	init(res);	if (metrics == null || metrics.isEmpty()) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	
 storing container metrics 
 
-public TimelinePutResponse postContainerMetrics( List<ContainerMetric> metrics) {	init(res);	if (metrics == null || metrics.isEmpty()) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	}	return timelineMetricStore.putContainerMetrics(metrics);	} catch (Exception e) {	
+public TimelinePutResponse postContainerMetrics( @Context HttpServletRequest req, @Context HttpServletRequest req, @Context HttpServletResponse res, @Context HttpServletResponse res, List<ContainerMetric> metrics) {	init(res);	if (metrics == null || metrics.isEmpty()) {	return new TimelinePutResponse();	}	try {	if (LOG.isDebugEnabled()) {	}	return timelineMetricStore.putContainerMetrics(metrics);	} catch (Exception e) {	
 error saving metrics 
 
 init(res);	if (entities == null) {	return new TimelinePutResponse();	}	try {	List<EntityIdentifier> entityIDs = new ArrayList<EntityIdentifier>();	for (TimelineEntity entity : entities.getEntities()) {	EntityIdentifier entityID = new EntityIdentifier(entity.getEntityId(), entity.getEntityType());	entityIDs.add(entityID);	if (LOG.isDebugEnabled()) {	
@@ -3510,7 +3519,7 @@ initializing
 public void init(FilterConfig filterConfig) throws ServletException {	if (configuration == null) {	
 the ambari configuration object is not available all default options will be assumed 
 
-protected abstract boolean checkPrerequisites(ServletRequest servletRequest);	public void destroy() {	
+protected abstract boolean checkPrerequisites(ServletRequest servletRequest);	
 destroying 
 
 ========================= ambari sample_2857 =========================
@@ -3548,8 +3557,8 @@ no arguments provided to CredentialProvider
 
 ========================= ambari sample_2768 =========================
 
-
-path download browsing path with download 
+public Response browse(@QueryParam("path") String path, @QueryParam("download") boolean download, @QueryParam("checkperm") boolean checkperm, @QueryParam("checkperm") boolean checkperm, @Context HttpHeaders headers, @Context UriInfo ui) {	
+browsing path with download 
 
 ResponseBuilder result = Response.ok(fs);	if (download) {	result.header("Content-Disposition", "attachment; filename=\"" + status.getPath().getName() + "\"").type(MediaType.APPLICATION_OCTET_STREAM);	} else {	FileNameMap fileNameMap = URLConnection.getFileNameMap();	String mimeType = fileNameMap.getContentTypeFor(status.getPath().getName());	result.header("Content-Disposition", "filename=\"" + status.getPath().getName() + "\"").type(mimeType);	}	return result.build();	} catch (WebApplicationException ex) {	
 exception while browsing 
@@ -4337,10 +4346,10 @@ exception occurred
 } catch (ItemNotFound itemNotFound) {	throw new NotFoundFormattedException(itemNotFound.getMessage(), itemNotFound);	}	getResourceManager().retrieveJobStatus(job);	JSONObject object = new JSONObject();	object.put("job", job);	return Response.ok(object).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
 exception occurred 
 
+public Response killJob(@PathParam("jobId") String jobId, @QueryParam("remove") final String remove) throws IOException {	
+killing job remove 
 
-jobId killing job remove 
-
-try {	PigJob job = null;	try {	job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	
+public Response killJob(@PathParam("jobId") String jobId, @QueryParam("remove") final String remove) throws IOException {	try {	PigJob job = null;	try {	job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	
 exception occurred 
 
 job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	throw new NotFoundFormattedException(itemNotFound.getMessage(), itemNotFound);	}	getResourceManager().killJob(job);	if (remove != null && remove.compareTo("true") == 0) {	getResourceManager().delete(jobId);	}	return Response.status(204).build();	} catch (WebApplicationException ex) {	
@@ -4349,7 +4358,7 @@ exception occurred
 throw new NotFoundFormattedException(itemNotFound.getMessage(), itemNotFound);	}	getResourceManager().killJob(job);	if (remove != null && remove.compareTo("true") == 0) {	getResourceManager().delete(jobId);	}	return Response.status(204).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
 exception occurred 
 
-public Response jobCompletionNotification(@Context HttpHeaders headers, try {	PigJob job = null;	job = getResourceManager().ignorePermissions(new Callable<PigJob>() {	public PigJob call() throws Exception {	PigJob job = null;	try {	job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	
+public Response jobCompletionNotification(@Context HttpHeaders headers, @Context UriInfo ui, @Context UriInfo ui, @PathParam("jobId") final String jobId) {	try {	PigJob job = null;	job = getResourceManager().ignorePermissions(new Callable<PigJob>() {	public PigJob call() throws Exception {	PigJob job = null;	try {	job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	
 exception occurred 
 
 } catch (ItemNotFound itemNotFound) {	return null;	}	return job;	}	});	if (job == null) throw new NotFoundFormattedException("Job with id '" + jobId + "' not found", null);	getResourceManager().retrieveJobStatus(job);	return Response.ok().build();	} catch (WebApplicationException ex) {	
@@ -4358,13 +4367,13 @@ exception occurred
 }	return job;	}	});	if (job == null) throw new NotFoundFormattedException("Job with id '" + jobId + "' not found", null);	getResourceManager().retrieveJobStatus(job);	return Response.ok().build();	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
 exception occurred 
 
-
+public Response jobExitCode(@Context HttpHeaders headers, @Context UriInfo ui, @Context UriInfo ui, @PathParam("jobId") String jobId, @PathParam("jobId") String jobId, @PathParam("fileName") String fileName, @PathParam("fileName") String fileName, @QueryParam("page") Long page) {	
 fetching results in filename 
 
-try {	PigJob job = null;	try {	job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	
+public Response jobExitCode(@Context HttpHeaders headers, @Context UriInfo ui, @Context UriInfo ui, @PathParam("jobId") String jobId, @PathParam("jobId") String jobId, @PathParam("fileName") String fileName, @PathParam("fileName") String fileName, @QueryParam("page") Long page) {	try {	PigJob job = null;	try {	job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	
 exception occurred 
 
-try {	PigJob job = null;	try {	job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	throw new NotFoundFormattedException("Job with id '" + jobId + "' not found", null);	}	String filePath = job.getStatusDir() + "/" + fileName;	
+public Response jobExitCode(@Context HttpHeaders headers, @Context UriInfo ui, @Context UriInfo ui, @PathParam("jobId") String jobId, @PathParam("jobId") String jobId, @PathParam("fileName") String fileName, @PathParam("fileName") String fileName, @QueryParam("page") Long page) {	try {	PigJob job = null;	try {	job = getResourceManager().read(jobId);	} catch (ItemNotFound itemNotFound) {	throw new NotFoundFormattedException("Job with id '" + jobId + "' not found", null);	}	String filePath = job.getStatusDir() + "/" + fileName;	
 reading file 
 
 FileResource file = new FileResource();	file.setFilePath(filePath);	file.setFileContent(paginator.readPage(page));	file.setHasNext(paginator.pageCount() > page + 1);	file.setPage(page);	file.setPageCount(paginator.pageCount());	JSONObject object = new JSONObject();	object.put("file", file);	return Response.ok(object).status(200).build();	} catch (WebApplicationException ex) {	
@@ -4388,7 +4397,7 @@ exception occurred
 return (job.getScriptId() != null && scriptId.compareTo(job.getScriptId()) == 0 && super.isConform(item));	}	}	});	JSONObject object = new JSONObject();	object.put("jobs", allJobs);	return Response.ok(object).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
 exception occurred 
 
-
+public Response runJob(PigJobRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {	
 creating new job 
 
 try {	job = getResourceManager().read(request.job.getId());	} catch (ItemNotFound itemNotFound) {	throw new NotFoundFormattedException("Job not found", null);	}	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), request.job.getId()));	JSONObject object = new JSONObject();	object.put("job", job);	return Response.ok(object).status(201).build();	} catch (WebApplicationException ex) {	
@@ -5084,9 +5093,6 @@ error while retrieving progress of vertices assumed for all vertices
 
 public void createJobs() {	if (propertyMap == null || propertyMap.getSolrDataArchiving() == null) return;	propertyMap.getSolrDataArchiving().values().forEach(DocumentArchivingProperties::validate);	propertyMap.getSolrDataArchiving().keySet().forEach(jobName -> {	
 registering data archiving job 
-
-break;	case LOCAL: baseDir = new File(properties.getLocalDestinationDirectory());	break;	}	FileNameSuffixFormatter fileNameSuffixFormatter = FileNameSuffixFormatter.from(properties);	LocalItemWriterListener itemWriterListener = new LocalItemWriterListener(fileAction, documentWiper);	File destinationDirectory = new File( baseDir, String.format("%s_%s_%s", properties.getSolr().getCollection(), jobId, isBlank(intervalEnd) ? "" : fileNameSuffixFormatter.format(intervalEnd)));	LOG.info("Destination directory path={}", destinationDirectory);	if (!destinationDirectory.exists()) {	if (!destinationDirectory.mkdirs()) {	
-unable to create directory 
 
 private File outFile(String collection, File directoryPath, String suffix) {	File file = new File(directoryPath, String.format("%s_-_%s.json", collection, suffix));	
 exporting to temp file 
@@ -5991,7 +5997,7 @@ unable to read hadoopserviceconfig json
 
 ========================= ambari sample_1446 =========================
 
-public Response getFile(@PathParam("filePath") String filePath, try {	filePath = sanitizeFilePath(filePath);	if (action != null && action.equals("ls")) {	
+public Response getFile(@PathParam("filePath") String filePath, @QueryParam("page") Long page, @QueryParam("page") Long page, @QueryParam("action") String action) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	if (action != null && action.equals("ls")) {	
 list directory 
 
 filePath = sanitizeFilePath(filePath);	if (action != null && action.equals("ls")) {	List<String> ls = new LinkedList<String>();	for (FileStatus fs : getHdfsApi().listdir(filePath)) {	ls.add(fs.getPath().toString());	}	JSONObject object = new JSONObject();	object.put("ls", ls);	return Response.ok(object).status(200).build();	}	
@@ -6018,16 +6024,16 @@ error occurred
 public Response deleteFile(@PathParam("filePath") String filePath) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	if (getHdfsApi().delete(filePath, false)) {	return Response.status(204).build();	}	throw new NotFoundFormattedException("FileSystem.delete returned false", null);	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
 error occurred 
 
-public Response updateFile(FileResourceRequest request, try {	filePath = sanitizeFilePath(filePath);	
+public Response updateFile(FileResourceRequest request, @PathParam("filePath") String filePath) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	
 rewriting file 
 
-public Response updateFile(FileResourceRequest request, try {	filePath = sanitizeFilePath(filePath);	FSDataOutputStream output = getHdfsApi().create(filePath, true);	output.write(request.file.getFileContent().getBytes("UTF-8"));	output.close();	return Response.status(204).build();	} catch (WebApplicationException ex) {	
+public Response updateFile(FileResourceRequest request, @PathParam("filePath") String filePath) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	FSDataOutputStream output = getHdfsApi().create(filePath, true);	output.write(request.file.getFileContent().getBytes("UTF-8"));	output.close();	return Response.status(204).build();	} catch (WebApplicationException ex) {	
 error occurred 
 
-public Response updateFile(FileResourceRequest request, try {	filePath = sanitizeFilePath(filePath);	FSDataOutputStream output = getHdfsApi().create(filePath, true);	output.write(request.file.getFileContent().getBytes("UTF-8"));	output.close();	return Response.status(204).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
+public Response updateFile(FileResourceRequest request, @PathParam("filePath") String filePath) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	FSDataOutputStream output = getHdfsApi().create(filePath, true);	output.write(request.file.getFileContent().getBytes("UTF-8"));	output.close();	return Response.status(204).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
 error occurred 
 
-public Response createFile(FileResourceRequest request, throws IOException, InterruptedException {	try {	
+public Response createFile(FileResourceRequest request, @Context HttpServletResponse response, @Context UriInfo ui) @Context HttpServletResponse response, @Context UriInfo ui) throws IOException, InterruptedException {	try {	
 creating file 
 
 if (request.file.getFileContent() != null) {	output.write(request.file.getFileContent().getBytes("UTF-8"));	}	output.close();	} catch (FileAlreadyExistsException ex) {	throw new ServiceFormattedException(ex.getMessage(), ex, 400);	}	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), request.file.getFilePath()));	return Response.status(204).build();	} catch (WebApplicationException ex) {	
@@ -7536,10 +7542,10 @@ reading file
 public Response deleteFile(@PathParam("filePath") String filePath) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	
 deleting file 
 
-public Response updateFile(FileResourceRequest request, try {	filePath = sanitizeFilePath(filePath);	
+public Response updateFile(FileResourceRequest request, @PathParam("filePath") String filePath) throws IOException, InterruptedException {	try {	filePath = sanitizeFilePath(filePath);	
 rewriting file 
 
-public Response createFile(FileResourceRequest request, throws IOException, InterruptedException {	try {	
+public Response createFile(FileResourceRequest request, @Context HttpServletResponse response, @Context UriInfo ui) @Context HttpServletResponse response, @Context UriInfo ui) throws IOException, InterruptedException {	try {	
 creating file 
 
 ========================= ambari sample_578 =========================
@@ -9564,9 +9570,6 @@ loading metric json from took ms
 try {	if (isDebugEnabled) {	endTime = System.currentTimeMillis();	}	inputStream = m_streamProvider.readFrom(m_url);	processInputStreamAndCacheResult(inputStream);	if (null != m_ttlUrlCache) {	m_ttlUrlCache.put(m_url, m_url);	}	} catch (IOException exception) {	
 removing cached values for url 
 
-protected abstract void removeCachedMetricsForCurrentURL();	protected abstract void processInputStreamAndCacheResult(InputStream inputStream) throws Exception;	final void logException(Throwable throwable, String url) {	String cacheKey = buildCacheKey(throwable, url);	if (null == s_exceptionCache.getIfPresent(cacheKey)) {	s_exceptionCache.put(cacheKey, throwable);	
-unable to retrieve metrics from subsequent failures will be suppressed from the log for minutes 
-
 public void uncaughtException(Thread t, Throwable e) {	
 asynchronous metric retrieval encountered an exception with thread 
 
@@ -9935,13 +9938,13 @@ webhdfs exception
 
 ========================= ambari sample_1286 =========================
 
-protected abstract boolean applies(Entry entry, String attribute);	public abstract String detectedProperty();	public Map<String, String> detect() {	
+protected abstract boolean applies(Entry entry, String attribute);	
 calculating the most probable attribute value 
 
-protected abstract boolean applies(Entry entry, String attribute);	public abstract String detectedProperty();	public Map<String, String> detect() {	Map<String, String> detectedMap = Maps.newHashMap();	Map.Entry<String, Integer> selectedEntry = null;	for (Map.Entry<String, Integer> entry : occurrenceMap().entrySet()) {	if (selectedEntry == null) {	selectedEntry = entry;	
+protected abstract boolean applies(Entry entry, String attribute);	Map<String, String> detectedMap = Maps.newHashMap();	Map.Entry<String, Integer> selectedEntry = null;	for (Map.Entry<String, Integer> entry : occurrenceMap().entrySet()) {	if (selectedEntry == null) {	selectedEntry = entry;	
 initial attribute value entry 
 
-public abstract String detectedProperty();	public Map<String, String> detect() {	Map<String, String> detectedMap = Maps.newHashMap();	Map.Entry<String, Integer> selectedEntry = null;	for (Map.Entry<String, Integer> entry : occurrenceMap().entrySet()) {	if (selectedEntry == null) {	selectedEntry = entry;	continue;	}	if (selectedEntry.getValue() < entry.getValue()) {	
+protected abstract boolean applies(Entry entry, String attribute);	Map<String, String> detectedMap = Maps.newHashMap();	Map.Entry<String, Integer> selectedEntry = null;	for (Map.Entry<String, Integer> entry : occurrenceMap().entrySet()) {	if (selectedEntry == null) {	selectedEntry = entry;	continue;	}	if (selectedEntry.getValue() < entry.getValue()) {	
 changing potential attribute value entry from to 
 
 continue;	}	if (selectedEntry.getValue() < entry.getValue()) {	selectedEntry = entry;	}	}	String detectedVal = "N/A";	if (selectedEntry.getValue() > 0) {	detectedVal = selectedEntry.getKey();	} else {	
@@ -10351,22 +10354,22 @@ exception occurred
 public Response getScriptList() {	try {	List allScripts = getResourceManager().readAll( new OnlyOwnersFilteringStrategy(this.context.getUsername()));	JSONObject object = new JSONObject();	object.put("scripts", allScripts);	return Response.ok(object).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (Exception ex) {	
 exception occurred 
 
-
+public Response updateScript(PigScriptRequest request, @PathParam("scriptId") String scriptId) {	
 updating scriptid 
 
-try {	getResourceManager().update(request.script, scriptId);	return Response.status(204).build();	} catch (WebApplicationException ex) {	
+public Response updateScript(PigScriptRequest request, @PathParam("scriptId") String scriptId) {	try {	getResourceManager().update(request.script, scriptId);	return Response.status(204).build();	} catch (WebApplicationException ex) {	
 exception occurred 
 
-try {	getResourceManager().update(request.script, scriptId);	return Response.status(204).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (ItemNotFound itemNotFound) {	
+public Response updateScript(PigScriptRequest request, @PathParam("scriptId") String scriptId) {	try {	getResourceManager().update(request.script, scriptId);	return Response.status(204).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (ItemNotFound itemNotFound) {	
 exception occurred 
 
-try {	getResourceManager().update(request.script, scriptId);	return Response.status(204).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (ItemNotFound itemNotFound) {	throw new NotFoundFormattedException(itemNotFound.getMessage(), itemNotFound);	} catch (Exception ex) {	
+public Response updateScript(PigScriptRequest request, @PathParam("scriptId") String scriptId) {	try {	getResourceManager().update(request.script, scriptId);	return Response.status(204).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (ItemNotFound itemNotFound) {	throw new NotFoundFormattedException(itemNotFound.getMessage(), itemNotFound);	} catch (Exception ex) {	
 exception occurred 
 
-
+public Response saveScript(PigScriptRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {	
 creating new script 
 
-try {	getResourceManager().create(request.script);	PigScript script = null;	script = getResourceManager().read(request.script.getId());	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), request.script.getId()));	JSONObject object = new JSONObject();	object.put("script", script);	return Response.ok(object).status(201).build();	} catch (WebApplicationException ex) {	
+public Response saveScript(PigScriptRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {	try {	getResourceManager().create(request.script);	PigScript script = null;	script = getResourceManager().read(request.script.getId());	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), request.script.getId()));	JSONObject object = new JSONObject();	object.put("script", script);	return Response.ok(object).status(201).build();	} catch (WebApplicationException ex) {	
 exception occurred 
 
 getResourceManager().create(request.script);	PigScript script = null;	script = getResourceManager().read(request.script.getId());	response.setHeader("Location", String.format("%s/%s", ui.getAbsolutePath().toString(), request.script.getId()));	JSONObject object = new JSONObject();	object.put("script", script);	return Response.ok(object).status(201).build();	} catch (WebApplicationException ex) {	throw ex;	} catch (ItemNotFound itemNotFound) {	
@@ -10462,6 +10465,9 @@ exception occurred while creatint table for db with details
 public Response renameTable(@PathParam("database_id") String oldDatabaseName, @PathParam("table_id") String oldTableName, TableRenameRequest request) {	try {	Job job = proxy.renameTable(oldDatabaseName, oldTableName, request.newDatabase, request.newTable, getResourceManager());	JSONObject response = new JSONObject();	response.put("job", job);	return Response.status(Response.Status.ACCEPTED).entity(response).build();	} catch (ServiceException e) {	
 exception occurred while renaming table for olddatabasename oldtablename newdatabasename newtablename 
 
+if(!Strings.isNullOrEmpty(analyzeColumns)){	shouldAnalyzeColumns = Boolean.valueOf(analyzeColumns.trim());	}	try {	ConnectionConfig hiveConnectionConfig = getHiveConnectionConfig();	Job job = proxy.analyzeTable(databaseName, tableName, shouldAnalyzeColumns, getResourceManager(), hiveConnectionConfig);	JSONObject response = new JSONObject();	response.put("job", job);	return Response.status(Response.Status.ACCEPTED).entity(response).build();	} catch (ServiceException e) {	
+exception occurred while analyzing table for database table analyzecolumns 
+
 query = proxy.generateCreateTableDDL(request.tableInfo.getDatabase(), request.tableInfo);	}else if(queryType.equals(ALTER_TABLE)){	query = proxy.generateAlterTableQuery(context, getHiveConnectionConfig(), request.tableInfo.getDatabase(), request.tableInfo.getTable(), request.tableInfo);	}else{	throw new ServiceException("query_type = '" + queryType + "' is not supported");	}	JSONObject response = new JSONObject();	response.put("ddl", new DDL(query));	return Response.status(Response.Status.ACCEPTED).entity(response).build();	} catch (ServiceException e) {	
 exception occurred while generating ddl for 
 
@@ -10471,7 +10477,7 @@ exception occurred while creatint table for db with details
 public Response deleteTable(@PathParam("database_id") String databaseName, @PathParam("table_id") String tableName) {	try {	Job job = proxy.deleteTable(databaseName, tableName, getResourceManager());	JSONObject response = new JSONObject();	response.put("job", job);	return Response.status(Response.Status.ACCEPTED).entity(response).build();	} catch (ServiceException e) {	
 exception occurred while deleting table for db tablename 
 
-public Response getColumnStats(@PathParam("database_id") String databaseName, @PathParam("table_id") String tableName, try {	Job job = proxy.getColumnStatsJob(databaseName, tableName, columnName, getResourceManager());	JSONObject response = new JSONObject();	response.put("job", job);	return Response.status(Response.Status.ACCEPTED).entity(response).build();	} catch (ServiceException e) {	
+public Response getColumnStats(@PathParam("database_id") String databaseName, @PathParam("table_id") String tableName, @PathParam("column_id") String columnName) {	try {	Job job = proxy.getColumnStatsJob(databaseName, tableName, columnName, getResourceManager());	JSONObject response = new JSONObject();	response.put("job", job);	return Response.status(Response.Status.ACCEPTED).entity(response).build();	} catch (ServiceException e) {	
 exception occurred while fetching column stats 
 
 public Response fetchColumnStats(@PathParam("database_id") String databaseName, @PathParam("table_id") String tablename, @PathParam("column_id") String columnName, @QueryParam("job_id") String jobId) {	try {	ColumnStats columnStats = proxy.fetchColumnStats(columnName, jobId, context);	columnStats.setTableName(tablename);	columnStats.setDatabaseName(databaseName);	JSONObject response = new JSONObject();	response.put("columnStats", columnStats);	return Response.status(Response.Status.ACCEPTED).entity(response).build();	} catch (ServiceException e) {	
@@ -10946,25 +10952,25 @@ oldtablename or newtablename is empty
 public OozieProxyImpersonator(ViewContext viewContext) {	this.viewContext = viewContext;	hdfsFileUtils = new HDFSFileUtils(viewContext);	workflowFilesService = new WorkflowFilesService(hdfsFileUtils);	this.oozieDelegate = new OozieDelegate(viewContext);	assetResource = new AssetResource(viewContext);	if (PROJ_MANAGER_ENABLED) {	workflowManagerService = new WorkflowManagerService(viewContext);	}	
 oozieproxyimpersonator initialized for instance s 
 
-
+public Response submitJob(String postBody, @Context HttpHeaders headers, @Context UriInfo ui, @QueryParam("app.path") String appPath, @Context UriInfo ui, @QueryParam("app.path") String appPath, @QueryParam("projectId") String projectId, @QueryParam("projectId") String projectId, @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite, @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite, @QueryParam("description") String description, @QueryParam("description") String description, @QueryParam("jobType") String jobTypeString) {	
 submit workflow job called 
 
-
+public Response saveWorkflow(String postBody, @Context HttpHeaders headers, @Context UriInfo ui, @QueryParam("app.path") String appPath, @Context UriInfo ui, @QueryParam("app.path") String appPath, @QueryParam("jobType") String jobTypeStr, @QueryParam("jobType") String jobTypeStr, @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite) {	
 save workflow called 
 
-
+public Response publishAsset(String postBody, @Context HttpHeaders headers, @Context UriInfo ui, @QueryParam("uploadPath") String uploadPath, @Context UriInfo ui, @QueryParam("uploadPath") String uploadPath, @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite) {	
 publish asset called 
 
 public Response handleGet(@Context HttpHeaders headers, @Context UriInfo ui) {	try {	return oozieDelegate.consumeService(headers, ui.getAbsolutePath() .getPath(), ui.getQueryParameters(), HttpMethod.GET, null);	} catch (Exception ex) {	
 error in get proxy 
 
-public Response handlePost(String xml, @Context HttpHeaders headers, try {	return oozieDelegate.consumeService(headers, ui.getAbsolutePath() .getPath(), ui.getQueryParameters(), HttpMethod.POST, xml);	} catch (Exception ex) {	
+public Response handlePost(String xml, @Context HttpHeaders headers, @Context UriInfo ui) {	try {	return oozieDelegate.consumeService(headers, ui.getAbsolutePath() .getPath(), ui.getQueryParameters(), HttpMethod.POST, xml);	} catch (Exception ex) {	
 error in post proxy 
 
-public Response handleDelete(@Context HttpHeaders headers, try {	return oozieDelegate.consumeService(headers, ui.getAbsolutePath() .getPath(), ui.getQueryParameters(), HttpMethod.POST, null);	} catch (Exception ex) {	
+public Response handleDelete(@Context HttpHeaders headers, @Context UriInfo ui) {	try {	return oozieDelegate.consumeService(headers, ui.getAbsolutePath() .getPath(), ui.getQueryParameters(), HttpMethod.POST, null);	} catch (Exception ex) {	
 error in delete proxy 
 
-public Response handlePut(String body, @Context HttpHeaders headers, try {	return oozieDelegate.consumeService(headers, ui.getAbsolutePath() .getPath(), ui.getQueryParameters(), HttpMethod.PUT, body);	} catch (Exception ex) {	
+public Response handlePut(String body, @Context HttpHeaders headers, @Context UriInfo ui) {	try {	return oozieDelegate.consumeService(headers, ui.getAbsolutePath() .getPath(), ui.getQueryParameters(), HttpMethod.PUT, body);	} catch (Exception ex) {	
 error in put proxy 
 
 ========================= ambari sample_1090 =========================
@@ -11400,7 +11406,7 @@ failed to perform s s
 
 ========================= ambari sample_3598 =========================
 
-return Response.ok(response).build();	}	public Response getServiceCheckList(){	ServiceCheck serviceCheck = new ServiceCheck(context);	try {	ServiceCheck.Policy policy = serviceCheck.getServiceCheckPolicy();	JSONObject policyJson = new JSONObject();	policyJson.put("serviceCheckPolicy", policy);	return Response.ok(policyJson).build();	} catch (HdfsApiException e) {	
+public Response getServiceCheckList(){	ServiceCheck serviceCheck = new ServiceCheck(context);	try {	ServiceCheck.Policy policy = serviceCheck.getServiceCheckPolicy();	JSONObject policyJson = new JSONObject();	policyJson.put("serviceCheckPolicy", policy);	return Response.ok(policyJson).build();	} catch (HdfsApiException e) {	
 error occurred while generating service check policy 
 
 ========================= ambari sample_568 =========================

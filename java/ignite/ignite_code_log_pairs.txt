@@ -239,7 +239,7 @@ failed unlock
 
 ========================= ignite sample_1162 =========================
 
-protected abstract void startNodes() throws Exception;	protected void invokeReadThrough(CacheConfiguration ccfg) throws Exception {	Ignite ignite0 = ignite(0);	ignite0.createCache(ccfg);	int key = 0;	for (Ignite node : G.allGrids()) {	if (node.configuration().isClientMode() && ccfg.getNearConfiguration() != null) node.createNearCache(ccfg.getName(), ccfg.getNearConfiguration());	}	for (Ignite node : G.allGrids()) {	
+protected abstract void startNodes() throws Exception;	Ignite ignite0 = ignite(0);	ignite0.createCache(ccfg);	int key = 0;	for (Ignite node : G.allGrids()) {	if (node.configuration().isClientMode() && ccfg.getNearConfiguration() != null) node.createNearCache(ccfg.getName(), ccfg.getNearConfiguration());	}	for (Ignite node : G.allGrids()) {	
 test for node 
 
 ========================= ignite sample_1861 =========================
@@ -544,6 +544,9 @@ wait for cancel
 
 ========================= ignite sample_7540 =========================
 
+dep = ctx.deploy().deploy(cls, ldr);	if (dep == null) throw new IgniteDeploymentCheckedException("Failed to auto-deploy task " + "(was task (re|un)deployed?): " + cls);	taskName = taskName(dep, taskCls, map);	}	catch (IgniteCheckedException e) {	taskName = task.getClass().getName();	deployEx = e;	}	}	assert taskName != null;	
+task deployment 
+
 public void setAttributes(GridTaskSessionImpl ses, Map<?, ?> attrs) throws IgniteCheckedException {	long timeout = ses.getEndTime() - U.currentTimeMillis();	if (timeout <= 0) {	
 task execution timed out remote session attributes won t be set 
 
@@ -647,7 +650,7 @@ failed to query events for empty nodes collection
 public IgniteInternalFuture<GridNearTxPrepareResponse> prepareColocatedTx( final GridNearTxLocal locTx, final GridNearTxPrepareRequest req ) {	req.txState(locTx.txState());	IgniteInternalFuture<GridNearTxPrepareResponse> fut = locTx.prepareAsyncLocal(req);	if (locTx.isRollbackOnly()) locTx.rollbackNearTxLocalAsync();	return fut.chain(new C1<IgniteInternalFuture<GridNearTxPrepareResponse>, GridNearTxPrepareResponse>() {	try {	return f.get();	}	catch (Exception e) {	locTx.setRollbackOnly();	
 failed to prepare dht transaction 
 
-private IgniteInternalFuture<IgniteInternalTx> finishDhtLocal(UUID nodeId, GridNearTxFinishRequest req) {	GridCacheVersion dhtVer = ctx.tm().mappedVersion(req.version());	GridDhtTxLocal tx = null;	if (dhtVer == null) {	
+private IgniteInternalFuture<IgniteInternalTx> finishDhtLocal(UUID nodeId, @Nullable GridNearTxLocal locTx, @Nullable GridNearTxLocal locTx, GridNearTxFinishRequest req) {	GridCacheVersion dhtVer = ctx.tm().mappedVersion(req.version());	GridDhtTxLocal tx = null;	if (dhtVer == null) {	
 received transaction finish request for unknown near version was lock explicit 
 
 }	try {	assert tx != null : "Transaction is null for near finish request [nodeId=" + nodeId + ", req=" + req + "]";	assert req.syncMode() != null : req;	tx.syncMode(req.syncMode());	tx.nearFinishFutureId(req.futureId());	tx.nearFinishMiniId(req.miniId());	tx.storeEnabled(req.storeEnabled());	if (req.commit()) {	if (!tx.markFinalizing(USER_FINISH)) {	
@@ -847,7 +850,7 @@ rebalancing supplier reserved following partitions
 
 ========================= ignite sample_3739 =========================
 
-public void addEvent( int part, KeyCacheObject key, UUID evtNodeId, int type, boolean hasNewVal, boolean hasOldVal, UUID subjId, boolean keepBinary ) {	assert key != null || type == EVT_CACHE_STARTED || type == EVT_CACHE_STOPPED;	
+public void addEvent( int part, KeyCacheObject key, UUID evtNodeId, @Nullable IgniteUuid xid, @Nullable IgniteUuid xid, @Nullable Object lockId, @Nullable Object lockId, int type, @Nullable CacheObject newVal, @Nullable CacheObject newVal, boolean hasNewVal, @Nullable CacheObject oldVal, @Nullable CacheObject oldVal, boolean hasOldVal, UUID subjId, @Nullable String cloClsName, @Nullable String cloClsName, @Nullable String taskName, @Nullable String taskName, boolean keepBinary ) {	assert key != null || type == EVT_CACHE_STARTED || type == EVT_CACHE_STOPPED;	
 added event without checking if event is recordable 
 
 Object key0;	Object val0;	Object oldVal0;	try {	key0 = cctx.cacheObjectContext().unwrapBinaryIfNeeded(key, keepBinary, false);	val0 = cctx.cacheObjectContext().unwrapBinaryIfNeeded(newVal, keepBinary, false);	oldVal0 = cctx.cacheObjectContext().unwrapBinaryIfNeeded(oldVal, keepBinary, false);	}	catch (Exception e) {	if (!cctx.cacheObjectContext().kernalContext().cacheObjects().isBinaryEnabled(cctx.config())) throw e;	
@@ -1681,7 +1684,7 @@ cassandra load tests execution failed
 
 ========================= ignite sample_6951 =========================
 
-private void checkPutGet(IgniteCache<Object, Object> cache, TransactionConcurrency concurrency, TransactionIsolation isolation) {	
+private void checkPutGet(IgniteCache<Object, Object> cache, @Nullable IgniteTransactions txs, @Nullable IgniteTransactions txs, TransactionConcurrency concurrency, TransactionIsolation isolation) {	
 check cache 
 
 ========================= ignite sample_1001 =========================
@@ -1715,10 +1718,10 @@ check node
 
 ========================= ignite sample_1996 =========================
 
-public void start( final IgniteConfiguration cfg, ExecutorService utilityCachePool, final ExecutorService execSvc, final ExecutorService svcExecSvc, final ExecutorService sysExecSvc, final StripedExecutor stripedExecSvc, ExecutorService p2pExecSvc, ExecutorService mgmtExecSvc, ExecutorService igfsExecSvc, StripedExecutor dataStreamExecSvc, ExecutorService restExecSvc, ExecutorService affExecSvc, IgniteStripedThreadPoolExecutor callbackExecSvc, ExecutorService qryExecSvc, ExecutorService schemaExecSvc, GridAbsClosure errHnd ) throws IgniteCheckedException {	gw.compareAndSet(null, new GridKernalGatewayImpl(cfg.getIgniteInstanceName()));	GridKernalGateway gw = this.gw.get();	gw.writeLock();	try {	switch (gw.getState()) {	case STARTED: {	
+public void start( final IgniteConfiguration cfg, ExecutorService utilityCachePool, final ExecutorService execSvc, final ExecutorService svcExecSvc, final ExecutorService sysExecSvc, final StripedExecutor stripedExecSvc, ExecutorService p2pExecSvc, ExecutorService mgmtExecSvc, ExecutorService igfsExecSvc, StripedExecutor dataStreamExecSvc, ExecutorService restExecSvc, ExecutorService affExecSvc, @Nullable ExecutorService idxExecSvc, @Nullable ExecutorService idxExecSvc, IgniteStripedThreadPoolExecutor callbackExecSvc, ExecutorService qryExecSvc, ExecutorService schemaExecSvc, @Nullable final Map<String, ? extends ExecutorService> customExecSvcs, @Nullable final Map<String, ? extends ExecutorService> customExecSvcs, GridAbsClosure errHnd ) throws IgniteCheckedException {	gw.compareAndSet(null, new GridKernalGatewayImpl(cfg.getIgniteInstanceName()));	GridKernalGateway gw = this.gw.get();	gw.writeLock();	try {	switch (gw.getState()) {	case STARTED: {	
 grid has already been started ignored 
 
-public void start( final IgniteConfiguration cfg, ExecutorService utilityCachePool, final ExecutorService execSvc, final ExecutorService svcExecSvc, final ExecutorService sysExecSvc, final StripedExecutor stripedExecSvc, ExecutorService p2pExecSvc, ExecutorService mgmtExecSvc, ExecutorService igfsExecSvc, StripedExecutor dataStreamExecSvc, ExecutorService restExecSvc, ExecutorService affExecSvc, IgniteStripedThreadPoolExecutor callbackExecSvc, ExecutorService qryExecSvc, ExecutorService schemaExecSvc, GridAbsClosure errHnd ) throws IgniteCheckedException {	gw.compareAndSet(null, new GridKernalGatewayImpl(cfg.getIgniteInstanceName()));	GridKernalGateway gw = this.gw.get();	gw.writeLock();	try {	switch (gw.getState()) {	case STARTED: {	return;	}	case STARTING: {	
+public void start( final IgniteConfiguration cfg, ExecutorService utilityCachePool, final ExecutorService execSvc, final ExecutorService svcExecSvc, final ExecutorService sysExecSvc, final StripedExecutor stripedExecSvc, ExecutorService p2pExecSvc, ExecutorService mgmtExecSvc, ExecutorService igfsExecSvc, StripedExecutor dataStreamExecSvc, ExecutorService restExecSvc, ExecutorService affExecSvc, @Nullable ExecutorService idxExecSvc, @Nullable ExecutorService idxExecSvc, IgniteStripedThreadPoolExecutor callbackExecSvc, ExecutorService qryExecSvc, ExecutorService schemaExecSvc, @Nullable final Map<String, ? extends ExecutorService> customExecSvcs, @Nullable final Map<String, ? extends ExecutorService> customExecSvcs, GridAbsClosure errHnd ) throws IgniteCheckedException {	gw.compareAndSet(null, new GridKernalGatewayImpl(cfg.getIgniteInstanceName()));	GridKernalGateway gw = this.gw.get();	gw.writeLock();	try {	switch (gw.getState()) {	case STARTED: {	return;	}	case STARTING: {	
 grid is already in process of being started ignored 
 
 startProcessor(new GridMarshallerMappingProcessor(ctx));	for (PluginProvider provider : ctx.plugins().allProviders()) {	ctx.add(new GridPluginComponent(provider));	provider.start(ctx.plugins().pluginContextForProvider(provider));	}	if (ctx.config().getPlatformConfiguration() != null) startProcessor(new PlatformPluginProcessor(ctx));	ctx.cluster().initDiagnosticListeners();	fillNodeAttributes(clusterProc.updateNotifierEnabled());	}	catch (Throwable e) {	
@@ -2454,6 +2457,9 @@ got removed entry during loadcache will ignore
 throw new IgniteException("Failed to put cache value: " + entry, e);	}	catch (GridCacheEntryRemovedException ignore) {	}	finally {	if (entry != null) entry.context().evicts().touch(entry, topVer);	part.release();	ctx.shared().database().checkpointReadUnlock();	}	}	
 will node load entry into cache partition is invalid 
 
+catch (GridCacheEntryRemovedException ignore) {	}	finally {	if (entry != null) entry.context().evicts().touch(entry, topVer);	part.release();	ctx.shared().database().checkpointReadUnlock();	}	}	}	catch (GridDhtInvalidPartitionException e) {	
+ignoring entry for partition that does not belong key val err 
+
 else {	AffinityTopologyVersion topVer = ctx.shared().exchange().lastTopologyFuture().initialVersion();	assert topVer.compareTo(req.topologyVersion()) > 0 : "Wrong ready topology version for " + "invalid partitions response [topVer=" + topVer + ", req=" + req + ']';	res = new GridNearSingleGetResponse(ctx.cacheId(), req.futureId(), topVer, null, true, req.addDeploymentInfo());	}	}	catch (NodeStoppingException ignored) {	return;	}	catch (IgniteCheckedException e) {	
 failed processing get request 
 
@@ -2621,6 +2627,11 @@ public void onPage(@Nullable UUID nodeId, @Nullable Collection<?> data, @Nullabl
 received query result page nodeId data err finished 
 
 ========================= ignite sample_4223 =========================
+
+else if (affinityBackupFilter == null && backupFilter == null) res.add(next.get2());	}	}	if (res.size() < primaryAndBackups && nodes.size() >= primaryAndBackups && exclNeighbors) {	for (int i = 1; i < lst.size() && res.size() < primaryAndBackups; i++) {	IgniteBiTuple<Long, ClusterNode> next = lst.get(i);	ClusterNode node = next.get2();	if (!res.contains(node)) res.add(next.get2());	}	if (!exclNeighborsWarn) {	
+affinity function excludeneighbors property is ignored because topology has no enough nodes to assign backups 
+
+========================= ignite sample_516 =========================
 
 switch (status) {	case STATUS_SUCCESS: return RestResult.success(res.getResponse());	default: return RestResult.fail(status, res.getError());	}	}	if (resp.code() == 401) return RestResult.fail(STATUS_AUTH_FAILED, "Failed to authenticate in cluster. " + "Please check agent\'s login and password or node port.");	if (resp.code() == 404) return RestResult.fail(STATUS_FAILED, "Failed connect to cluster.");	return RestResult.fail(STATUS_FAILED, "Failed to execute REST command: " + resp.message());	}	catch (ConnectException ignored) {	
 failed connect to cluster please ensure that nodes have ignite rest http module in classpath was copied from libs optional to libs folder 
@@ -2792,11 +2803,6 @@ automatic tostring took ms
 
 ========================= ignite sample_691 =========================
 
-protected abstract Iterator<I> inputIterator(@Nullable Object... args) throws CacheLoaderException;	ExecutorService exec = new ThreadPoolExecutor( threadsCnt, threadsCnt, 0L, MILLISECONDS, new ArrayBlockingQueue<Runnable>(batchQueueSize), new BlockingRejectedExecutionHandler());	Iterator<I> iter = inputIterator(args);	Collection<I> buf = new ArrayList<>(batchSize);	try {	while (iter.hasNext()) {	if (Thread.currentThread().isInterrupted()) {	
-working thread was interrupted while loading data 
-
-========================= ignite sample_2973 =========================
-
 try (Ignite client = startGrid("client")) {	IgniteCache<Integer, ValueObj> cache = client.cache(CACHE_NAME_2);	int count = 1_000;	for (int idx = 0; idx < count; ++idx) cache.put(idx, new ValueObj(count - idx - 1, 0));	long start = System.currentTimeMillis();	QueryCursor<List<?>> cursor = cache.query(new SqlFieldsQuery("select min(_key), max(_key) from ValueObj"));	List<List<?>> result = cursor.getAll();	assertEquals(1, result.size());	assertEquals(0, result.get(0).get(0));	assertEquals(count - 1, result.get(0).get(1));	
 elapsed 
 
@@ -2866,7 +2872,7 @@ test execution completed but of workers failed failed workers
 srvSocks.add(srvSock);	new GridTestThread(new Runnable() {	try {	while(!Thread.currentThread().isInterrupted()) {	Socket clientSock = srvSock.accept();	connCnt.getAndIncrement();	new GridTestThread(workerFactory.newWorker(clientSock)).start();	}	}	catch (Exception e) {	
 unexpected error 
 
-public abstract void action(InputStream input, OutputStream output) throws IOException;	}	private class SomeResponseWorker implements WorkerFactory {	return new SocketWorker(clientSock) {	output.write("Some response".getBytes());	
+public abstract void action(InputStream input, OutputStream output) throws IOException;	}	return new SocketWorker(clientSock) {	output.write("Some response".getBytes());	
 test some response was sent to 
 
 ========================= ignite sample_2572 =========================
@@ -2939,6 +2945,9 @@ removed entry from cache
 
 public final void removeEntry(GridCacheEntryEx entry) {	boolean rmvd = map.removeEntry(entry);	if (log.isDebugEnabled()) {	
 remove will not be done for key entry got replaced or removed 
+
+private boolean evictx(K key, GridCacheVersion ver, @Nullable CacheEntryPredicate[] filter) {	KeyCacheObject cacheKey = ctx.toCacheKeyObject(key);	GridCacheEntryEx entry = peekEx(cacheKey);	if (entry == null) return true;	try {	return ctx.evicts().evict(entry, ver, true, filter);	}	catch (IgniteCheckedException ex) {	
+failed to evict entry from cache 
 
 }	}	if (res != null) {	ctx.addResult(map, key, res, skipVals, keepCacheObjects, deserializeBinary, true, needVer);	if (entry != null && (tx == null || (!tx.implicit() && tx.isolation() == READ_COMMITTED))) ctx.evicts().touch(entry, topVer);	if (keysSize == 1) return new GridFinishedFuture<>(map);	}	break;	}	catch (GridCacheEntryRemovedException ignored) {	
 got removed entry in getallasync method will retry 
@@ -3631,7 +3640,7 @@ must fail inside of gridresultpage fetchnextpage or subclass
 
 ========================= ignite sample_7479 =========================
 
-}	return cfg;	}	return 10 * 60 * 1000L;	}	stopAllGrids();	super.afterTest();	}	public void testConcurrentJoin() throws Exception {	for (int iter = 0; iter < ITERATIONS; iter++) {	
+public void testConcurrentJoin() throws Exception {	for (int iter = 0; iter < ITERATIONS; iter++) {	
 iteration 
 
 ========================= ignite sample_999 =========================
@@ -3750,6 +3759,11 @@ iteration
 
 ========================= ignite sample_2285 =========================
 
+}	}	if (res.size() < primaryAndBackups && nodes.size() >= primaryAndBackups && exclNeighbors) {	it = sortedNodes.iterator();	it.next();	while (it.hasNext() && res.size() < primaryAndBackups) {	ClusterNode node = it.next();	if (!res.contains(node)) res.add(node);	}	if (!exclNeighborsWarn) {	
+affinity function excludeneighbors property is ignored because topology has no enough nodes to assign backups affinity function excludeneighbors property is ignored because topology has no enough nodes to assign backups 
+
+========================= ignite sample_2905 =========================
+
 private void spiStop0(boolean disconnect) throws IgniteSpiException {	if (log.isDebugEnabled()) {	
 disconnecting spi 
 
@@ -3761,6 +3775,9 @@ verification for local node leave has been received from coordinator continuing 
 
 timeout = threshold - U.currentTimeMillis();	}	catch (InterruptedException ignored) {	Thread.currentThread().interrupt();	break;	}	}	if (spiState == LEFT) {	}	else if (log.isInfoEnabled()) {	
 no verification for local node leave has been received from coordinator will stop node anyway 
+
+try {	if (addr.isUnresolved()) addr = new InetSocketAddress(InetAddress.getByName(addr.getHostName()), addr.getPort());	long tstamp = U.currentTimeMillis();	sock = spi.createSocket();	fut.sock = sock;	sock = spi.openSocket(sock, addr, timeoutHelper);	openedSock = true;	spi.writeToSocket(sock, new TcpDiscoveryPingRequest(locNodeId, clientNodeId), timeoutHelper.nextTimeoutChunk(spi.getSocketTimeout()));	TcpDiscoveryPingResponse res = spi.readMessage(sock, null, timeoutHelper.nextTimeoutChunk( spi.getAckTimeout()));	if (locNodeId.equals(res.creatorNodeId())) {	
+ping response from local node 
 
 noResStart = 0;	switch (res) {	case RES_WAIT: retry = true;	break;	case RES_OK: if (log.isDebugEnabled()) log.debug("Join request message has been sent to address [addr=" + addr + ", req=" + joinReq + ']');	return true;	default: if (res == RES_CONTINUE_JOIN) {	if (!fromAddrs.contains(addr)) retry = true;	}	else {	
 unexpected response to join request 
@@ -5259,7 +5276,7 @@ an attempt to undeploy cache with binary objects
 
 ========================= ignite sample_3880 =========================
 
-private void checkEntryProcessCall(Integer key, IgniteCache<Integer, TestValue> cache, int expCallCnt) {	Ignite ignite = cache.unwrap(Ignite.class);	ClusterNode primary = ignite.affinity(cache.getName()).mapKeyToNode(key);	assertNotNull(primary);	log.info("Check call [key=" + key + ", primary=" + primary.attribute(ATTR_IGNITE_INSTANCE_NAME) + ", concurrency=" + concurrency + ", isolation=" + isolation + "]");	Transaction tx;	TestReturnValue retVal;	
+private void checkEntryProcessCall(Integer key, IgniteCache<Integer, TestValue> cache, @Nullable TransactionConcurrency concurrency, @Nullable TransactionConcurrency concurrency, @Nullable TransactionIsolation isolation, @Nullable TransactionIsolation isolation, int expCallCnt) {	Ignite ignite = cache.unwrap(Ignite.class);	ClusterNode primary = ignite.affinity(cache.getName()).mapKeyToNode(key);	assertNotNull(primary);	log.info("Check call [key=" + key + ", primary=" + primary.attribute(ATTR_IGNITE_INSTANCE_NAME) + ", concurrency=" + concurrency + ", isolation=" + isolation + "]");	Transaction tx;	TestReturnValue retVal;	
 invoke 
 
 log.info("Check call [key=" + key + ", primary=" + primary.attribute(ATTR_IGNITE_INSTANCE_NAME) + ", concurrency=" + concurrency + ", isolation=" + isolation + "]");	Transaction tx;	TestReturnValue retVal;	callCnt.set(0);	tx = startTx(cache, concurrency, isolation);	retVal = cache.invoke(key, new TestEntryProcessor(OP_UPDATE), new TestValue(Integer.MIN_VALUE));	if (tx != null) tx.commit();	assertEquals(expCallCnt, callCnt.get());	checkReturnValue(retVal, "null");	checkCacheValue(cache.getName(), key, new TestValue(0));	
@@ -5967,6 +5984,12 @@ received event
 
 ========================= ignite sample_1930 =========================
 
+assertParameter(cc.getWriteBehindFlushThreadCount() > 0, "writeBehindFlushThreadCount > 0");	if (cc.getWriteBehindFlushSize() == 0 && cc.getWriteBehindFlushFrequency() == 0) throw new IgniteCheckedException("Cannot set both 'writeBehindFlushFrequency' and " + "'writeBehindFlushSize' parameters to 0 for cache: " + U.maskName(cc.getName()));	}	if (cc.isReadThrough() && cfgStore == null) throw new IgniteCheckedException("Cannot enable read-through (loader or store is not provided) " + "for cache: " + U.maskName(cc.getName()));	if (cc.isWriteThrough() && cfgStore == null) throw new IgniteCheckedException("Cannot enable write-through (writer or store is not provided) " + "for cache: " + U.maskName(cc.getName()));	long delay = cc.getRebalanceDelay();	if (delay != 0) {	if (cc.getCacheMode() != PARTITIONED) U.warn(log, "Rebalance delay is supported only for partitioned caches (will ignore): " + (cc.getName()), "Will ignore rebalance delay for cache: " + U.maskName(cc.getName()));	else if (cc.getRebalanceMode() == SYNC) {	if (delay < 0) {	
+ignoring sync rebalance mode with manual rebalance start node will not wait for rebalancing to be finished node will not wait for rebalance in sync mode 
+
+}	if (cc.isReadThrough() && cfgStore == null) throw new IgniteCheckedException("Cannot enable read-through (loader or store is not provided) " + "for cache: " + U.maskName(cc.getName()));	if (cc.isWriteThrough() && cfgStore == null) throw new IgniteCheckedException("Cannot enable write-through (writer or store is not provided) " + "for cache: " + U.maskName(cc.getName()));	long delay = cc.getRebalanceDelay();	if (delay != 0) {	if (cc.getCacheMode() != PARTITIONED) U.warn(log, "Rebalance delay is supported only for partitioned caches (will ignore): " + (cc.getName()), "Will ignore rebalance delay for cache: " + U.maskName(cc.getName()));	else if (cc.getRebalanceMode() == SYNC) {	if (delay < 0) {	}	else {	
+using sync rebalance mode with rebalance delay node will wait until rebalancing is initiated for ms for cache node will wait until rebalancing is initiated for ms for cache 
+
 private void cleanup(CacheGroupContext grp) {	CacheConfiguration cfg = grp.config();	for (Object obj : grp.configuredUserObjects()) cleanup(cfg, obj, false);	if (!grp.systemCache()) {	try {	ctx.config().getMBeanServer().unregisterMBean(U.makeMBeanName(ctx.igniteInstanceName(), CACHE_GRP_METRICS_MBEAN_GRP, grp.cacheOrGroupName()));	}	catch (Throwable e) {	
 failed to unregister mbean for cache group 
 
@@ -6196,7 +6219,7 @@ added rest protocol
 
 ========================= ignite sample_4925 =========================
 
-private void load0( Collection<? extends DataStreamerEntry> entries, final GridFutureAdapter<Object> resFut, final int remaps ) {	try {	assert entries != null;	final boolean remap = remaps > 0;	if (!remap) {	acquireRemapSemaphore();	}	if (!isWarningPrinted) {	synchronized (this) {	if (!allowOverwrite() && !isWarningPrinted) {	
+private void load0( Collection<? extends DataStreamerEntry> entries, final GridFutureAdapter<Object> resFut, @Nullable final Collection<KeyCacheObjectWrapper> activeKeys, @Nullable final Collection<KeyCacheObjectWrapper> activeKeys, final int remaps ) {	try {	assert entries != null;	final boolean remap = remaps > 0;	if (!remap) {	acquireRemapSemaphore();	}	if (!isWarningPrinted) {	synchronized (this) {	if (!allowOverwrite() && !isWarningPrinted) {	
 data streamer will not overwrite existing cache entries for better performance to change set allowoverwrite to true 
 
 for (IgniteInternalFuture fut = q.poll(); fut != null; fut = q.poll()) {	try {	if (timeout == DFLT_UNLIMIT_TIMEOUT) fut.get();	else {	long timeRemain = timeout - U.currentTimeMillis() + startTimeMillis;	if (timeRemain <= 0) throw new IgniteDataStreamerTimeoutException("Data streamer exceeded timeout on flush.");	fut.get(timeRemain);	}	}	catch (IgniteClientDisconnectedCheckedException e) {	
@@ -6649,11 +6672,6 @@ tweets transformation was interrupted
 
 ========================= ignite sample_460 =========================
 
-return dht().preloader();	}	GridNearCacheEntry entry = null;	while (true) {	try {	entry = (GridNearCacheEntry)super.entryEx(key, topVer);	entry.initializeFromDht(topVer);	return entry;	}	catch (GridCacheEntryRemovedException ignore) {	
-got removed near entry while initializing from dht entry will retry 
-
-========================= ignite sample_3869 =========================
-
 public void cancelInternalQuery(UUID routineId) {	try {	cctx.kernalContext().continuous().stopRoutine(routineId).get();	}	catch (IgniteCheckedException | IgniteException e) {	
 failed to stop internal continuous query 
 
@@ -7041,9 +7059,6 @@ public void download(GridFutureAdapter<?> fut){	this.finishFut = fut;	final Serv
 fail close socket 
 
 ========================= ignite sample_4066 =========================
-
-protected abstract void init();	}	if (e != null) {	
-failed to process request from remote client 
 
 private GridClientResponse makeFailureResponse(GridClientException e, UUID clientId, Long reqId) {	
 failed to process message on router 

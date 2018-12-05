@@ -81,16 +81,16 @@ tasks count
 
 ========================= brooklyn sample_603 =========================
 
-protected abstract void reconfigureService(Collection<HostGeoInfo> targetHosts);	protected void startTracker() {	synchronized (trackerLock) {	if (targetEntityProvider == null || !getManagementSupport().isDeployed()) {	
+protected abstract void reconfigureService(Collection<HostGeoInfo> targetHosts);	synchronized (trackerLock) {	if (targetEntityProvider == null || !getManagementSupport().isDeployed()) {	
 tracker for not yet active 
 
-protected void startTracker() {	synchronized (trackerLock) {	if (targetEntityProvider == null || !getManagementSupport().isDeployed()) {	return;	}	endTracker();	ImmutableSet.Builder<Sensor<?>> sensorsToTrack = ImmutableSet.<Sensor<?>>builder().add( HOSTNAME, ADDRESS, Attributes.MAIN_URI, WebAppService.ROOT_URL);	if (Boolean.TRUE.equals(config().get(FILTER_FOR_RUNNING))) {	sensorsToTrack.add(Attributes.SERVICE_STATE_ACTUAL);	}	
+protected abstract void reconfigureService(Collection<HostGeoInfo> targetHosts);	synchronized (trackerLock) {	if (targetEntityProvider == null || !getManagementSupport().isDeployed()) {	return;	}	endTracker();	ImmutableSet.Builder<Sensor<?>> sensorsToTrack = ImmutableSet.<Sensor<?>>builder().add( HOSTNAME, ADDRESS, Attributes.MAIN_URI, WebAppService.ROOT_URL);	if (Boolean.TRUE.equals(config().get(FILTER_FOR_RUNNING))) {	sensorsToTrack.add(Attributes.SERVICE_STATE_ACTUAL);	}	
 initializing tracker for following 
 
-public abstract String getHostname();	long lastUpdate = -1;	protected void refreshGroupMembership() {	try {	
+public abstract String getHostname();	long lastUpdate = -1;	try {	
 geodns refreshing targets 
 
-public abstract String getHostname();	long lastUpdate = -1;	protected void refreshGroupMembership() {	try {	if (targetEntityProvider == null) return;	if (targetEntityProvider instanceof DynamicGroup) ((DynamicGroup) targetEntityProvider).rescanEntities();	Set<Entity> pool = MutableSet.copyOf(targetEntityProvider instanceof Group ? targetEntityProvider.getMembers(): targetEntityProvider.getChildren());	
+public abstract String getHostname();	long lastUpdate = -1;	try {	if (targetEntityProvider == null) return;	if (targetEntityProvider instanceof DynamicGroup) ((DynamicGroup) targetEntityProvider).rescanEntities();	Set<Entity> pool = MutableSet.copyOf(targetEntityProvider instanceof Group ? targetEntityProvider.getMembers(): targetEntityProvider.getChildren());	
 geodns refreshing targets pool now 
 
 changed |= addTargetHost(e);	}	}	for (Entity e: previousOnes) {	changed |= removeTargetHost(e, false);	}	if (changed || (lastUpdate > 0 && Time.hasElapsedSince(lastUpdate, Duration.ONE_HOUR))) {	update();	}	} catch (Exception e) {	
@@ -356,13 +356,13 @@ stopped software process entity
 public String call() {	if (entity().getAttribute(SoftwareProcess.SERVICE_STATE_ACTUAL) == Lifecycle.STOPPED) {	
 skipping stop of entity when already stopped 
 
-protected abstract String stopProcessesAtMachine();	protected StopMachineDetails<Integer> stopAnyProvisionedMachines() {	MachineProvisioningLocation<MachineLocation> provisioner = entity().getAttribute(SoftwareProcess.PROVISIONING_LOCATION);	if (Iterables.isEmpty(entity().getLocations())) {	
+protected abstract String stopProcessesAtMachine();	MachineProvisioningLocation<MachineLocation> provisioner = entity().getAttribute(SoftwareProcess.PROVISIONING_LOCATION);	if (Iterables.isEmpty(entity().getLocations())) {	
 no machine decommissioning necessary for no locations 
 
-protected abstract String stopProcessesAtMachine();	protected StopMachineDetails<Integer> stopAnyProvisionedMachines() {	MachineProvisioningLocation<MachineLocation> provisioner = entity().getAttribute(SoftwareProcess.PROVISIONING_LOCATION);	if (Iterables.isEmpty(entity().getLocations())) {	return new StopMachineDetails<Integer>("No machine decommissioning necessary - no locations", 0);	}	if (provisioner==null) {	
+protected abstract String stopProcessesAtMachine();	MachineProvisioningLocation<MachineLocation> provisioner = entity().getAttribute(SoftwareProcess.PROVISIONING_LOCATION);	if (Iterables.isEmpty(entity().getLocations())) {	return new StopMachineDetails<Integer>("No machine decommissioning necessary - no locations", 0);	}	if (provisioner==null) {	
 no machine decommissioning necessary for did not provision 
 
-protected StopMachineDetails<Integer> stopAnyProvisionedMachines() {	MachineProvisioningLocation<MachineLocation> provisioner = entity().getAttribute(SoftwareProcess.PROVISIONING_LOCATION);	if (Iterables.isEmpty(entity().getLocations())) {	return new StopMachineDetails<Integer>("No machine decommissioning necessary - no locations", 0);	}	if (provisioner==null) {	return new StopMachineDetails<Integer>("No machine decommissioning necessary - did not provision", 0);	}	Location machine = getLocation(null);	if (!(machine instanceof MachineLocation)) {	
+protected abstract String stopProcessesAtMachine();	MachineProvisioningLocation<MachineLocation> provisioner = entity().getAttribute(SoftwareProcess.PROVISIONING_LOCATION);	if (Iterables.isEmpty(entity().getLocations())) {	return new StopMachineDetails<Integer>("No machine decommissioning necessary - no locations", 0);	}	if (provisioner==null) {	return new StopMachineDetails<Integer>("No machine decommissioning necessary - did not provision", 0);	}	Location machine = getLocation(null);	if (!(machine instanceof MachineLocation)) {	
 no decommissioning necessary for not a machine location 
 
 protected StopMachineDetails<Integer> suspendAnyProvisionedMachines() {	MachineProvisioningLocation<MachineLocation> provisioner = entity().getAttribute(SoftwareProcess.PROVISIONING_LOCATION);	if (Iterables.isEmpty(entity().getLocations())) {	
@@ -3916,7 +3916,7 @@ testing solr on using
 checkNotNull(targetName, "targetName");	JavaWebAppDriver driver = getDriver();	String deployedName = driver.deploy(url, targetName);	Set<String> deployedWars = getAttribute(DEPLOYED_WARS);	if (deployedWars == null) {	deployedWars = Sets.newLinkedHashSet();	}	deployedWars.add(deployedName);	sensors().set(DEPLOYED_WARS, deployedWars);	} catch (RuntimeException e) {	
 error deploying to on rethrowing 
 
-public void undeploy( try {	JavaWebAppDriver driver = getDriver();	driver.undeploy(targetName);	Set<String> deployedWars = getAttribute(DEPLOYED_WARS);	if (deployedWars == null) {	deployedWars = Sets.newLinkedHashSet();	}	deployedWars.remove( driver.getFilenameContextMapper().convertDeploymentTargetNameToContext(targetName) );	sensors().set(DEPLOYED_WARS, deployedWars);	} catch (RuntimeException e) {	
+try {	JavaWebAppDriver driver = getDriver();	driver.undeploy(targetName);	Set<String> deployedWars = getAttribute(DEPLOYED_WARS);	if (deployedWars == null) {	deployedWars = Sets.newLinkedHashSet();	}	deployedWars.remove( driver.getFilenameContextMapper().convertDeploymentTargetNameToContext(targetName) );	sensors().set(DEPLOYED_WARS, deployedWars);	} catch (RuntimeException e) {	
 error undeploying on rethrowing 
 
 ========================= brooklyn sample_243 =========================
@@ -6025,10 +6025,10 @@ could not find item in brooklyn catalog returning null
 public OsgiConfigLoader(String propertiesPath) {	this.propertiesPath = propertiesPath;	
 osgiconfigloader instance created 
 
-public abstract void init();	public abstract void destroy();	public abstract void updateProperties(Map properties);	public Map<String, String> load() {	if (configAdmin == null) {	
+public abstract void init();	if (configAdmin == null) {	
 no osgi configuration admin available cannot load cfg 
 
-public abstract void updateProperties(Map properties);	public Map<String, String> load() {	if (configAdmin == null) {	return ImmutableMap.of();	}	String filter = '(' + Constants.SERVICE_PID + '=' + propertiesPath + ')';	Configuration[] configs;	try {	configs = configAdmin.listConfigurations(filter);	} catch (InvalidSyntaxException | IOException e) {	
+public abstract void init();	if (configAdmin == null) {	return ImmutableMap.of();	}	String filter = '(' + Constants.SERVICE_PID + '=' + propertiesPath + ')';	Configuration[] configs;	try {	configs = configAdmin.listConfigurations(filter);	} catch (InvalidSyntaxException | IOException e) {	
 cannot list osgi configurations 
 
 } catch (InvalidSyntaxException | IOException e) {	throw Exceptions.propagate(e);	}	final MutableMap<String, String> map = MutableMap.of();	if (configs != null) {	for (Configuration config : configs) {	LOG.debug("Reading OSGi configuration from {}; bundleLocation={}", config.getPid(), config.getBundleLocation());	map.putAll(dictToMap(config.getProperties()));	}	} else {	
@@ -6589,7 +6589,7 @@ simulated release of machine
 
 ========================= brooklyn sample_2249 =========================
 
-public abstract void setBrokerUrl();	public void preStop() {	try {	for (JMSDestination queue : queues.values()) {	queue.destroy();	}	} catch (Exception e) {	
+public abstract void setBrokerUrl();	try {	for (JMSDestination queue : queues.values()) {	queue.destroy();	}	} catch (Exception e) {	
 error deleting queues from broker continuing with stop 
 
 for (JMSDestination queue : queues.values()) {	queue.destroy();	}	} catch (Exception e) {	}	try {	for (JMSDestination topic : topics.values()) {	topic.destroy();	}	} catch (Exception e) {	
@@ -7950,10 +7950,10 @@ caught exception destroying management context
 
 ========================= brooklyn sample_718 =========================
 
-public AssemblyTemplateDto get( return dto().adapt(lookup(camp().assemblyTemplates(), id));	}	) public Response post( try {	
+public Response post( @Context UriInfo info, @Context UriInfo info, @ApiParam(value = "ID of item being retrieved", required = true) @ApiParam(value = "ID of item being retrieved", required = true) @PathParam("id") String id) {	try {	
 camp rest instantiating at 
 
-public AssemblyTemplateDto get( return dto().adapt(lookup(camp().assemblyTemplates(), id));	}	) public Response post( try {	AssemblyTemplate at = lookup(camp().assemblyTemplates(), id);	Assembly assembly = at.getInstantiator().newInstance().instantiate(at, camp());	URI assemblyUri = info.getBaseUriBuilder().path( dto().adapt(assembly).getUri() ).build();	return Response.created(assemblyUri).build();	} catch (Exception e) {	
+public Response post( @Context UriInfo info, @Context UriInfo info, @ApiParam(value = "ID of item being retrieved", required = true) @ApiParam(value = "ID of item being retrieved", required = true) @PathParam("id") String id) {	try {	AssemblyTemplate at = lookup(camp().assemblyTemplates(), id);	Assembly assembly = at.getInstantiator().newInstance().instantiate(at, camp());	URI assemblyUri = info.getBaseUriBuilder().path( dto().adapt(assembly).getUri() ).build();	return Response.created(assemblyUri).build();	} catch (Exception e) {	
 unable to create at 
 
 ========================= brooklyn sample_1805 =========================
@@ -8105,10 +8105,10 @@ config is
 
 ========================= brooklyn sample_2784 =========================
 
-protected abstract void addProducerHardcoded(Entity producer);	protected abstract void addProducerMember(Entity producer);	protected abstract void addProducerChild(Entity producer);	protected void removeProducer(Entity producer) {	
+protected abstract void addProducerHardcoded(Entity producer);	protected abstract void addProducerMember(Entity producer);	protected abstract void addProducerChild(Entity producer);	
 stopped listening to 
 
-protected abstract void onProducerAdded(Entity producer);	protected abstract void onProducerRemoved(Entity producer);	protected void onUpdated() {	try {	emit(targetSensor, compute());	} catch (Throwable t) {	
+protected abstract void onProducerAdded(Entity producer);	protected abstract void onProducerRemoved(Entity producer);	try {	emit(targetSensor, compute());	} catch (Throwable t) {	
 error calculating and setting aggregate for enricher 
 
 ========================= brooklyn sample_1002 =========================
@@ -8957,8 +8957,14 @@ updating monterey service configuration with changes
 for (Map.Entry<String, String> entry: additionalVals.entrySet()) {	String key = entry.getKey();	String value = entry.getValue();	CompositeData data = new CompositeDataSupport( JmxConstants.PROPERTY_TYPE, MutableMap.of(JmxConstants.KEY, key, JmxConstants.TYPE, "String", JmxConstants.VALUE, value));	table.remove(data.getAll(new String[] {JmxConstants.KEY}));	table.put(data);	}	} catch (OpenDataException e) {	throw Exceptions.propagate(e);	}	
 updating monterey service configuration with new configuration 
 
-
+public void installFeature( @EffectorParam(name="featureName", description="Name of the feature - see org.apache.karaf:type=features#installFeature()") final String featureName) throws Exception {	
 installing feature via jmx 
+
+public long installBundle( @EffectorParam(name="bundle", description="URI of bundle to be deployed") String bundle) throws URISyntaxException {	URI uri = new URI(bundle);	boolean wrap = false;	if (WRAP_SCHEME.equals(uri.getScheme())) {	bundle = bundle.substring(WRAP_SCHEME.length() + 1);	uri = new URI(bundle);	wrap = true;	}	if (FILE_SCHEME.equals(uri.getScheme())) {	
+deploying bundle via file copy 
+
+if (WRAP_SCHEME.equals(uri.getScheme())) {	bundle = bundle.substring(WRAP_SCHEME.length() + 1);	uri = new URI(bundle);	wrap = true;	}	if (FILE_SCHEME.equals(uri.getScheme())) {	File source = new File(uri);	String target = getDriver().getRunDir() + "/" + source.getName();	getDriver().copyResource(source, target);	return (Long) jmxHelper.operation(OSGI_FRAMEWORK, "installBundle", (wrap ? WRAP_SCHEME + ":" : "") + FILE_SCHEME + ": } else {	
+deploying bundle via jmx 
 
 ========================= brooklyn sample_115 =========================
 
@@ -11422,7 +11428,7 @@ fallback loadclass attempt failed orig class
 
 ========================= brooklyn sample_1527 =========================
 
-public abstract T invokeEffector(I trait, Map<String,?> parameters);	public static <I,T> ExplicitEffector<I,T> create(String name, Class<T> type, List<ParameterType<?>> parameters, String description, Closure body) {	
+public abstract T invokeEffector(I trait, Map<String,?> parameters);	
 use of groovy lang closure is deprecated in expliciteffector create 
 
 ========================= brooklyn sample_1177 =========================

@@ -2236,7 +2236,7 @@ configure component with customizer
 
 ========================= camel sample_434 =========================
 
-public abstract void run(Runnable runnable) throws Throwable;	public Processor wrap(RouteContext routeContext, Processor processor) {	JtaTransactionErrorHandler answer;	ErrorHandlerBuilder builder = (ErrorHandlerBuilder) routeContext.getRoute().getErrorHandlerBuilder();	if (builder instanceof ErrorHandlerBuilderRef) {	ErrorHandlerBuilderRef builderRef = (ErrorHandlerBuilderRef) builder;	String ref = builderRef.getRef();	if (ErrorHandlerBuilderRef.isErrorHandlerBuilderConfigured(ref)) {	
+public abstract void run(Runnable runnable) throws Throwable;	JtaTransactionErrorHandler answer;	ErrorHandlerBuilder builder = (ErrorHandlerBuilder) routeContext.getRoute().getErrorHandlerBuilder();	if (builder instanceof ErrorHandlerBuilderRef) {	ErrorHandlerBuilderRef builderRef = (ErrorHandlerBuilderRef) builder;	String ref = builderRef.getRef();	if (ErrorHandlerBuilderRef.isErrorHandlerBuilderConfigured(ref)) {	
 looking up errorhandlerbuilder with ref 
 
 String ref = builderRef.getRef();	if (ErrorHandlerBuilderRef.isErrorHandlerBuilderConfigured(ref)) {	builder = (ErrorHandlerBuilder) ErrorHandlerBuilderRef.lookupErrorHandlerBuilder(routeContext, ref);	}	}	JtaTransactionErrorHandlerBuilder txBuilder;	if ((builder != null) && builder.supportTransacted()) {	if (!(builder instanceof JtaTransactionErrorHandlerBuilder)) {	throw new RuntimeCamelException("The given transactional error handler builder '" + builder + "' is not of type '" + JtaTransactionErrorHandlerBuilder.class.getName() + "' which is required in this environment!");	}	
@@ -5645,7 +5645,7 @@ cannot load class using classloader this exception will be ignored
 
 ========================= camel sample_13086 =========================
 
-protected abstract JettyHttpEndpoint createEndpoint(URI endpointUri, URI httpUri) throws URISyntaxException;	public void connect(HttpConsumer consumer) throws Exception {	JettyHttpEndpoint endpoint = (JettyHttpEndpoint)consumer.getEndpoint();	String connectorKey = getConnectorKey(endpoint);	synchronized (CONNECTORS) {	ConnectorRef connectorRef = CONNECTORS.get(connectorKey);	if (connectorRef == null) {	Server server = createServer();	Connector connector = getConnector(server, endpoint);	if ("localhost".equalsIgnoreCase(endpoint.getHttpUri().getHost())) {	
+protected abstract JettyHttpEndpoint createEndpoint(URI endpointUri, URI httpUri) throws URISyntaxException;	JettyHttpEndpoint endpoint = (JettyHttpEndpoint)consumer.getEndpoint();	String connectorKey = getConnectorKey(endpoint);	synchronized (CONNECTORS) {	ConnectorRef connectorRef = CONNECTORS.get(connectorKey);	if (connectorRef == null) {	Server server = createServer();	Connector connector = getConnector(server, endpoint);	if ("localhost".equalsIgnoreCase(endpoint.getHttpUri().getHost())) {	
 you use localhost interface it means that no external connections will be available don t you want to use instead all network interfaces 
 
 CONNECTORS.put(connectorKey, connectorRef);	} else {	if (endpoint.getHandlers() != null && !endpoint.getHandlers().isEmpty()) {	List<Handler> existingHandlers = new ArrayList<>();	if (connectorRef.server.getHandlers() != null && connectorRef.server.getHandlers().length > 0) {	existingHandlers = Arrays.asList(connectorRef.server.getHandlers());	}	List<Handler> newHandlers = new ArrayList<>(endpoint.getHandlers());	boolean changed = !existingHandlers.containsAll(newHandlers) && !newHandlers.containsAll(existingHandlers);	if (changed) {	
@@ -8005,10 +8005,10 @@ reply received out message body set to reply payload
 exchange.setOut(response);	Object body = response.getBody();	if (endpoint.isTransferException() && body instanceof Exception) {	exchange.setException((Exception) body);	} else {	}	if (endpoint.isTransferFault()) {	Object faultHeader = response.removeHeader(JmsConstants.JMS_TRANSFER_FAULT);	if (faultHeader != null) {	boolean isFault = exchange.getContext().getTypeConverter().tryConvertTo(boolean.class, faultHeader);	
 transfer fault on out message 
 
-protected abstract void handleReplyMessage(String correlationID, Message message, Session session);	protected abstract AbstractMessageListenerContainer createListenerContainer() throws Exception;	protected ReplyHandler waitForProvisionCorrelationToBeUpdated(String correlationID, Message message) {	if (log.isWarnEnabled()) {	
+protected abstract void handleReplyMessage(String correlationID, Message message, Session session);	protected abstract AbstractMessageListenerContainer createListenerContainer() throws Exception;	if (log.isWarnEnabled()) {	
 early reply received with correlationid 
 
-protected abstract void handleReplyMessage(String correlationID, Message message, Session session);	protected abstract AbstractMessageListenerContainer createListenerContainer() throws Exception;	protected ReplyHandler waitForProvisionCorrelationToBeUpdated(String correlationID, Message message) {	if (log.isWarnEnabled()) {	}	ReplyHandler answer = null;	boolean done = false;	int counter = 0;	while (!done && counter++ < endpoint.getConfiguration().getWaitForProvisionCorrelationToBeUpdatedCounter()) {	
+protected abstract void handleReplyMessage(String correlationID, Message message, Session session);	protected abstract AbstractMessageListenerContainer createListenerContainer() throws Exception;	if (log.isWarnEnabled()) {	}	ReplyHandler answer = null;	boolean done = false;	int counter = 0;	while (!done && counter++ < endpoint.getConfiguration().getWaitForProvisionCorrelationToBeUpdatedCounter()) {	
 early reply not found handler at attempt waiting a bit longer 
 
 int counter = 0;	while (!done && counter++ < endpoint.getConfiguration().getWaitForProvisionCorrelationToBeUpdatedCounter()) {	try {	Thread.sleep(endpoint.getConfiguration().getWaitForProvisionCorrelationToBeUpdatedThreadSleepingTime());	} catch (InterruptedException e) {	}	answer = correlation.get(correlationID);	done = answer != null;	if (answer != null) {	if (log.isTraceEnabled()) {	
@@ -10227,7 +10227,7 @@ share
 
 ========================= camel sample_8851 =========================
 
-protected abstract int poll() throws Exception;	protected void doStart() throws Exception {	if (configuration.getClient() == null) {	configuration.createClient();	
+protected abstract int poll() throws Exception;	if (configuration.getClient() == null) {	configuration.createClient();	
 consumer dropbox client created 
 
 protected void doStop() throws Exception {	if (configuration.getClient() == null) {	configuration.setClient(null);	
@@ -11498,7 +11498,7 @@ unable to create the messageproducer
 protected Session createSession() throws Exception {	ConnectionResource connectionResource = getOrCreateConnectionResource();	Connection conn = connectionResource.borrowConnection();	try {	return conn.createSession(isEndpointTransacted(), getAcknowledgeMode());	} catch (Exception e) {	
 unable to create the session 
 
-public abstract void sendMessage(Exchange exchange, AsyncCallback callback, MessageProducerResources producer, ReleaseProducerCallback releaseProducerCallback) throws Exception;	public boolean process(final Exchange exchange, final AsyncCallback callback) {	if (log.isDebugEnabled()) {	
+public abstract void sendMessage(Exchange exchange, AsyncCallback callback, MessageProducerResources producer, ReleaseProducerCallback releaseProducerCallback) throws Exception;	if (log.isDebugEnabled()) {	
 processing exchange id 
 
 releaseProducerCallback = new ReturnProducerCallback();	if (isEndpointTransacted()) {	exchange.getUnitOfWork().addSynchronization(new SessionTransactionSynchronization(producer.getSession(), producer.getCommitStrategy()));	}	}	if (producer == null) {	exchange.setException(new Exception("Unable to send message: connection not available"));	} else {	if (!isSynchronous()) {	if (log.isDebugEnabled()) {	
@@ -11531,7 +11531,7 @@ configure component with customizer
 
 ========================= camel sample_628 =========================
 
-protected abstract String getUri();	protected abstract Logger getLogger();	public void testDailyTrend() throws Exception {	MockEndpoint mock = getMockEndpoint("mock:result");	mock.expectedMinimumMessageCount(1);	mock.assertIsSatisfied();	List<Exchange> tweets = mock.getExchanges();	for (Exchange e : tweets) {	
+protected abstract String getUri();	protected abstract Logger getLogger();	MockEndpoint mock = getMockEndpoint("mock:result");	mock.expectedMinimumMessageCount(1);	mock.assertIsSatisfied();	List<Exchange> tweets = mock.getExchanges();	for (Exchange e : tweets) {	
 tweet 
 
 ========================= camel sample_14159 =========================
@@ -17661,10 +17661,10 @@ received reply message with correlationid
 public void processReply(ReplyHolder holder) {	if (holder != null && isRunAllowed()) {	try {	Exchange exchange = holder.getExchange();	boolean timeout = holder.isTimeout();	if (timeout) {	if (log.isWarnEnabled()) {	
 timeout occurred after millis waiting for reply message with correlationid on destination setting exchangetimedoutexception on and continue routing 
 
-protected abstract void handleReplyMessage(String correlationID, AMQP.BasicProperties properties, byte[] message);	protected abstract Connection createListenerContainer() throws Exception;	protected ReplyHandler waitForProvisionCorrelationToBeUpdated(String correlationID, byte[] message) {	if (log.isWarnEnabled()) {	
+protected abstract void handleReplyMessage(String correlationID, AMQP.BasicProperties properties, byte[] message);	protected abstract Connection createListenerContainer() throws Exception;	if (log.isWarnEnabled()) {	
 early reply received with correlationid 
 
-protected abstract void handleReplyMessage(String correlationID, AMQP.BasicProperties properties, byte[] message);	protected abstract Connection createListenerContainer() throws Exception;	protected ReplyHandler waitForProvisionCorrelationToBeUpdated(String correlationID, byte[] message) {	if (log.isWarnEnabled()) {	}	ReplyHandler answer = null;	boolean done = false;	int counter = 0;	while (!done && counter++ < 50) {	
+protected abstract void handleReplyMessage(String correlationID, AMQP.BasicProperties properties, byte[] message);	protected abstract Connection createListenerContainer() throws Exception;	if (log.isWarnEnabled()) {	}	ReplyHandler answer = null;	boolean done = false;	int counter = 0;	while (!done && counter++ < 50) {	
 early reply not found handler at attempt waiting a bit longer 
 
 int counter = 0;	while (!done && counter++ < 50) {	try {	Thread.sleep(100);	} catch (InterruptedException e) {	}	answer = correlation.get(correlationID);	done = answer != null;	if (answer != null) {	if (log.isTraceEnabled()) {	

@@ -4185,8 +4185,11 @@ connecting union work with work
 
 ========================= hive sample_3518 =========================
 
-public static HushableRandomAccessFileAppender createAppender( final boolean isAppend = Booleans.parseBoolean(append, true);	final boolean isFlush = Booleans.parseBoolean(immediateFlush, true);	final boolean ignoreExceptions = Booleans.parseBoolean(ignore, true);	final boolean isAdvertise = Boolean.parseBoolean(advertise);	final int bufferSize = Integers.parseInt(bufferSizeStr, 256 * 1024 /* RandomAccessFileManager.DEFAULT_BUFFER_SIZE */);	if (name == null) {	
+public static HushableRandomAccessFileAppender createAppender( @PluginAttribute("fileName") final String fileName, @PluginAttribute("fileName") final String fileName, @PluginAttribute("append") final String append, @PluginAttribute("append") final String append, @PluginAttribute("name") final String name, @PluginAttribute("name") final String name, @PluginAttribute("immediateFlush") final String immediateFlush, @PluginAttribute("immediateFlush") final String immediateFlush, @PluginAttribute("bufferSize") final String bufferSizeStr, @PluginAttribute("bufferSize") final String bufferSizeStr, @PluginAttribute("ignoreExceptions") final String ignore, @PluginAttribute("ignoreExceptions") final String ignore, @PluginElement("Layout") Layout<? extends Serializable> layout, @PluginElement("Layout") Layout<? extends Serializable> layout, @PluginElement("Filter") final Filter filter, @PluginElement("Filter") final Filter filter, @PluginAttribute("advertise") final String advertise, @PluginAttribute("advertise") final String advertise, @PluginAttribute("advertiseURI") final String advertiseURI, @PluginAttribute("advertiseURI") final String advertiseURI, @PluginConfiguration final Configuration config) {	final boolean isAppend = Booleans.parseBoolean(append, true);	final boolean isFlush = Booleans.parseBoolean(immediateFlush, true);	final boolean ignoreExceptions = Booleans.parseBoolean(ignore, true);	final boolean isAdvertise = Boolean.parseBoolean(advertise);	final int bufferSize = Integers.parseInt(bufferSizeStr, 256 * 1024 /* RandomAccessFileManager.DEFAULT_BUFFER_SIZE */);	if (name == null) {	
 no name provided for fileappender 
+
+public static HushableRandomAccessFileAppender createAppender( @PluginAttribute("fileName") final String fileName, @PluginAttribute("fileName") final String fileName, @PluginAttribute("append") final String append, @PluginAttribute("append") final String append, @PluginAttribute("name") final String name, @PluginAttribute("name") final String name, @PluginAttribute("immediateFlush") final String immediateFlush, @PluginAttribute("immediateFlush") final String immediateFlush, @PluginAttribute("bufferSize") final String bufferSizeStr, @PluginAttribute("bufferSize") final String bufferSizeStr, @PluginAttribute("ignoreExceptions") final String ignore, @PluginAttribute("ignoreExceptions") final String ignore, @PluginElement("Layout") Layout<? extends Serializable> layout, @PluginElement("Layout") Layout<? extends Serializable> layout, @PluginElement("Filter") final Filter filter, @PluginElement("Filter") final Filter filter, @PluginAttribute("advertise") final String advertise, @PluginAttribute("advertise") final String advertise, @PluginAttribute("advertiseURI") final String advertiseURI, @PluginAttribute("advertiseURI") final String advertiseURI, @PluginConfiguration final Configuration config) {	final boolean isAppend = Booleans.parseBoolean(append, true);	final boolean isFlush = Booleans.parseBoolean(immediateFlush, true);	final boolean ignoreExceptions = Booleans.parseBoolean(ignore, true);	final boolean isAdvertise = Boolean.parseBoolean(advertise);	final int bufferSize = Integers.parseInt(bufferSizeStr, 256 * 1024 /* RandomAccessFileManager.DEFAULT_BUFFER_SIZE */);	if (name == null) {	return null;	}	if (fileName == null) {	
+no filename provided for fileappender with name 
 
 ========================= hive sample_4662 =========================
 
@@ -4586,10 +4589,10 @@ error getting functions
 public TGetCrossReferenceResp GetCrossReference(TGetCrossReferenceReq req) throws TException {	TGetCrossReferenceResp resp = new TGetCrossReferenceResp();	try {	OperationHandle opHandle = cliService.getCrossReference( new SessionHandle(req.getSessionHandle()), req.getParentCatalogName(), req.getParentSchemaName(), req.getParentTableName(), req.getForeignCatalogName(), req.getForeignSchemaName(), req.getForeignTableName());	resp.setOperationHandle(opHandle.toTOperationHandle());	resp.setStatus(OK_STATUS);	} catch (Exception e) {	
 error getting functions 
 
-public abstract void run();	private String getProxyUser(String realUser, Map<String, String> sessionConf, String ipAddress) throws HiveSQLException {	String proxyUser = null;	if (cliService.getHiveConf().getVar( ConfVars.HIVE_SERVER2_TRANSPORT_MODE).equalsIgnoreCase("http")) {	proxyUser = SessionManager.getProxyUserName();	
+public abstract void run();	String proxyUser = null;	if (cliService.getHiveConf().getVar( ConfVars.HIVE_SERVER2_TRANSPORT_MODE).equalsIgnoreCase("http")) {	proxyUser = SessionManager.getProxyUserName();	
 proxy user from query string 
 
-public abstract void run();	private String getProxyUser(String realUser, Map<String, String> sessionConf, String ipAddress) throws HiveSQLException {	String proxyUser = null;	if (cliService.getHiveConf().getVar( ConfVars.HIVE_SERVER2_TRANSPORT_MODE).equalsIgnoreCase("http")) {	proxyUser = SessionManager.getProxyUserName();	}	if (proxyUser == null && sessionConf != null && sessionConf.containsKey(HiveAuthConstants.HS2_PROXY_USER)) {	String proxyUserFromThriftBody = sessionConf.get(HiveAuthConstants.HS2_PROXY_USER);	
+public abstract void run();	String proxyUser = null;	if (cliService.getHiveConf().getVar( ConfVars.HIVE_SERVER2_TRANSPORT_MODE).equalsIgnoreCase("http")) {	proxyUser = SessionManager.getProxyUserName();	}	if (proxyUser == null && sessionConf != null && sessionConf.containsKey(HiveAuthConstants.HS2_PROXY_USER)) {	String proxyUserFromThriftBody = sessionConf.get(HiveAuthConstants.HS2_PROXY_USER);	
 proxy user from thrift body 
 
 if (proxyUser == null) {	return realUser;	}	if (!hiveConf.getBoolVar(HiveConf.ConfVars.HIVE_SERVER2_ALLOW_USER_SUBSTITUTION)) {	throw new HiveSQLException("Proxy user substitution is not allowed");	}	if (HiveAuthConstants.AuthTypes.NONE.toString(). equalsIgnoreCase(hiveConf.getVar(ConfVars.HIVE_SERVER2_AUTHENTICATION))) {	return proxyUser;	}	HiveAuthFactory.verifyProxyAccess(realUser, proxyUser, ipAddress, hiveConf);	
@@ -7095,7 +7098,7 @@ deleting appender for key
 private void keyComplete(String key) {	Preconditions.checkNotNull(key, "Key must be specified");	boolean removed = knownAppenders.remove(key);	if (removed) {	if (LOGGER.isDebugEnabled()) {	}	routingAppender.deleteAppender(key);	} else {	
 ignoring call to remove unknown key 
 
-public static PurgePolicy createPurgePolicy( Preconditions.checkNotNull(name, "Name must be specified for " + LlapRoutingAppenderPurgePolicy.class.getName());	LlapRoutingAppenderPurgePolicy llapRoutingAppenderPurgePolicy = new LlapRoutingAppenderPurgePolicy(name);	LlapRoutingAppenderPurgePolicy old = INSTANCES.putIfAbsent(name, llapRoutingAppenderPurgePolicy);	if (old != null) {	
+public static PurgePolicy createPurgePolicy( @PluginAttribute("name") final String name) {	Preconditions.checkNotNull(name, "Name must be specified for " + LlapRoutingAppenderPurgePolicy.class.getName());	LlapRoutingAppenderPurgePolicy llapRoutingAppenderPurgePolicy = new LlapRoutingAppenderPurgePolicy(name);	LlapRoutingAppenderPurgePolicy old = INSTANCES.putIfAbsent(name, llapRoutingAppenderPurgePolicy);	if (old != null) {	
 attempt to create multiple instances of with the name using original instance 
 
 ========================= hive sample_2251 =========================
@@ -9065,7 +9068,7 @@ adding dummy op to work from mj work
 
 ========================= hive sample_3070 =========================
 
-public CompleteBean completeJob(@PathParam("jobid") String jobid, throws CallbackFailedException, IOException {	
+public CompleteBean completeJob(@PathParam("jobid") String jobid, @QueryParam("status") String jobStatus) @QueryParam("status") String jobStatus) throws CallbackFailedException, IOException {	
 received callback 
 
 private static String getRequestingHost(String requestingUser, HttpServletRequest request) {	final String unkHost = "???";	if(request == null) {	
@@ -9708,10 +9711,10 @@ sending message to
 
 ========================= hive sample_624 =========================
 
-public void abortTask(TaskAttemptContext context) throws IOException;	public void commitTask(TaskAttemptContext context) throws IOException;	}	private HashMap<String, TaskCommitterProxy> taskCommitters = new HashMap<String, TaskCommitterProxy>();	public synchronized void commitTask(TaskAttemptContext context) throws IOException {	String key = generateKey(context);	if (!taskCommitters.containsKey(key)) {	
+public void abortTask(TaskAttemptContext context) throws IOException;	}	private HashMap<String, TaskCommitterProxy> taskCommitters = new HashMap<String, TaskCommitterProxy>();	String key = generateKey(context);	if (!taskCommitters.containsKey(key)) {	
 no callback registered for taskattemptid skipping 
 
-public void abortTask(TaskAttemptContext context) throws IOException;	public void commitTask(TaskAttemptContext context) throws IOException;	}	private HashMap<String, TaskCommitterProxy> taskCommitters = new HashMap<String, TaskCommitterProxy>();	public synchronized void commitTask(TaskAttemptContext context) throws IOException {	String key = generateKey(context);	if (!taskCommitters.containsKey(key)) {	return;	}	try {	
+public void abortTask(TaskAttemptContext context) throws IOException;	}	private HashMap<String, TaskCommitterProxy> taskCommitters = new HashMap<String, TaskCommitterProxy>();	String key = generateKey(context);	if (!taskCommitters.containsKey(key)) {	return;	}	try {	
 committing taskattempt 
 
 public synchronized void abortTask(TaskAttemptContext context) throws IOException {	String key = generateKey(context);	if (!taskCommitters.containsKey(key)) {	
@@ -11516,10 +11519,10 @@ renaming file to
 renamedPath = getRenamedPath(raf.getFileName(), counter);	if (!Files.exists(renamedPath)) {	if (LOGGER.isTraceEnabled()) {	}	Files.move(Paths.get(raf.getFileName()), renamedPath);	break;	}	counter++;	}	} catch (IOException e) {	
 failed to rename file to 
 
-public static LlapWrappedAppender createAppender( ) {	if (config == null) {	
+public static LlapWrappedAppender createAppender( @PluginAttribute("name") final String name, @PluginAttribute("name") final String name, @PluginAttribute("renameFileOnClose") final String renameFileOnCloseProvided, @PluginAttribute("renameFileOnClose") final String renameFileOnCloseProvided, @PluginAttribute("renamedFileSuffix") final String renamedFileSuffixProvided, @PluginAttribute("renamedFileSuffix") final String renamedFileSuffixProvided, @PluginNode final Node node, @PluginNode final Node node, @PluginConfiguration final Configuration config @PluginConfiguration final Configuration config ) {	if (config == null) {	
 pluginconfiguration not expected to be null 
 
-public static LlapWrappedAppender createAppender( ) {	if (config == null) {	return null;	}	if (node == null) {	
+public static LlapWrappedAppender createAppender( @PluginAttribute("name") final String name, @PluginAttribute("name") final String name, @PluginAttribute("renameFileOnClose") final String renameFileOnCloseProvided, @PluginAttribute("renameFileOnClose") final String renameFileOnCloseProvided, @PluginAttribute("renamedFileSuffix") final String renamedFileSuffixProvided, @PluginAttribute("renamedFileSuffix") final String renamedFileSuffixProvided, @PluginNode final Node node, @PluginNode final Node node, @PluginConfiguration final Configuration config @PluginConfiguration final Configuration config ) {	if (config == null) {	return null;	}	if (node == null) {	
 node must be specified as an appender specification 
 
 ========================= hive sample_2249 =========================
